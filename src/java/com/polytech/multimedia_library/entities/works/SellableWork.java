@@ -23,6 +23,11 @@ public class SellableWork extends AbstractWork
         this(0, "", null, 0, State.UNKNOWN);
     }
     
+    public SellableWork(String name, Owner owner, float price, State state)
+    {
+        this(0, name, owner, price, state);
+    }
+    
     public SellableWork(int id, String name, Owner owner, float price, State state)
     {
         this.id = id;
