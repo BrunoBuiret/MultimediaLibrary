@@ -272,6 +272,14 @@ public class AdherentsController extends AbstractController
             {
                 try
                 {
+                    // Customize the flash message
+                    String flashMessage = "Vous avez édité avec succès l'adhérent nommé <strong>%s %s</strong>.";
+                    
+                    if(!adherent.getFirstName().equals(firstName) || !adherent.getLastName().equals(lastName))
+                    {
+                        flashMessage = "Vous avez édité avec succès l'adhérent maintenant nommé <strong>%s %s</strong>.";
+                    }
+                    
                     // Edit the adherent
                     adherent.setFirstName(firstName);
                     adherent.setLastName(lastName);
@@ -285,7 +293,7 @@ public class AdherentsController extends AbstractController
                         request,
                         "success",
                         String.format(
-                            "Vous avez édité avec succès l'adhérent maintenant nommé <strong>%s %s</strong>.",
+                            flashMessage,
                             StringEscapeUtils.escapeHtml4(adherent.getFirstName()),
                             StringEscapeUtils.escapeHtml4(adherent.getLastName())
                         )
