@@ -2,10 +2,12 @@
 <c:set var="_page_title" value="Édition d'un propriétaire » ${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}" />
 <c:set var="_page_current" value="owners_edit" />
 <%@include file="/WEB-INF/_inc/header.jsp" %>
-    <h1>
-        Édition d'un propriétaire
-        <small>${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}</small>
-    </h1>
+    <div class="page-header">
+        <h1>
+            Édition d'un propriétaire
+            <small>${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}</small>
+        </h1>
+    </div>
     <form class="form-horizontal" method="post" action="owners.jsp?action=edit&id=${owner.id}">
         <div class="form-group<c:if test="${not empty _error_first_name}"> has-error</c:if>">
             <label for="firstName" class="control-label col-sm-2">
