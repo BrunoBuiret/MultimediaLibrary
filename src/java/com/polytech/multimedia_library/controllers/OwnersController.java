@@ -255,6 +255,14 @@ public class OwnersController extends AbstractController
             {
                 try
                 {
+                    // Customize flash message
+                    String flashMessage = "Vous avez édité avec succès le propriétaire nommé <strong>%s %s</strong>.";
+                    
+                    if(!owner.getFirstName().equals(firstName) || !owner.getLastName().equals(lastName))
+                    {
+                        flashMessage = "Vous avez édité avec succès le propriétaire maintenant nommé <strong>%s %s</strong>.";
+                    }
+                    
                     // Edit the owner
                     owner.setFirstName(firstName);
                     owner.setLastName(lastName);
@@ -265,7 +273,8 @@ public class OwnersController extends AbstractController
                     // Then, define a flash message to inform the user
                     this.addFlash(request,
                         "success",
-                        String.format("Vous avez édité avec succès le propriétaire maintenant nommé <strong>%s %s</strong>.",
+                        String.format(
+                            flashMessage,
                             StringEscapeUtils.escapeHtml4(owner.getFirstName()),
                             StringEscapeUtils.escapeHtml4(owner.getLastName())
                         )
