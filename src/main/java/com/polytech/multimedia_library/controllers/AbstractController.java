@@ -17,6 +17,11 @@ import javax.servlet.http.HttpSession;
 public abstract class AbstractController extends HttpServlet
 {
     /**
+     * The error page's path.
+     */
+    protected static String ERROR_PAGE_PATH = "/WEB-INF/error.jsp";
+    
+    /**
      * Forwards the response to the mentionned file.
      *
      * @param path The file's path.
@@ -65,7 +70,7 @@ public abstract class AbstractController extends HttpServlet
     {
         request.setAttribute("_error_message", message);
         
-        return "/WEB-INF/error.jsp";
+        return AbstractController.ERROR_PAGE_PATH;
     }
     
     /**
