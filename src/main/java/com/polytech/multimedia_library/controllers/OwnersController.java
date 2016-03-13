@@ -211,17 +211,30 @@ public class OwnersController extends AbstractController
 
         // Try getting the owner's id
         String idToParse = request.getParameter("id");
+        int id = 0;
 
-        if(null == idToParse)
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant du propriétaire à éditer.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
         {
             return this.displayError(
-                "Données manquantes",
-                "Vous devez préciser l'identifiant du propriétaire à éditer.",
+                "Erreur",
+                "Impossible de récupérer l'identifiant du propriétaire.",
+                e,
                 request
             );
         }
-
-        int id = Integer.parseInt(idToParse);
         
         // Fetch the owner
         OwnerRepository repository = new OwnerRepository();

@@ -220,17 +220,30 @@ public class AdherentsController extends AbstractController
 
         // Try getting the adherent's id
         String idToParse = request.getParameter("id");
-
-        if(null == idToParse)
+        int id = 0;
+        
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant de l'adhérent à éditer.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
         {
             return this.displayError(
-                "Données manquantes",
-                "Vous devez préciser l'identifiant de l'adhérent à éditer.",
+                "Erreur",
+                "Impossible de récupérer l'identifiant de l'adhérent.",
+                e,
                 request
             );
         }
-
-        int id = Integer.parseInt(idToParse);
         
         // Fetch the adherent
         AdherentRepository repository = new AdherentRepository();
