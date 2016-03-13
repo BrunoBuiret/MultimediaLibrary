@@ -33,9 +33,5 @@
             <kbd>c:url</kbd> + TAB -&gt; <code> &lt;c:url value="..." var="_url" /&gt;</code><br/>
             <kbd>_url</kbd> + TAB -&gt; <code>&lt;c:out value="\${_url}" /&gt;</code>
         </li>
-        <li>
-            Créer une méthode <code>getAndClearFlashList()</code> plutôt que de faire un <code>getFlashList()</code>
-            suivi d'un <code>clearFlashList()</code>
-        </li>
     </ul>
 <%@include file="/WEB-INF/_inc/footer.jsp" %>
