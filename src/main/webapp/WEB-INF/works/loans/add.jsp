@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/i18n/fr.js"></script>
     <script type="text/javascript">
         $(function() {
-            $("#owner").select2({
+            $("#ownerId").select2({
                 language: "fr"
             });
         });
@@ -44,23 +44,25 @@
                 </c:if>
             </div>
         </div>
-        <div class="form-group<c:if test="${not empty _error_owner}"> has-error</c:if>">
-            <label for="name" class="control-label col-sm-2">
+        <div class="form-group<c:if test="${not empty _error_owner_id}"> has-error</c:if>">
+            <label for="ownerId" class="control-label col-sm-2">
                 Propriétaire*
             </label>
             <div class="col-sm-10">
-                <select class="form-control" id="owner" name="owner">
-                <%-- <c:forEach items="" var="">
+                <select class="form-control" id="ownerId" name="ownerId">
+                <c:forEach items="${owners}" var="owner">
                     <option
-                        value=""
+                        value="${owner.id}"
+                        <c:if test="${false}">
+                        </c:if>
                     >
-                        
+                        <c:out value="${owner.firstName} ${owner.lastName}" />
                     </option>
-                </c:forEach> --%>
+                </c:forEach>
                 </select>
-                <c:if test="${not empty _error_owner}">
+                <c:if test="${not empty _error_owner_id}">
                     <span class="help-block">
-                        ${_error_owner}
+                        ${_error_owner_id}
                     </span>
                 </c:if>
             </div>
