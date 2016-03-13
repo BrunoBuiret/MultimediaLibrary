@@ -102,6 +102,29 @@ public abstract class AbstractController extends HttpServlet
     }
     
     /**
+     * Gets the flash messages list and clears it from session.
+     * 
+     * @param request The servlet request.
+     * @return The flash list
+     */
+    protected List<Flash> getAndClearFlashList(HttpServletRequest request)
+    {
+        // Initialize vars
+        HttpSession session = request.getSession();
+        List<Flash> currentFlashList = this.getFlashList(session);
+        List<Flash> flashList = new ArrayList<>(currentFlashList);
+        
+        // Erase the saved flash list
+        currentFlashList.clear();
+        session.setAttribute(
+            "_flash",
+            flashList
+        );
+        
+        return flashList;
+    }
+    
+    /**
      * Adds a flash message to the session.
      * 
      * @param request The servlet request.
@@ -117,30 +140,6 @@ public abstract class AbstractController extends HttpServlet
         
         // Add the flash message
         flashList.add(new Flash(type, contents));
-        
-        // Then, erase the current flash list
-        session.setAttribute(
-            "_flash",
-            flashList
-        );
-        
-        return this;
-    }
-    
-    /**
-     * Clears the flash messages list.
-     * 
-     * @param request The servlet request.
-     * @return This instance.
-     */
-    protected AbstractController clearFlashList(HttpServletRequest request)
-    {
-        // Initialize vars
-        HttpSession session = request.getSession();
-        List<Flash> flashList = this.getFlashList(session);
-        
-        // Add the flash message
-        flashList.clear();
         
         // Then, erase the current flash list
         session.setAttribute(

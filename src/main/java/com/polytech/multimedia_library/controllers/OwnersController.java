@@ -38,7 +38,7 @@ public class OwnersController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize some common attributes
-        request.setAttribute("_method", request.getMethod());
+        request.setAttribute("_method", request.getMethod().toUpperCase());
         
         // What is being done?
         String actionName = request.getParameter("action");
@@ -96,8 +96,7 @@ public class OwnersController extends AbstractController
             request.setAttribute("owners", repository.fetchAll());
             
             // Display flash messages
-            request.setAttribute("_flash", new ArrayList<>(this.getFlashList(request)));
-            this.clearFlashList(request);
+            request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
         catch(Exception e)
         {
@@ -120,7 +119,7 @@ public class OwnersController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize vars
-        final String requestMethod = request.getMethod();
+        final String requestMethod = request.getMethod().toUpperCase();
         String targetPath = "/WEB-INF/owners/add.jsp";
 
         if(requestMethod.equals(HttpProtocol.METHOD_POST))
@@ -199,7 +198,7 @@ public class OwnersController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize vars
-        final String requestMethod = request.getMethod();
+        final String requestMethod = request.getMethod().toUpperCase();
         String targetPath = "/WEB-INF/owners/edit.jsp";
 
         // Try getting the owner's id
@@ -309,9 +308,6 @@ public class OwnersController extends AbstractController
     protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
     {
-        // Initialize vars
-        final String requestMethod = request.getMethod();
-
         // Try getting the owner's id
         String idToParse = request.getParameter("id");
 

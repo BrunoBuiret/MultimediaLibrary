@@ -39,7 +39,7 @@ public class LoansController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize some common attributes
-        request.setAttribute("_method", request.getMethod());
+        request.setAttribute("_method", request.getMethod().toUpperCase());
         
         // What is being done?
         String actionName = request.getParameter("action");
@@ -97,8 +97,7 @@ public class LoansController extends AbstractController
             request.setAttribute("works", repository.fetchAll());
             
             // Display flash messages
-            request.setAttribute("_flash", new ArrayList<>(this.getFlashList(request)));
-            this.clearFlashList(request);
+            request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
         catch(Exception e)
         {
@@ -121,7 +120,7 @@ public class LoansController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize vars
-        final String requestMethod = request.getMethod();
+        final String requestMethod = request.getMethod().toUpperCase();
         String targetPath = "/WEB-INF/works/loans/add.jsp";
 
         if(requestMethod.equals(HttpProtocol.METHOD_POST))
@@ -178,7 +177,7 @@ public class LoansController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    response.sendRedirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST); // @todo equivalent c:url ?
+                    response.sendRedirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST); // @todo equivalent c:url ?
 
                     return null;
                 }

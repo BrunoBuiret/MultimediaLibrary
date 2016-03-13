@@ -36,7 +36,7 @@ public class SalesController extends AbstractController
     throws ServletException, IOException
     {
         // Initialize some common attributes
-        request.setAttribute("_method", request.getMethod());
+        request.setAttribute("_method", request.getMethod().toUpperCase());
         
         // What is being done?
         String actionName = request.getParameter("action");
@@ -94,8 +94,7 @@ public class SalesController extends AbstractController
             request.setAttribute("works", repository.fetchAll());
             
             // Display flash messages
-            request.setAttribute("_flash", new ArrayList<>(this.getFlashList(request)));
-            this.clearFlashList(request);
+            request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
         catch(Exception e)
         {
