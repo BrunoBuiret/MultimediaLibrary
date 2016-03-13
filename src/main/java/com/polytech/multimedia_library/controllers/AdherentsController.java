@@ -99,8 +99,12 @@ public class AdherentsController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des adhérents.",
+                e,
+                request
+            );
         }
         
         return targetPath;
@@ -181,7 +185,12 @@ public class AdherentsController extends AbstractController
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'ajout d'un nouvel adhérent.",
+                        e,
+                        request
+                    );
                 }
             }
 
@@ -214,9 +223,11 @@ public class AdherentsController extends AbstractController
 
         if(null == idToParse)
         {
-            this.displayError("Vous devez préciser l'identifiant de l'adhérent à éditer.", request, response);
-
-            return null;
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant de l'adhérent à éditer.",
+                request
+            );
         }
 
         int id = Integer.parseInt(idToParse);
@@ -227,9 +238,11 @@ public class AdherentsController extends AbstractController
         
         if(null == adherent)
         {
-            this.displayError("Cet adhérent n'existe pas ou plus.", request, response);
-            
-            return null;
+            return this.displayError(
+                "Erreur 404",
+                "Cet adhérent n'existe pas ou plus.",
+                request
+            );
         }
         
         // Bind the adherent so as to display their data
@@ -303,7 +316,12 @@ public class AdherentsController extends AbstractController
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'édition d'un adhérent.",
+                        e,
+                        request
+                    );
                 }
             }
             
@@ -332,9 +350,11 @@ public class AdherentsController extends AbstractController
 
         if(null == idToParse)
         {
-            this.displayError("Vous devez préciser l'identifiant de l'adhérent à supprimer.", request, response);
-
-            return null;
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant de l'adhérent à supprimer.",
+                request
+            );
         }
 
         int id = Integer.parseInt(idToParse);
@@ -345,9 +365,11 @@ public class AdherentsController extends AbstractController
         
         if(null == adherent)
         {
-            this.displayError("Cet adhérent n'existe pas ou plus.", request, response);
-            
-            return null;
+            return this.displayError(
+                "Erreur 404",
+                "Cet adhérent n'existe pas ou plus.",
+                request
+            );
         }
         
         // Then, deleting them
@@ -370,8 +392,12 @@ public class AdherentsController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling.
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la suppression d'un adhérent.",
+                e,
+                request
+            );
         }
 
         return null;

@@ -100,8 +100,12 @@ public class LoansController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des oeuvres à prêter.",
+                e,
+                request
+            );
         }
         
         return targetPath;
@@ -182,7 +186,12 @@ public class LoansController extends AbstractController
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'ajout d'une nouvelle oeuvre à prêter.",
+                        e,
+                        request
+                    );
                 }
             }
 

@@ -46,37 +46,76 @@ public abstract class AbstractController extends HttpServlet
     }
     
     /**
-     * Displays an error page with the given <code>message</code>.
+     * Displays an error page with the given message.
      * 
      * @param message The message to display.
      * @param request The servlet request.
-     * @param response The servlet response.
+     * @return 
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException If an I/O error occurs.
      */
-    protected void displayError(String message, HttpServletRequest request, HttpServletResponse response)
+    protected String displayError(String message, HttpServletRequest request)
     throws ServletException, IOException
     {
         request.setAttribute("_error_message", message);
-        this.forward("/WEB-INF/error.jsp", request, response);
+        
+        return "/WEB-INF/error.jsp";
     }
     
     /**
-     * Displays an error page with the given <code>message</code> 
+     * Displays an error page with the given title and message.
      * 
-     * @param message
-     * @param exception
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException 
+     * @param title The title to display.
+     * @param message The message to display.
+     * @param request The servlet request.
+     * @return
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException If an I/O error occurs.
      */
-    protected void displayError(String message, Exception exception, HttpServletRequest request, HttpServletResponse response)
+    protected String displayError(String title, String message, HttpServletRequest request)
     throws ServletException, IOException
     {
-        request.setAttribute("_error_message", message);
+        request.setAttribute("_error_title", title);
+        
+        return this.displayError(message, request);
+    }
+    
+    /**
+     * Displays an error page for the given exception with the specified message.
+     * 
+     * @param message The message to display.
+     * @param exception The exception to handle.
+     * @param request The servlet request.
+     * @return 
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException If an I/O error occurs.
+     */
+    protected String displayError(String message, Exception exception, HttpServletRequest request)
+    throws ServletException, IOException
+    {
         request.setAttribute("_error_exception", exception);
-        this.forward("/WEB-INF/error.jsp", request, response);
+        
+        return this.displayError(message, request);
+    }
+    
+    /**
+     * Displays an error page for the given exception with the specified
+     * title and message.
+     * 
+     * @param title The title to display.
+     * @param message The message to display.
+     * @param exception The exception to handle.
+     * @param request The servlet request.
+     * @return 
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException If an I/O error occurs.
+     */
+    protected String displayError(String title, String message, Exception exception, HttpServletRequest request)
+    throws ServletException, IOException
+    {
+        request.setAttribute("_error_exception", exception);
+        
+        return this.displayError(title, message, request);
     }
     
     /**

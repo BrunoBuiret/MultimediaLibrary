@@ -99,8 +99,12 @@ public class OwnersController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des propriétaires.",
+                e,
+                request
+            );
         }
         
         return targetPath;
@@ -173,7 +177,12 @@ public class OwnersController extends AbstractController
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'ajout d'un nouveau propriétaire.",
+                        e,
+                        request
+                    );
                 }
             }
 
@@ -205,9 +214,11 @@ public class OwnersController extends AbstractController
 
         if(null == idToParse)
         {
-            this.displayError("Vous devez préciser l'identifiant du propriétaire à éditer.", request, response);
-
-            return null;
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant du propriétaire à éditer.",
+                request
+            );
         }
 
         int id = Integer.parseInt(idToParse);
@@ -218,9 +229,11 @@ public class OwnersController extends AbstractController
         
         if(null == owner)
         {
-            this.displayError("Ce propriétaire n'existe pas ou plus.", request, response);
-            
-            return null;
+            return this.displayError(
+                "Erreur 404",
+                "Ce propriétaire n'existe pas ou plus.",
+                request
+            );
         }
         
         // Bind the owner so as to display their data
@@ -284,7 +297,12 @@ public class OwnersController extends AbstractController
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'édition d'un propriétaire.",
+                        e,
+                        request
+                    );
                 }
             }
             
@@ -312,9 +330,11 @@ public class OwnersController extends AbstractController
 
         if(null == idToParse)
         {
-            this.displayError("Vous devez préciser l'identifiant du propriétaire à supprimer.", request, response);
-
-            return null;
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant du propriétaire à supprimer.",
+                request
+            );
         }
 
         int id = Integer.parseInt(idToParse);
@@ -325,9 +345,11 @@ public class OwnersController extends AbstractController
         
         if(null == owner)
         {
-            this.displayError("Ce propriétaire n'existe pas ou plus.", request, response);
-            
-            return null;
+            return this.displayError(
+                "Erreur 404",
+                "Ce propriétaire n'existe pas ou plus.",
+                request
+            );
         }
         
         // Then, deleting them
@@ -349,8 +371,12 @@ public class OwnersController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling.
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la suppression d'un propriétaire.",
+                e,
+                request
+            );
         }
 
         return null;

@@ -97,8 +97,12 @@ public class SalesController extends AbstractController
         }
         catch(Exception e)
         {
-            // @todo Error handling
-            e.printStackTrace();
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des oeuvres à vendre.",
+                e,
+                request
+            );
         }
         
         return targetPath;

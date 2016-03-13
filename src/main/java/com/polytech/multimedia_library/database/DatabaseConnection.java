@@ -25,30 +25,28 @@ public class DatabaseConnection
     
     /**
      * Prevents this class from being instantiated outside of this file.
+     * @throws javax.naming.NamingException
+     * @throws java.sql.SQLException
      */
     protected DatabaseConnection()
+    throws NamingException, SQLException
     {
-        try
-        {
-            Context globalContext = new InitialContext();
-            Context environmentContext = (Context) globalContext.lookup("java:comp/env");
-            DataSource dataSource = (DataSource) environmentContext.lookup("jdbc/DSOeuvre");
-            
-            this.connection = dataSource.getConnection();
-        }
-        catch(SQLException | NamingException e)
-        {
-            // @todo Error handling.
-            e.printStackTrace();
-        }
+        Context globalContext = new InitialContext();
+        Context environmentContext = (Context) globalContext.lookup("java:comp/env");
+        DataSource dataSource = (DataSource) environmentContext.lookup("jdbc/DSOeuvre");
+
+        this.connection = dataSource.getConnection();
     }
     
     /**
      * Gets a unique instance of this class.
      * 
      * @return The unique instance of this class.
+     * @throws javax.naming.NamingException
+     * @throws java.sql.SQLException
      */
     public static DatabaseConnection getInstance()
+    throws NamingException, SQLException
     {
         if(null == DatabaseConnection.instance)
         {
