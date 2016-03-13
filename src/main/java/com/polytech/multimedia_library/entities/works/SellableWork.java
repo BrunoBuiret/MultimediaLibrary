@@ -44,7 +44,7 @@ public class SellableWork extends AbstractWork
      */
     public float getPrice()
     {
-        return price;
+        return this.price;
     }
 
     /**
@@ -64,7 +64,7 @@ public class SellableWork extends AbstractWork
      */
     public State getState()
     {
-        return state;
+        return this.state;
     }
 
     /**

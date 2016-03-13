@@ -179,7 +179,7 @@ public class AdherentsController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
+                    this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
 
                     return null;
                 }
@@ -234,13 +234,27 @@ public class AdherentsController extends AbstractController
         
         // Fetch the adherent
         AdherentRepository repository = new AdherentRepository();
-        Adherent adherent = repository.fetch(id);
+        Adherent adherent = null;
         
-        if(null == adherent)
+        try
+        {
+            adherent = repository.fetch(id);
+            
+            if(null == adherent)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cet adhérent n'existe pas ou plus.",
+                    request
+                );
+            }
+        }
+        catch(Exception e)
         {
             return this.displayError(
-                "Erreur 404",
-                "Cet adhérent n'existe pas ou plus.",
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations de l'adhérent.",
+                e,
                 request
             );
         }
@@ -310,7 +324,7 @@ public class AdherentsController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
+                    this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
 
                     return null;
                 }
@@ -357,25 +371,27 @@ public class AdherentsController extends AbstractController
             );
         }
 
+        // Get the actual id
         int id = Integer.parseInt(idToParse);
         
-        // Fetch the adherent
-        AdherentRepository repository = new AdherentRepository();
-        Adherent adherent = repository.fetch(id);
-        
-        if(null == adherent)
-        {
-            return this.displayError(
-                "Erreur 404",
-                "Cet adhérent n'existe pas ou plus.",
-                request
-            );
-        }
-        
-        // Then, deleting them
         try
         {
+            // Fetch the adherent
+            AdherentRepository repository = new AdherentRepository();
+            Adherent adherent = repository.fetch(id);
+
+            if(null == adherent)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cet adhérent n'existe pas ou plus.",
+                    request
+                );
+            }
+
+            // Then, delete them
             repository.delete(adherent);
+            
             // Then, define a flash message to inform the user
             this.addFlash(
                 request,
@@ -388,7 +404,7 @@ public class AdherentsController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
+            this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
         }
         catch(Exception e)
         {

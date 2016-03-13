@@ -171,7 +171,7 @@ public class OwnersController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
+                    this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
 
                     return null;
                 }
@@ -225,13 +225,27 @@ public class OwnersController extends AbstractController
         
         // Fetch the owner
         OwnerRepository repository = new OwnerRepository();
-        Owner owner = repository.fetch(id);
+        Owner owner = null;
         
-        if(null == owner)
+        try
+        {
+            owner = repository.fetch(id);
+            
+            if(null == owner)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Ce propriétaire n'existe pas ou plus.",
+                    request
+                );
+            }
+        }
+        catch(Exception e)
         {
             return this.displayError(
-                "Erreur 404",
-                "Ce propriétaire n'existe pas ou plus.",
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations du propriétaire.",
+                e,
                 request
             );
         }
@@ -291,7 +305,7 @@ public class OwnersController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
+                    this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
 
                     return null;
                 }
@@ -337,24 +351,25 @@ public class OwnersController extends AbstractController
             );
         }
 
+        // Get the actual id
         int id = Integer.parseInt(idToParse);
         
-        // Fetch the owner
-        OwnerRepository repository = new OwnerRepository();
-        Owner owner = repository.fetch(id);
-        
-        if(null == owner)
-        {
-            return this.displayError(
-                "Erreur 404",
-                "Ce propriétaire n'existe pas ou plus.",
-                request
-            );
-        }
-        
-        // Then, deleting them
         try
         {
+            // Fetch the owner
+            OwnerRepository repository = new OwnerRepository();
+            Owner owner = repository.fetch(id);
+
+            if(null == owner)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Ce propriétaire n'existe pas ou plus.",
+                    request
+                );
+            }
+            
+            // Then, delete them
             repository.delete(owner);
             
             // Then, define a flash message to inform the user
@@ -367,7 +382,7 @@ public class OwnersController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
+            this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
         }
         catch(Exception e)
         {

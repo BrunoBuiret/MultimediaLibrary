@@ -1,11 +1,14 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.entities.Owner;
 import com.polytech.multimedia_library.entities.works.LoanableWork;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.repositories.works.LoanableWorkRepository;
 import java.io.IOException;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +54,23 @@ public class LoansController extends AbstractController
             actionName = LoansController.ACTION_LIST;
         }
         
+        System.out.println(String.format(
+            "contextPath = %s\n" +
+            "requestURI = %s\n" +
+            "servletPath = %s\n" +
+            "localAddr = %s\n" +
+            "localName = %s\n" +
+            "protocol = %s\n" +
+            "serverName = %s",
+            request.getContextPath(),
+            request.getRequestURI(),
+            request.getServletPath(),
+            request.getLocalAddr(),
+            request.getLocalName(),
+            request.getProtocol(),
+            request.getServerName()
+        ));
+        
         switch(actionName)
         {
             case LoansController.ACTION_LIST:
@@ -66,7 +86,7 @@ public class LoansController extends AbstractController
             break;
             
             case LoansController.ACTION_DELETE:
-                // targetPath = this.executeDelete(request, response);
+                targetPath = this.executeDelete(request, response);
             break;
         }
         
@@ -130,32 +150,57 @@ public class LoansController extends AbstractController
         if(requestMethod.equals(HttpProtocol.METHOD_POST))
         {
             // The form has been sent already
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String town = request.getParameter("town");
+            String name = request.getParameter("name");
+            String ownerIdToParse = request.getParameter("ownerId");
+            
+            // Initialize vars
+            int ownerId = 0;
+            OwnerRepository ownerRepository = new OwnerRepository();
+            Owner owner = null;
 
             // Perform some checks
             boolean hasError = false;
-            firstName = firstName != null ? firstName.trim() : "";
-            lastName = lastName != null ? lastName.trim() : "";
-            town = town != null ? town.trim() : "";
+            name = name != null ? name.trim() : "";
+            ownerIdToParse = ownerIdToParse != null ? ownerIdToParse.trim() : "";
 
-            if(firstName.isEmpty())
+            if(name.isEmpty())
             {
                 hasError = true;
-                request.setAttribute("_error_first_name", "Vous devez renseigner le prénom.");
+                request.setAttribute("_error_name", "Vous devez renseigner le nom de l'oeuvre.");
             }
 
-            if(lastName.isEmpty())
+            if(!ownerIdToParse.isEmpty())
             {
-                hasError = true;
-                request.setAttribute("_error_last_name", "Vous devez renseigner le nom.");
+                try
+                {
+                    ownerId = Integer.parseInt(ownerIdToParse);
+                    owner = ownerRepository.fetch(ownerId);
+                    
+                    if(null == owner)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_owner_id", "Le propriétaire que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_owner_id", "Impossible de récupérer l'identifiant du propriétaire de l'oeuvre.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence du propriétaire.",
+                        e,
+                        request
+                    );
+                }
             }
-
-            if(town.isEmpty())
+            else
             {
                 hasError = true;
-                request.setAttribute("_error_town", "Vous devez renseigner la ville.");
+                request.setAttribute("_error_owner_id", "Vous devez renseigner le propriétaire de l'oeuvre.");
             }
 
             if(!hasError)
@@ -163,25 +208,27 @@ public class LoansController extends AbstractController
                 try
                 {
                     // Build the new adherent
-                    LoanableWork work = new LoanableWork();
+                    LoanableWork work = new LoanableWork(name, owner);
+                    
+                    System.out.println(work);
+                    System.out.println(work.getOwner());
 
                     // And save them
-                    LoanableWorkRepository repository = new LoanableWorkRepository();
-                    repository.save(work);
+                    LoanableWorkRepository workRepository = new LoanableWorkRepository();
+                    workRepository.save(work);
 
                     // Then, define a flash message to inform the user
                     this.addFlash(
                         request,
                         "success",
                         String.format(
-                            "Vous avez crée une nouvelle oeuvre à prêter nommée <strong>%s %s</strong>.",
-                            StringEscapeUtils.escapeHtml4(firstName),
-                            StringEscapeUtils.escapeHtml4(lastName)
+                            "Vous avez crée une nouvelle oeuvre à prêter nommée <strong>%s</strong>.",
+                            StringEscapeUtils.escapeHtml4(name)
                         )
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("/loanableWorks.jsp?action=" + LoansController.ACTION_LIST, response);
+                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
 
                     return null;
                 }
@@ -197,9 +244,8 @@ public class LoansController extends AbstractController
             }
 
             // The form did have errors
-            request.setAttribute("_last_first_name", firstName);
-            request.setAttribute("_last_last_name", lastName);
-            request.setAttribute("_last_town", town);
+            request.setAttribute("_last_name", name);
+            request.setAttribute("_last_owner_id", ownerId);
         }
         
         // Fetch the existing owners
@@ -219,6 +265,76 @@ public class LoansController extends AbstractController
         }
         
         return targetPath;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Try getting the work's id
+        String idToParse = request.getParameter("id");
+
+        if(null == idToParse)
+        {
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant de l'oeuvre à supprimer.",
+                request
+            );
+        }
+
+        // Get the actual id
+        int id = Integer.parseInt(idToParse);
+        
+        try
+        {
+            // Fetch the work
+            LoanableWorkRepository repository = new LoanableWorkRepository();
+            LoanableWork work = repository.fetch(id);
+
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+            
+            // Then, delete them
+            repository.delete(work);
+            
+            // Then, define a flash message to inform the user
+            this.addFlash(
+                request,
+                "success",
+                String.format(
+                    "Vous avez supprimé l'adhérent nommé <strong>%s</strong>.",
+                    StringEscapeUtils.escapeHtml4(work.getName())
+                )
+            );
+            
+            // Finally, redirect the user
+            this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la suppression d'une oeuvre.",
+                e,
+                request
+            );
+        }
+
+        return null;
     }
     
     /**

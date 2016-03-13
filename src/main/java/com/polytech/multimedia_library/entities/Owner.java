@@ -30,7 +30,7 @@ public class Owner
 
     public int getId()
     {
-        return id;
+        return this.id;
     }
 
     public void setId(int id)
@@ -40,7 +40,7 @@ public class Owner
 
     public String getFirstName()
     {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName)
@@ -50,7 +50,7 @@ public class Owner
 
     public String getLastName()
     {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName)

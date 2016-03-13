@@ -29,7 +29,7 @@ abstract public class AbstractWork
      */
     public int getId()
     {
-        return id;
+        return this.id;
     }
 
     /**
@@ -49,7 +49,7 @@ abstract public class AbstractWork
      */
     public String getName()
     {
-        return name;
+        return this.name;
     }
 
     /**
@@ -69,7 +69,7 @@ abstract public class AbstractWork
      */
     public Owner getOwner()
     {
-        return owner;
+        return this.owner;
     }
 
     /**

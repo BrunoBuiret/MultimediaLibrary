@@ -36,13 +36,19 @@ public abstract class AbstractController extends HttpServlet
      * Redirects the user to another URL.
      * 
      * @param url The URL to redirect to.
+     * @param request The servlet request.
      * @param response The servlet response.
      * @throws IOException  If an I/O error occurs.
      */
-    protected void redirect(String url, HttpServletResponse response)
+    protected void redirect(String url, HttpServletRequest request, HttpServletResponse response)
     throws IOException
     {
-        response.sendRedirect(response.encodeRedirectURL(url));
+        if(url.startsWith("/"))
+        {
+            url = url.substring(1);
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/" + response.encodeRedirectURL(url));
     }
     
     /**
@@ -159,7 +165,7 @@ public abstract class AbstractController extends HttpServlet
         currentFlashList.clear();
         session.setAttribute(
             "_flash",
-            flashList
+            currentFlashList
         );
         
         return flashList;

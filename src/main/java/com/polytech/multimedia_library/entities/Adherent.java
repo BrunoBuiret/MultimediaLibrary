@@ -69,7 +69,7 @@ public class Adherent
      */
     public int getId()
     {
-        return id;
+        return this.id;
     }
 
     /**
@@ -89,7 +89,7 @@ public class Adherent
      */
     public String getFirstName()
     {
-        return firstName;
+        return this.firstName;
     }
 
     /**
@@ -109,7 +109,7 @@ public class Adherent
      */
     public String getLastName()
     {
-        return lastName;
+        return this.lastName;
     }
 
     /**
@@ -129,7 +129,7 @@ public class Adherent
      */
     public String getTown()
     {
-        return town;
+        return this.town;
     }
 
     /**
