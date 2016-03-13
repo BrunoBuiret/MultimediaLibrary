@@ -1,5 +1,8 @@
 <%@include file="/WEB-INF/_inc/bootstrap.jsp" %>
-<c:set var="_page_title" value="Édition d'un adhérent » ${fn:escapeXml(adherent.firstName)} ${fn:escapeXml(adherent.lastName)}" />
+<c:set var="_page_title">
+    Édition d'un adhérent 
+    » ${fn:escapeXml(adherent.firstName)} ${fn:escapeXml(adherent.lastName)}
+</c:set>
 <c:set var="_page_current" value="adherents_edit" />
 <%@include file="/WEB-INF/_inc/header.jsp" %>
     <div class="page-header">

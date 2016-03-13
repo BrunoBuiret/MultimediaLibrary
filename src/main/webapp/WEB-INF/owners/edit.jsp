@@ -1,5 +1,8 @@
 <%@include file="/WEB-INF/_inc/bootstrap.jsp" %>
-<c:set var="_page_title" value="Édition d'un propriétaire » ${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}" />
+<c:set var="_page_title">
+    Édition d'un propriétaire
+    » ${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}
+</c:set>
 <c:set var="_page_current" value="owners_edit" />
 <%@include file="/WEB-INF/_inc/header.jsp" %>
     <div class="page-header">
