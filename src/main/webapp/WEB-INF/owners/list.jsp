@@ -53,7 +53,7 @@
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
                                     <a href="owners.jsp?action=delete&id=${owner.id}" class="color-danger"><!--
-                                        --><span class="glyphicon glyphicon-remove"></span><!--
+                                        --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
                             </tr>

@@ -23,7 +23,8 @@
         </c:forEach>
     </c:if>
     <p>
-        <a class="btn btn-default" href="sellableWorks.jsp?action=add" role="button">
+        <c:url value="sellableWorks.jsp?action=add" var="_url" />
+        <a class="btn btn-default" href="${fn:escapeXml(_url)}" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Ajout
         </a>
@@ -63,8 +64,10 @@
                                     ${fn:escapeXml(work.owner.lastName)}
                                 </td>
                                 <td class="text-center">
+                                    <%-- @todo Hide this link if the work has already been booked --%>
+                                    <c:url value="sellableWorks.jsp?action=book&id=${work.id}" var="_url" />
                                     <a
-                                        href="sellableWorks.jsp?action=book&amp;id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         class="color-success"
                                         data-toggle="tooltip"
                                         data-placement="left"
@@ -72,8 +75,9 @@
                                     ><!--
                                         --><span class="glyphicon glyphicon-tag"></span><!--
                                     --></a>
+                                    <c:url value="sellableWorks.jsp?action=edit&id=${work.id}" var="_url" />
                                     <a
-                                        href="sellableWorks.jsp?action=edit&amp;id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         data-toggle="tooltip"
                                         data-placement="left"
                                         title="Éditer cette oeuvre"
@@ -81,13 +85,13 @@
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
                                     <a
-                                        href="sellableWorks.jsp?action=delete&amp;id=${work.id}"
+                                        href="sellableWorks.jsp?action=delete&id=${work.id}"
                                         class="color-danger"
                                         data-toggle="tooltip"
                                         data-placement="left"
                                         title="Supprimer cette oeuvre"
                                     ><!--
-                                        --><span class="glyphicon glyphicon-remove"></span><!--
+                                        --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
                             </tr>

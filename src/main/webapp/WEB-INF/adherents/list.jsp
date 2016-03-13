@@ -61,7 +61,7 @@
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
                                     <a href="adherents.jsp?action=delete&id=${adherent.id}" class="color-danger"><!--
-                                        --><span class="glyphicon glyphicon-remove"></span><!--
+                                        --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
                             </tr>

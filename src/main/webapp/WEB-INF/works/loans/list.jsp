@@ -81,7 +81,7 @@
                                         data-placement="left"
                                         title="Supprimer cette oeuvre"
                                     ><!--
-                                        --><span class="glyphicon glyphicon-remove"></span><!--
+                                        --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
                             </tr>
