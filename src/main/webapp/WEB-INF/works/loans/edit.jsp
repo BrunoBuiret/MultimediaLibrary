@@ -13,21 +13,19 @@
     <script type="text/javascript">
         $(function() {
             // Initialize vars
-            var $a = $("#ownerId");
+            var $ownersList = $("#ownerId");
             
-            //
-            $a.select2({
+            $ownersList.select2({
                 language: "fr"
             });
-            
             
             $("form").on("reset", function(e) {
                 <c:choose>
                     <c:when test="${_last_owner_id != null}">
-                        $a.val(${_last_owner_id}).trigger("change");
+                        $ownersList.val(${_last_owner_id}).trigger("change");
                     </c:when>
                     <c:otherwise>
-                        $a.val(${work.owner.id}).trigger("change");
+                        $ownersList.val(${work.owner.id}).trigger("change");
                     </c:otherwise>
                 </c:choose>
             });
