@@ -1,6 +1,13 @@
 <%@include file="/WEB-INF/_inc/bootstrap.jsp" %>
 <c:set var="_page_title" value="Catalogue des prêts" />
 <c:set var="_page_current" value="works_loans_list" />
+<c:set var="_page_scripts">
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle='tooltip']").tooltip();
+        });
+    </script>
+</c:set>
 <%@include file="/WEB-INF/_inc/header.jsp" %>
     <div class="page-header">
         <h1>Catalogue des prêts</h1>
@@ -31,7 +38,7 @@
                     <th>
                         Propriétaire
                     </th>
-                    <th style="width: 50px;">
+                    <th style="width: 70px;">
                     </th>
                 </tr>
             </thead>
@@ -50,10 +57,30 @@
                                     ${fn:escapeXml(work.owner.lastName)}
                                 </td>
                                 <td class="text-center">
-                                    <a href="loanableWorks.jsp?action=edit&id=${work.id}"><!--
+                                    <a
+                                        href="loanableWorks.jsp?action=borrow&id=${work.id}"
+                                        class="color-success"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Emprunter cette oeuvre"
+                                    ><!--
+                                        --><span class="glyphicon glyphicon-thumbs-up"></span><!--
+                                    --></a>
+                                    <a
+                                        href="loanableWorks.jsp?action=edit&id=${work.id}"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Éditer cette oeuvre"
+                                    ><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
-                                    <a href="loanableWorks.jsp?action=delete&id=${work.id}" class="color-danger"><!--
+                                    <a
+                                        href="loanableWorks.jsp?action=delete&id=${work.id}"
+                                        class="color-danger"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Supprimer cette oeuvre"
+                                    ><!--
                                         --><span class="glyphicon glyphicon-remove"></span><!--
                                     --></a>
                                 </td>

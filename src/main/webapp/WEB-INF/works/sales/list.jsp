@@ -1,6 +1,13 @@
 <%@include file="/WEB-INF/_inc/bootstrap.jsp" %>
 <c:set var="_page_title" value="Catalogue des ventes" />
 <c:set var="_page_current" value="works_sales_list" />
+<c:set var="_page_scripts">
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle='tooltip']").tooltip();
+        });
+    </script>
+</c:set>
 <%@include file="/WEB-INF/_inc/header.jsp" %>
     <div class="page-header">
         <h1>Catalogue des ventes</h1>
@@ -34,7 +41,7 @@
                     <th>
                         Propriétaire
                     </th>
-                    <th style="width: 50px;">
+                    <th style="width: 70px;">
                     </th>
                 </tr>
             </thead>
@@ -56,10 +63,30 @@
                                     ${fn:escapeXml(work.owner.lastName)}
                                 </td>
                                 <td class="text-center">
-                                    <a href="sellableWorks.jsp?action=edit&id=${work.id}"><!--
+                                    <a
+                                        href="sellableWorks.jsp?action=book&amp;id=${work.id}"
+                                        class="color-success"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Réserver cette oeuvre pour l'acheter"
+                                    ><!--
+                                        --><span class="glyphicon glyphicon-tag"></span><!--
+                                    --></a>
+                                    <a
+                                        href="sellableWorks.jsp?action=edit&amp;id=${work.id}"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Éditer cette oeuvre"
+                                    ><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
-                                    <a href="sellableWorks.jsp?action=delete&id=${work.id}" class="color-danger"><!--
+                                    <a
+                                        href="sellableWorks.jsp?action=delete&amp;id=${work.id}"
+                                        class="color-danger"
+                                        data-toggle="tooltip"
+                                        data-placement="left"
+                                        title="Supprimer cette oeuvre"
+                                    ><!--
                                         --><span class="glyphicon glyphicon-remove"></span><!--
                                     --></a>
                                 </td>
