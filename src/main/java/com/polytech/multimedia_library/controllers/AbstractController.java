@@ -33,13 +33,26 @@ public abstract class AbstractController extends HttpServlet
     }
     
     /**
+     * Redirects the user to another URL.
+     * 
+     * @param url The URL to redirect to.
+     * @param response The servlet response.
+     * @throws IOException  If an I/O error occurs.
+     */
+    protected void redirect(String url, HttpServletResponse response)
+    throws IOException
+    {
+        response.sendRedirect(response.encodeRedirectURL(url));
+    }
+    
+    /**
      * Displays an error page with the given <code>message</code>.
      * 
      * @param message The message to display.
      * @param request The servlet request.
      * @param response The servlet response.
      * @throws ServletException If a servlet-specific error occurs.
-     * @throws IOException  If an I/O error occurs.
+     * @throws IOException If an I/O error occurs.
      */
     protected void displayError(String message, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -88,17 +101,6 @@ public abstract class AbstractController extends HttpServlet
         }
         
         return flashList;
-    }
-    
-    /**
-     * Alias to get the flash messages list.
-     * 
-     * @param request The servlet request.
-     * @return The flash list.
-     */
-    protected List<Flash> getFlashList(HttpServletRequest request)
-    {
-        return this.getFlashList(request.getSession());
     }
     
     /**

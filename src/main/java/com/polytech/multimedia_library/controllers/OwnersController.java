@@ -4,7 +4,6 @@ import com.polytech.multimedia_library.entities.Owner;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -168,7 +167,7 @@ public class OwnersController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    response.sendRedirect("owners.jsp?action=" + OwnersController.ACTION_LIST);
+                    this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
 
                     return null;
                 }
@@ -279,7 +278,7 @@ public class OwnersController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    response.sendRedirect("owners.jsp?action=" + OwnersController.ACTION_LIST);
+                    this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
 
                     return null;
                 }
@@ -346,7 +345,7 @@ public class OwnersController extends AbstractController
             );
             
             // Finally, redirect the user
-            response.sendRedirect("owners.jsp?action=" + OwnersController.ACTION_LIST);
+            this.redirect("/owners.jsp?action=" + OwnersController.ACTION_LIST, response);
         }
         catch(Exception e)
         {

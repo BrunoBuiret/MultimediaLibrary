@@ -4,7 +4,6 @@ import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.AdherentRepository;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -176,7 +175,7 @@ public class AdherentsController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    response.sendRedirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST);
+                    this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
 
                     return null;
                 }
@@ -298,7 +297,7 @@ public class AdherentsController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    response.sendRedirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST);
+                    this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
 
                     return null;
                 }
@@ -367,7 +366,7 @@ public class AdherentsController extends AbstractController
             );
             
             // Finally, redirect the user
-            response.sendRedirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST);
+            this.redirect("/adherents.jsp?action=" + AdherentsController.ACTION_LIST, response);
         }
         catch(Exception e)
         {

@@ -3,7 +3,6 @@ package com.polytech.multimedia_library.controllers.works;
 import com.polytech.multimedia_library.controllers.AbstractController;
 import com.polytech.multimedia_library.repositories.works.SellableWorkRepository;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -5,7 +5,6 @@ import com.polytech.multimedia_library.entities.works.LoanableWork;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.works.LoanableWorkRepository;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -177,7 +176,7 @@ public class LoansController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    response.sendRedirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST); // @todo equivalent c:url ?
+                    this.redirect("/loanableWorks.jsp?action=" + LoansController.ACTION_LIST, response);
 
                     return null;
                 }
