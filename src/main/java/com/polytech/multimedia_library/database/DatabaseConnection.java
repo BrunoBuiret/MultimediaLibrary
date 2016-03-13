@@ -25,8 +25,8 @@ public class DatabaseConnection
     
     /**
      * Prevents this class from being instantiated outside of this file.
-     * @throws javax.naming.NamingException
-     * @throws java.sql.SQLException
+     * @throws javax.naming.NamingException If the context can't be read.
+     * @throws java.sql.SQLException If an SQL error happens.
      */
     protected DatabaseConnection()
     throws NamingException, SQLException

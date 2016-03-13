@@ -3,6 +3,7 @@ package com.polytech.multimedia_library.controllers.works;
 import com.polytech.multimedia_library.controllers.AbstractController;
 import com.polytech.multimedia_library.entities.works.LoanableWork;
 import com.polytech.multimedia_library.http.HttpProtocol;
+import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.repositories.works.LoanableWorkRepository;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -199,6 +200,22 @@ public class LoansController extends AbstractController
             request.setAttribute("_last_first_name", firstName);
             request.setAttribute("_last_last_name", lastName);
             request.setAttribute("_last_town", town);
+        }
+        
+        // Fetch the existing owners
+        try
+        {
+            OwnerRepository repository = new OwnerRepository();
+            request.setAttribute("owners", repository.fetchAll());
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des propriétaires.",
+                e,
+                request
+            );
         }
         
         return targetPath;
