@@ -50,26 +50,9 @@ public class LoansController extends AbstractController
         
         if(null == actionName)
         {
-            // By default, list all adherents
+            // By default, list all works
             actionName = LoansController.ACTION_LIST;
         }
-        
-        System.out.println(String.format(
-            "contextPath = %s\n" +
-            "requestURI = %s\n" +
-            "servletPath = %s\n" +
-            "localAddr = %s\n" +
-            "localName = %s\n" +
-            "protocol = %s\n" +
-            "serverName = %s",
-            request.getContextPath(),
-            request.getRequestURI(),
-            request.getServletPath(),
-            request.getLocalAddr(),
-            request.getLocalName(),
-            request.getProtocol(),
-            request.getServerName()
-        ));
         
         switch(actionName)
         {
@@ -82,7 +65,7 @@ public class LoansController extends AbstractController
             break;
             
             case LoansController.ACTION_EDIT:
-                // targetPath = this.executeEdit(request, response);
+                targetPath = this.executeEdit(request, response);
             break;
             
             case LoansController.ACTION_DELETE:
@@ -207,11 +190,8 @@ public class LoansController extends AbstractController
             {
                 try
                 {
-                    // Build the new adherent
+                    // Build the new work
                     LoanableWork work = new LoanableWork(name, owner);
-                    
-                    System.out.println(work);
-                    System.out.println(work.getOwner());
 
                     // And save them
                     LoanableWorkRepository workRepository = new LoanableWorkRepository();
@@ -251,8 +231,204 @@ public class LoansController extends AbstractController
         // Fetch the existing owners
         try
         {
-            OwnerRepository repository = new OwnerRepository();
-            request.setAttribute("owners", repository.fetchAll());
+            OwnerRepository ownerRepository = new OwnerRepository();
+            request.setAttribute("owners", ownerRepository.fetchAll());
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des propriétaires.",
+                e,
+                request
+            );
+        }
+        
+        return targetPath;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Initialize vars
+        final String requestMethod = request.getMethod().toUpperCase();
+        String targetPath = "/WEB-INF/works/loans/edit.jsp";
+
+        // Try getting the owner's id
+        String idToParse = request.getParameter("id");
+        int id = 0;
+
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant du propriétaire à éditer.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Impossible de récupérer l'identifiant du propriétaire.",
+                e,
+                request
+            );
+        }
+        
+        // Fetch the owner
+        LoanableWorkRepository workRepository = new LoanableWorkRepository();
+        LoanableWork work = null;
+        
+        try
+        {
+            work = workRepository.fetch(id);
+            
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Bind the owner so as to display their data
+        request.setAttribute("work", work);
+        
+        // Initialize additional vars
+        OwnerRepository ownerRepository = new OwnerRepository();
+
+        if(requestMethod.equals(HttpProtocol.METHOD_POST))
+        {
+            // The form has been sent already
+            String name = request.getParameter("name");
+            String ownerIdToParse = request.getParameter("ownerId");
+            
+            // Initialize vars
+            int ownerId = 0;
+            Owner owner = null;
+
+            // Perform some checks
+            boolean hasError = false;
+            name = null != name ? name.trim() : "";
+            ownerIdToParse = null != ownerIdToParse ? ownerIdToParse.trim() : "";
+
+            if(name.isEmpty())
+            {
+                hasError = true;
+                request.setAttribute("_error_name", "Vous devez renseigner le prénom.");
+            }
+
+            if(!ownerIdToParse.isEmpty())
+            {
+                try
+                {
+                    ownerId = Integer.parseInt(ownerIdToParse);
+                    owner = ownerRepository.fetch(ownerId);
+                    
+                    if(null == owner)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_owner_id", "Le propriétaire que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_owner_id", "Impossible de récupérer l'identifiant du propriétaire de l'oeuvre.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence du propriétaire.",
+                        e,
+                        request
+                    );
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_owner_id", "Vous devez renseigner le nom.");
+            }
+
+            if(!hasError)
+            {
+                try
+                {
+                    // Customize flash message
+                    String flashMessage = "Vous avez édité avec succès l'oeuvre nommée <strong>%s</strong>.";
+                    
+                    if(!work.getName().equals(name))
+                    {
+                        flashMessage = "Vous avez édité avec succès l'oeuvre maintenant nommée <strong>%s</strong>.";
+                    }
+                    
+                    // Edit the work
+                    work.setName(name);
+                    work.setOwner(owner);
+                    
+                    // Then, save it
+                    workRepository.save(work);
+
+                    // Then, define a flash message to inform the user
+                    this.addFlash(request,
+                        "success",
+                        String.format(
+                            flashMessage,
+                            StringEscapeUtils.escapeHtml4(work.getName())
+                        )
+                    );
+                    // Finally, redirect the user
+                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+
+                    return null;
+                }
+                catch(Exception e)
+                {
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'édition d'un propriétaire.",
+                        e,
+                        request
+                    );
+                }
+            }
+            
+            // If the form wasn't correctly filled, memorize the current values
+            request.setAttribute("_last_name", name);
+            request.setAttribute("_last_owner_id", ownerId);
+        }
+        
+        // Fetch the existing owners
+        try
+        {
+            request.setAttribute("owners", ownerRepository.fetchAll());
         }
         catch(Exception e)
         {
@@ -316,7 +492,7 @@ public class LoansController extends AbstractController
                 request,
                 "success",
                 String.format(
-                    "Vous avez supprimé l'adhérent nommé <strong>%s</strong>.",
+                    "Vous avez supprimé l'oeuvre nommée <strong>%s</strong>.",
                     StringEscapeUtils.escapeHtml4(work.getName())
                 )
             );

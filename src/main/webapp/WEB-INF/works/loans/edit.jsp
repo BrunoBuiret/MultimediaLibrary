@@ -1,6 +1,9 @@
 <%@include file="/WEB-INF/_inc/bootstrap.jsp" %>
-<c:set var="_page_title" value="Ajout d'une oeuvre à prêter" />
-<c:set var="_page_current" value="works_loans_add" />
+<c:set var="_page_title">
+    Édition d'une oeuvre à prêter
+    » ${fn:escapeXml(work.name)}
+</c:set>
+<c:set var="_page_current" value="works_loans_edit" />
 <c:set var="_page_stylesheets">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" media="screen" />
 </c:set>
@@ -9,8 +12,24 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/i18n/fr.js"></script>
     <script type="text/javascript">
         $(function() {
-            $("#ownerId").select2({
+            // Initialize vars
+            var $a = $("#ownerId");
+            
+            //
+            $a.select2({
                 language: "fr"
+            });
+            
+            
+            $("form").on("reset", function(e) {
+                <c:choose>
+                    <c:when test="${_last_owner_id != null}">
+                        $a.val(${_last_owner_id}).trigger("change");
+                    </c:when>
+                    <c:otherwise>
+                        $a.val(${work.owner.id}).trigger("change");
+                    </c:otherwise>
+                </c:choose>
             });
         });
     </script>
@@ -18,10 +37,11 @@
 <%@include file="/WEB-INF/_inc/header.jsp" %>
     <div class="page-header">
         <h1>
-            Ajout d'une nouvelle oeuvre à prêter
+            Édition d'une oeuvre à prêter
+            <small>${fn:escapeXml(work.name)}</small>
         </h1>
     </div>
-    <c:url value="/loanableWorks.jsp?action=add" var="_url" />
+    <c:url value="/loanableWorks.jsp?action=edit&id=${work.id}" var="_url" />
     <form class="form-horizontal" method="post" action="${fn:escapeXml(_url)}">
         <div class="form-group<c:if test="${not empty _error_name}"> has-error</c:if>">
             <label for="name" class="control-label col-sm-2">
@@ -33,9 +53,14 @@
                     class="form-control"
                     id="name"
                     name="name"
-                    <c:if test="${not empty _last_name}">
-                        value="${fn:escapeXml(_last_name)}"
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${_last_name != null}">
+                            value="${fn:escapeXml(_last_name)}"
+                        </c:when>
+                        <c:otherwise>
+                            value="${fn:escapeXml(work.name)}"
+                        </c:otherwise>
+                    </c:choose>
                 />
                 <c:if test="${not empty _error_name}">
                     <span class="help-block">
@@ -53,9 +78,18 @@
                 <c:forEach items="${owners}" var="owner">
                     <option
                         value="${owner.id}"
-                        <c:if test="${not empty _last_owner_id and _last_owner_id == owner.id}">
-                            selected="selected"
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${_last_owner_id != null}">
+                                <c:if test="${_last_owner_id == owner.id}">
+                                    selected="selected"
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${work.owner.id == owner.id}">
+                                    selected="selected"
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     >
                         <c:out value="${owner.firstName} ${owner.lastName}" />
                     </option>
@@ -71,17 +105,10 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-success">
-                    Ajouter
+                    Sauvegarder
                 </button>
                 <button type="reset" class="btn btn-danger">
-                    <c:choose>
-                        <c:when test="${_method == _method_post}">
-                            Réinitialiser
-                        </c:when>
-                        <c:otherwise>
-                            Tout effacer
-                        </c:otherwise>
-                    </c:choose>
+                    Réinitialiser
                 </button>
                 <c:url value="/loanableWorks.jsp?action=list" var="_url" />
                 <a href="${fn:escapeXml(_url)}" class="btn btn-default">
