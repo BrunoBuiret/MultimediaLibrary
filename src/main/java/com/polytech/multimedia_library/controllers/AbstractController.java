@@ -43,9 +43,10 @@ public abstract class AbstractController extends HttpServlet
      * @param url The URL to redirect to.
      * @param request The servlet request.
      * @param response The servlet response.
+     * @return 
      * @throws IOException  If an I/O error occurs.
      */
-    protected void redirect(String url, HttpServletRequest request, HttpServletResponse response)
+    protected String redirect(String url, HttpServletRequest request, HttpServletResponse response)
     throws IOException
     {
         if(url.startsWith("/"))
@@ -54,6 +55,8 @@ public abstract class AbstractController extends HttpServlet
         }
         
         response.sendRedirect(request.getContextPath() + "/" + response.encodeRedirectURL(url));
+        
+        return null;
     }
     
     /**

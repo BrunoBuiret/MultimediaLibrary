@@ -1,6 +1,7 @@
 package com.polytech.multimedia_library.entities.works.sellable;
 
 import com.polytech.multimedia_library.entities.Adherent;
+import com.polytech.multimedia_library.entities.works.sellable.bookings.Status;
 import java.util.Date;
 
 /**
@@ -22,19 +23,19 @@ public class Booking
     /**
      * 
      */
-    protected String state;
+    protected Status status;
     
     /**
      * 
      * @param adherent
      * @param date
-     * @param state 
+     * @param status 
      */
-    public Booking(Adherent adherent, Date date, String state)
+    public Booking(Adherent adherent, Date date, Status status)
     {
         this.adherent = adherent;
         this.date = date;
-        this.state = state;
+        this.status = status;
     }
 
     /**
@@ -77,17 +78,17 @@ public class Booking
      * 
      * @return 
      */
-    public String getState()
+    public Status getStatus()
     {
-        return state;
+        return status;
     }
 
     /**
      * 
-     * @param state 
+     * @param status 
      */
-    public void setState(String state)
+    public void setStatus(Status status)
     {
-        this.state = state;
+        this.status = status;
     }
 }

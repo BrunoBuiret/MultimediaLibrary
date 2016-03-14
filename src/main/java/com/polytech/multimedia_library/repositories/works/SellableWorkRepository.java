@@ -5,6 +5,7 @@ import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.entities.works.SellableWork;
 import com.polytech.multimedia_library.entities.works.sellable.Booking;
 import com.polytech.multimedia_library.entities.works.sellable.State;
+import com.polytech.multimedia_library.entities.works.sellable.bookings.Status;
 import com.polytech.multimedia_library.repositories.AdherentRepository;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.utilities.DateUtils;
@@ -112,27 +113,68 @@ public class SellableWorkRepository
         
         if(0 != work.getId())
         {
-            // Build query
-            PreparedStatement query = connection.prepare(
-                "UPDATE `oeuvrevente` " +
-                "SET " +
-                    "`titre_oeuvrevente` = ?, " +
-                    "`etat_oeuvrevente` = ?, " +
-                    "`prix_oeuvrevente` = ?, " +
-                    "`id_proprietaire` = ? " +
-                "WHERE `id_oeuvrevente` = ? " +
-                "LIMIT 1"
-            );
+            try
+            {
+                // Start a transaction
+                connection.beginTransaction();
+                
+                // First, update the work
+                PreparedStatement workQuery = connection.prepare(
+                    "UPDATE `oeuvrevente` " +
+                    "SET " +
+                        "`titre_oeuvrevente` = ?, " +
+                        "`etat_oeuvrevente` = ?, " +
+                        "`prix_oeuvrevente` = ?, " +
+                        "`id_proprietaire` = ? " +
+                    "WHERE `id_oeuvrevente` = ? " +
+                    "LIMIT 1"
+                );
+                workQuery.setString(1, work.getName());
+                workQuery.setString(2, work.getState().getCode());
+                workQuery.setDouble(3, work.getPrice());
+                workQuery.setInt(4, work.getOwner().getId());
+                workQuery.setInt(5, work.getId());
+                workQuery.executeUpdate();
+                
+                // Then, the booking
+                if(work.hasBooking())
+                {
+                    System.out.println("Coucou");
+                    
+                    PreparedStatement bookingQuery = connection.prepare(
+                        "INSERT INTO `reservation` " +
+                        "(`id_oeuvrevente`, `id_adherent`, `date_reservation`, `statut`) " +
+                        "VALUES " +
+                        "(?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                            "`date_reservation` = VALUES(`date_reservation`), " +
+                            "`statut` = VALUES(`statut`)"
+                    );
+                    bookingQuery.setInt(1, work.getId());
+                    bookingQuery.setInt(2, work.getBooking().getAdherent().getId());
+                    bookingQuery.setString(3, DateUtils.toSqlDate(work.getBooking().getDate()));
+                    bookingQuery.setString(4, work.getBooking().getStatus().getCode());
+                    bookingQuery.executeUpdate();
+                }
 
-            // Then, bind parameters
-            query.setString(1, work.getName());
-            query.setString(2, work.getState().getCode());
-            query.setDouble(3, work.getPrice());
-            query.setInt(4, work.getOwner().getId());
-            query.setInt(5, work.getId());
-
-            // Finally, execute it
-            query.executeUpdate();
+                // Commit the transaction
+                connection.endTransaction();
+            }
+            catch(SQLException mainException)
+            {
+                try
+                {
+                    connection.cancelTransaction();
+                }
+                catch(SQLException secondaryException)
+                {
+                    // Register the previous exception
+                    secondaryException.addSuppressed(mainException);
+                    
+                    // Then, re-throw this one
+                    throw secondaryException;
+                }
+            }
         }
         else
         {
@@ -208,6 +250,7 @@ public class SellableWorkRepository
      * @return The newly built sellable work.
      * @throws javax.naming.NamingException If the context can't be read.
      * @throws java.sql.SQLException If an SQL error happens.
+     * @throws java.text.ParseException
      */
     protected SellableWork buildEntity(ResultSet resultSet)
     throws NamingException, SQLException, ParseException
@@ -231,7 +274,7 @@ public class SellableWorkRepository
                 new Booking(
                     adherentRepository.fetch(resultSet.getInt("id_adherent")),
                     DateUtils.parseSqlDate(resultSet.getString("date_reservation")),
-                    resultSet.getString("statut")
+                    Status.fromCode(resultSet.getString("statut"))
                 )
             );
         }

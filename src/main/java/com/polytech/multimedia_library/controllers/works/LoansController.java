@@ -545,7 +545,7 @@ public class LoansController extends AbstractController
         final String requestMethod = request.getMethod().toUpperCase();
         String targetPath = "/WEB-INF/works/loans/borrow.jsp";
 
-        // Try getting the owner's id
+        // Try getting the work's id
         String idToParse = request.getParameter("id");
         int id = 0;
 

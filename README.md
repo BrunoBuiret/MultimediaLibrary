@@ -25,3 +25,5 @@ Les fonctionnalités suivantes pourront être implémentées :
 * Consultation de la liste des prêts
 * Édition d'un prêt
 * Suppression d'un prêt
+* Consultation de la liste des réservations
+* Confirmation / Rejet d'une réservation

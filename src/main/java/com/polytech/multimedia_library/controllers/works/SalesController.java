@@ -1,14 +1,21 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.entities.Owner;
 import com.polytech.multimedia_library.entities.works.SellableWork;
+import com.polytech.multimedia_library.entities.works.sellable.Booking;
 import com.polytech.multimedia_library.entities.works.sellable.State;
+import com.polytech.multimedia_library.entities.works.sellable.bookings.Status;
 import com.polytech.multimedia_library.http.HttpProtocol;
+import com.polytech.multimedia_library.repositories.AdherentRepository;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.repositories.works.SellableWorkRepository;
+import com.polytech.multimedia_library.utilities.DateUtils;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,6 +36,8 @@ public class SalesController extends AbstractController
     protected static final String ACTION_EDIT = "edit";
     
     protected static final String ACTION_DELETE = "delete";
+    
+    protected static final String ACTION_BOOK = "book";
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -72,6 +81,10 @@ public class SalesController extends AbstractController
             case SalesController.ACTION_DELETE:
                 targetPath = this.executeDelete(request, response);
             break;
+            
+            case SalesController.ACTION_BOOK:
+                targetPath = this.executeBook(request, response);
+            break;
         }
         
         // Should the request be forwarded?
@@ -103,7 +116,7 @@ public class SalesController extends AbstractController
             // Display flash messages
             request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
-        catch(Exception e)
+        catch(NamingException | SQLException | ParseException e)
         {
             return this.displayError(
                 "Erreur",
@@ -236,7 +249,7 @@ public class SalesController extends AbstractController
 
                     return null;
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -258,7 +271,7 @@ public class SalesController extends AbstractController
         {
             request.setAttribute("owners", ownerRepository.fetchAll());
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -288,7 +301,7 @@ public class SalesController extends AbstractController
 
         // Try getting the owner's id
         String idToParse = request.getParameter("id");
-        int id = 0;
+        int id;
 
         try
         {
@@ -315,7 +328,7 @@ public class SalesController extends AbstractController
         
         // Fetch the work
         SellableWorkRepository workRepository = new SellableWorkRepository();
-        SellableWork work = null;
+        SellableWork work;
         
         try
         {
@@ -330,7 +343,7 @@ public class SalesController extends AbstractController
                 );
             }
         }
-        catch(Exception e)
+        catch(NamingException | SQLException | ParseException e)
         {
             return this.displayError(
                 "Erreur",
@@ -455,7 +468,7 @@ public class SalesController extends AbstractController
 
                     return null;
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -477,7 +490,7 @@ public class SalesController extends AbstractController
         {
             request.setAttribute("owners", ownerRepository.fetchAll());
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -547,7 +560,7 @@ public class SalesController extends AbstractController
             // Finally, redirect the user
             this.redirect("sellableWorks.jsp?action=" + SalesController.ACTION_LIST, request, response);
         }
-        catch(Exception e)
+        catch(NamingException | SQLException | ParseException e)
         {
             return this.displayError(
                 "Erreur",
@@ -558,6 +571,204 @@ public class SalesController extends AbstractController
         }
 
         return null;
+    }
+    
+    /**
+     * 
+     * @param request
+     * @param response
+     * @return 
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeBook(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Initialize vars
+        final String requestMethod = request.getMethod().toUpperCase();
+        String targetPath = "/WEB-INF/works/sales/book.jsp";
+
+        // Try getting the work's id
+        String idToParse = request.getParameter("id");
+        int id;
+
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant de l'oeuvre à réserver.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Impossible de récupérer l'identifiant de l'oeuvre à réserver.",
+                e,
+                request
+            );
+        }
+        
+        // Fetch the work
+        SellableWorkRepository workRepository = new SellableWorkRepository();
+        SellableWork work;
+        
+        try
+        {
+            work = workRepository.fetch(id);
+            
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+            else if(work.hasBooking())
+            {
+                return this.displayError(
+                    "Oeuvre déjà réservée",
+                    String.format(
+                        "L'oeuvre <strong>%s</strong> a été réservé pour <strong>%s %s</strong>.",
+                        StringEscapeUtils.escapeHtml4(work.getName()),
+                        StringEscapeUtils.escapeHtml4(work.getBooking().getAdherent().getFirstName()),
+                        StringEscapeUtils.escapeHtml4(work.getBooking().getAdherent().getLastName())
+                    ),
+                    request
+                );
+            }
+        }
+        catch(NamingException | SQLException | ParseException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Bind the work so as to display its data
+        request.setAttribute("work", work);
+        
+        // Bind additional data for the view and the form handling
+        Date dateToday = DateUtils.getToday();
+        request.setAttribute("today", dateToday);
+        
+        // Initialize additional vars
+        AdherentRepository adherentRepository = new AdherentRepository();
+        
+        if(requestMethod.equals(HttpProtocol.METHOD_POST))
+        {
+            // The form has been sent already
+            String adherentIdToParse = request.getParameter("adherentId");
+            
+            // Initialize vars
+            int adherentId = 0;
+            Adherent adherent = null;
+
+            // Perform some checks
+            boolean hasError = false;
+            adherentIdToParse = adherentIdToParse != null ? adherentIdToParse.trim() : "";
+            
+            if(!adherentIdToParse.isEmpty())
+            {
+                try
+                {
+                    adherentId = Integer.parseInt(adherentIdToParse);
+                    adherent = adherentRepository.fetch(adherentId);
+                    
+                    // Does the adherent exist?
+                    if(null == adherent)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_adherent_id", "L'adhérent que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_adherent_id", "Impossible de récupérer l'identifiant de l'adhérent.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence de l'adhérent.",
+                        e,
+                        request
+                    );
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_adherent_id", "Vous devez renseigner l'adhérent souhaitant emprunter l'oeuvre.");
+            }
+            
+            if(!hasError)
+            {
+                try
+                {
+                    // Build the new booking and associate it
+                    work.setBooking(new Booking(adherent, dateToday, Status.PENDING));
+                    
+                    // And save it
+                    workRepository.save(work);
+                    
+                    // Then, define a flash message to inform the user
+                    this.addFlash(
+                        request,
+                        "success",
+                        String.format(
+                            "Vous avez réservé <strong>%s</strong> pour <strong>%s %s</strong>.",
+                            StringEscapeUtils.escapeHtml4(work.getName()),
+                            StringEscapeUtils.escapeHtml4(adherent.getFirstName()),
+                            StringEscapeUtils.escapeHtml4(adherent.getLastName())
+                        )
+                    );
+                    
+                    // Finally, redirect the user
+                    return this.redirect("sellableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de la réservation d'une oeuvre.",
+                        e,
+                        request
+                    );
+                }
+            }
+            
+            // The form did have errors
+            request.setAttribute("_last_adherent_id", adherentId);
+        }
+        
+        // Fetch the existing adherents
+        try
+        {
+            request.setAttribute("adherents", adherentRepository.fetchAll());
+        }
+        catch(NamingException | SQLException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des adhérents.",
+                e,
+                request
+            );
+        }
+        
+        return targetPath;
     }
     
     /**
