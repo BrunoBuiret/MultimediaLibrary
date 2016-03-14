@@ -11,6 +11,8 @@
         $(function() {
             // Select 2
             var $ownersList = $("#ownerId");
+            var $options = $ownersList.find("option");
+            var firstItemId = $options.length > 0 ? $options.eq(0).val() : -1;
             
             $ownersList.select2({
                 language: "fr"
@@ -22,7 +24,7 @@
                         $ownersList.val(${_last_owner_id}).trigger("change");
                     </c:when>
                     <c:otherwise>
-                        $ownersList.val(${work.owner.id}).trigger("change");
+                        $ownersList.val(firstItemId).trigger("change");
                     </c:otherwise>
                 </c:choose>
             });
