@@ -1,6 +1,8 @@
 # Médiathèque
 
 ## Base de données
+La base de données `baseoeuvre` a été complétée de la façon suivante :
+
 ```sql
 CREATE TABLE `emprunt`(
  `id_oeuvrepret` int(10) unsigned NOT NULL,
