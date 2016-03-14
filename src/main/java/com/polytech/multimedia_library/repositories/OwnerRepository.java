@@ -159,15 +159,47 @@ public class OwnerRepository extends AbstractRepository
                 // Start a transaction
                 connection.beginTransaction();
                 
-                // First, delete the bookings
-                PreparedStatement bookingsDeletion = connection.prepare(
+                // First, delete the sales
+                PreparedStatement salesDeletion = connection.prepare(
+                    "DELETE FROM `reservation` " +
+                    "WHERE `id_oeuvrevente` IN (" +
+                        "SELECT `id_oeuvrevente` " +
+                        "FROM `oeuvrevente` " +
+                        "WHERE `id_proprietaire` = ? " +
+                    ")"
+                );
+                salesDeletion.setInt(1, owner.getId());
+                salesDeletion.executeUpdate();
+                
+                // Then, delete the sellable works
+                PreparedStatement sellableWorksDeletion = connection.prepare(
                     "DELETE FROM `oeuvrevente` " +
                     "WHERE `id_proprietaire` = ?"
                 );
-                bookingsDeletion.setInt(1, owner.getId());
-                bookingsDeletion.executeUpdate();
+                sellableWorksDeletion.setInt(1, owner.getId());
+                sellableWorksDeletion.executeUpdate();
                 
-                // Then, delete the owner themselves
+                // First, delete the loans
+                PreparedStatement loansDeletion = connection.prepare(
+                    "DELETE FROM `emprunt` " +
+                    "WHERE `id_oeuvrepret` IN (" +
+                        "SELECT `id_oeuvrepret` " +
+                        "FROM `oeuvrepret` " +
+                        "WHERE `id_proprietaire` = ? " +
+                    ")"
+                );
+                loansDeletion.setInt(1, owner.getId());
+                loansDeletion.executeUpdate();
+                
+                // Then, delete the loanable works
+                PreparedStatement loanableWorksDeletion = connection.prepare(
+                    "DELETE FROM `oeuvrepret` " +
+                    "WHERE `id_proprietaire` = ?"
+                );
+                loanableWorksDeletion.setInt(1, owner.getId());
+                loanableWorksDeletion.executeUpdate();
+                
+                // Finally, delete the owner themselves
                 PreparedStatement ownerDeletion = connection.prepare(
                     "DELETE FROM `proprietaire` " +
                     "WHERE `id_proprietaire` = ? " +

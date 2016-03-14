@@ -65,16 +65,28 @@
                                 </td>
                                 <td class="text-center">
                                     <%-- @todo Hide this link if the work has already been booked --%>
-                                    <c:url value="sellableWorks.jsp?action=book&id=${work.id}" var="_url" />
-                                    <a
-                                        href="${fn:escapeXml(_url)}"
-                                        class="color-success"
-                                        data-toggle="tooltip"
-                                        data-placement="left"
-                                        title="Réserver cette oeuvre pour l'acheter"
-                                    ><!--
-                                        --><span class="glyphicon glyphicon-tag"></span><!--
-                                    --></a>
+                                    <c:choose>
+                                        <c:when test="${work.hasBooking() == true}">
+                                            <span
+                                                class="glyphicon glyphicon-tag"
+                                                data-toggle="tooltip"
+                                                data-placement="left"
+                                                title="Cette oeuvre a déjà été réservée"
+                                            ></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:url value="sellableWorks.jsp?action=book&id=${work.id}" var="_url" />
+                                            <a
+                                                href="${fn:escapeXml(_url)}"
+                                                class="color-success"
+                                                data-toggle="tooltip"
+                                                data-placement="left"
+                                                title="Réserver cette oeuvre pour l'acheter"
+                                            ><!--
+                                                --><span class="glyphicon glyphicon-tag"></span><!--
+                                            --></a>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <c:url value="sellableWorks.jsp?action=edit&id=${work.id}" var="_url" />
                                     <a
                                         href="${fn:escapeXml(_url)}"

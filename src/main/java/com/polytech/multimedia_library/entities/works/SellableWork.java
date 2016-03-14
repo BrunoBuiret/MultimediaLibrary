@@ -1,6 +1,7 @@
 package com.polytech.multimedia_library.entities.works;
 
 import com.polytech.multimedia_library.entities.Owner;
+import com.polytech.multimedia_library.entities.works.sellable.Booking;
 import com.polytech.multimedia_library.entities.works.sellable.State;
 
 /**
@@ -11,30 +12,68 @@ public class SellableWork extends AbstractWork
     /**
      * The work's price.
      */
-    float price;
+    double price;
     
     /**
      * The work's state.
      */
     State state;
     
+    /**
+     * 
+     */
+    Booking booking;
+    
+    /**
+     * 
+     */
     public SellableWork()
     {
         this(0, "", null, 0, State.UNKNOWN);
     }
     
-    public SellableWork(String name, Owner owner, float price, State state)
+    /**
+     * 
+     * @param name
+     * @param owner
+     * @param price
+     * @param state 
+     */
+    public SellableWork(String name, Owner owner, double price, State state)
     {
         this(0, name, owner, price, state);
     }
     
-    public SellableWork(int id, String name, Owner owner, float price, State state)
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param owner
+     * @param price
+     * @param state 
+     */
+    public SellableWork(int id, String name, Owner owner, double price, State state)
+    {
+        this(id, name, owner, price, state, null);
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param owner
+     * @param price
+     * @param state
+     * @param booking 
+     */
+    public SellableWork(int id, String name, Owner owner, double price, State state, Booking booking)
     {
         this.id = id;
         this.name = name;
         this.owner = owner;
         this.price = price;
         this.state = state;
+        this.booking = booking;
     }
 
     /**
@@ -42,7 +81,7 @@ public class SellableWork extends AbstractWork
      * 
      * @return The work's price.
      */
-    public float getPrice()
+    public double getPrice()
     {
         return this.price;
     }
@@ -52,7 +91,7 @@ public class SellableWork extends AbstractWork
      * 
      * @param price The work's price.
      */
-    public void setPrice(float price)
+    public void setPrice(double price)
     {
         this.price = price;
     }
@@ -75,5 +114,32 @@ public class SellableWork extends AbstractWork
     public void setState(State state)
     {
         this.state = state;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean hasBooking()
+    {
+        return null != this.booking;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Booking getBooking()
+    {
+        return this.booking;
+    }
+    
+    /**
+     * 
+     * @param booking 
+     */
+    public void setBooking(Booking booking)
+    {
+        this.booking = booking;
     }
 }

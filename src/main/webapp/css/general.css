@@ -20,7 +20,8 @@ a:hover span.glyphicon {
 }
 
 .jumbotron,
-.container .jumbotron, .container-fluid .jumbotron {
+.container .jumbotron,
+.container-fluid .jumbotron {
     padding: 20px;
 }
 

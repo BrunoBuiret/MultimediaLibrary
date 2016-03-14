@@ -155,18 +155,46 @@ public class LoanableWorkRepository
         
         if(0 != work.getId())
         {
-            // Build query
-            PreparedStatement bookingsDeletion = connection.prepare(
-                "DELETE FROM `oeuvrepret` " +
-                "WHERE `id_oeuvrepret` = ? " +
-                "LIMIT 1"
-            );
+            try
+            {
+                // Start a transaction
+                connection.beginTransaction();
 
-            // Then, bind parameters
-            bookingsDeletion.setInt(1, work.getId());
-
-            // Finally, execute it
-            bookingsDeletion.executeUpdate();
+                // First, delete the loans
+                PreparedStatement loansDeletion = connection.prepare(
+                    "DELETE FROM `emprunt` " +
+                    "WHERE `id_oeuvrepret` = ? "
+                );
+                loansDeletion.setInt(1, work.getId());
+                loansDeletion.executeUpdate();
+                
+                // Then, delete the works
+                PreparedStatement worksDeletion = connection.prepare(
+                    "DELETE FROM `oeuvrepret` " +
+                    "WHERE `id_oeuvrepret` = ? " +
+                    "LIMIT 1"
+                );
+                worksDeletion.setInt(1, work.getId());
+                worksDeletion.executeUpdate();
+                
+                // Commit the transaction
+                connection.endTransaction();
+            }
+            catch(SQLException mainException)
+            {
+                try
+                {
+                    connection.cancelTransaction();
+                }
+                catch(SQLException secondaryException)
+                {
+                    // Register the previous exception
+                    secondaryException.addSuppressed(mainException);
+                    
+                    // Then, re-throw this one
+                    throw secondaryException;
+                }
+            }
         }
         else
         {

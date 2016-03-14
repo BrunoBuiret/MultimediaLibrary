@@ -1,12 +1,20 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.entities.Owner;
+import com.polytech.multimedia_library.entities.works.SellableWork;
+import com.polytech.multimedia_library.entities.works.sellable.State;
+import com.polytech.multimedia_library.http.HttpProtocol;
+import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.repositories.works.SellableWorkRepository;
 import java.io.IOException;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * @author Bruno Buiret <bruno.buiret@etu.univ-lyon1.fr>
@@ -54,15 +62,15 @@ public class SalesController extends AbstractController
             break;
                 
             case SalesController.ACTION_ADD:
-                // targetPath = this.executeAdd(request, response);
+                targetPath = this.executeAdd(request, response);
             break;
             
             case SalesController.ACTION_EDIT:
-                // targetPath = this.executeEdit(request, response);
+                targetPath = this.executeEdit(request, response);
             break;
             
             case SalesController.ACTION_DELETE:
-                // targetPath = this.executeDelete(request, response);
+                targetPath = this.executeDelete(request, response);
             break;
         }
         
@@ -106,6 +114,450 @@ public class SalesController extends AbstractController
         }
         
         return targetPath;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeAdd(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Initialize vars
+        final String requestMethod = request.getMethod().toUpperCase();
+        String targetPath = "/WEB-INF/works/sales/add.jsp";
+        
+        // Initialize additional vars
+        OwnerRepository ownerRepository = new OwnerRepository();
+
+        if(requestMethod.equals(HttpProtocol.METHOD_POST))
+        {
+            // The form has been sent already
+            String name = request.getParameter("name");
+            String ownerIdToParse = request.getParameter("ownerId");
+            String priceToParse = request.getParameter("price");
+            
+            // Initialize vars
+            int ownerId = 0;
+            Owner owner = null;
+            double price = 0.;
+
+            // Perform some checks
+            boolean hasError = false;
+            name = name != null ? name.trim() : "";
+            ownerIdToParse = ownerIdToParse != null ? ownerIdToParse.trim() : "";
+            priceToParse = priceToParse != null ? priceToParse.trim() : "";
+
+            if(name.isEmpty())
+            {
+                hasError = true;
+                request.setAttribute("_error_name", "Vous devez renseigner le nom de l'oeuvre.");
+            }
+
+            if(!ownerIdToParse.isEmpty())
+            {
+                try
+                {
+                    ownerId = Integer.parseInt(ownerIdToParse);
+                    owner = ownerRepository.fetch(ownerId);
+                    
+                    if(null == owner)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_owner_id", "Le propriétaire que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_owner_id", "Impossible de récupérer l'identifiant du propriétaire de l'oeuvre.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence du propriétaire.",
+                        e,
+                        request
+                    );
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_owner_id", "Vous devez renseigner le propriétaire de l'oeuvre.");
+            }
+            
+            if(!priceToParse.isEmpty())
+            {
+                try
+                {
+                    price = Double.parseDouble(priceToParse);
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_price", "Impossible de récupérer le prix de l'oeuvre.");
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_price", "Vous devez renseigner le prix de l'oeuvre.");
+            }
+
+            if(!hasError)
+            {
+                try
+                {
+                    // Build the new work
+                    SellableWork work = new SellableWork(name, owner, price, State.UNKNOWN);
+
+                    // And save it
+                    SellableWorkRepository workRepository = new SellableWorkRepository();
+                    workRepository.save(work);
+
+                    // Then, define a flash message to inform the user
+                    this.addFlash(
+                        request,
+                        "success",
+                        String.format(
+                            "Vous avez crée une nouvelle oeuvre à vendre nommée <strong>%s</strong>.",
+                            StringEscapeUtils.escapeHtml4(name)
+                        )
+                    );
+                    
+                    // Finally, redirect the user
+                    this.redirect("sellableWorks.jsp?action=" + SalesController.ACTION_LIST, request, response);
+
+                    return null;
+                }
+                catch(Exception e)
+                {
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'ajout d'une nouvelle oeuvre à vendre.",
+                        e,
+                        request
+                    );
+                }
+            }
+
+            // The form did have errors
+            request.setAttribute("_last_name", name);
+            request.setAttribute("_last_owner_id", ownerId);
+            request.setAttribute("_last_price", priceToParse);
+        }
+        
+        // Fetch the existing owners
+        try
+        {
+            request.setAttribute("owners", ownerRepository.fetchAll());
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des propriétaires.",
+                e,
+                request
+            );
+        }
+        
+        return targetPath;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Initialize vars
+        final String requestMethod = request.getMethod().toUpperCase();
+        String targetPath = "/WEB-INF/works/sales/edit.jsp";
+
+        // Try getting the owner's id
+        String idToParse = request.getParameter("id");
+        int id = 0;
+
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant de l'oeuvre à éditer.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Impossible de récupérer l'identifiant de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Fetch the work
+        SellableWorkRepository workRepository = new SellableWorkRepository();
+        SellableWork work = null;
+        
+        try
+        {
+            work = workRepository.fetch(id);
+            
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Bind the owner so as to display their data
+        request.setAttribute("work", work);
+        
+        // Initialize additional vars
+        OwnerRepository ownerRepository = new OwnerRepository();
+
+        if(requestMethod.equals(HttpProtocol.METHOD_POST))
+        {
+            // The form has been sent already
+            String name = request.getParameter("name");
+            String ownerIdToParse = request.getParameter("ownerId");
+            String priceToParse = request.getParameter("price");
+            
+            // Initialize vars
+            int ownerId = 0;
+            Owner owner = null;
+            double price = 0.;
+
+            // Perform some checks
+            boolean hasError = false;
+            name = null != name ? name.trim() : "";
+            ownerIdToParse = null != ownerIdToParse ? ownerIdToParse.trim() : "";
+            priceToParse = priceToParse != null ? priceToParse.trim() : "";
+
+            if(name.isEmpty())
+            {
+                hasError = true;
+                request.setAttribute("_error_name", "Vous devez renseigner le prénom.");
+            }
+
+            if(!ownerIdToParse.isEmpty())
+            {
+                try
+                {
+                    ownerId = Integer.parseInt(ownerIdToParse);
+                    owner = ownerRepository.fetch(ownerId);
+                    
+                    if(null == owner)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_owner_id", "Le propriétaire que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_owner_id", "Impossible de récupérer l'identifiant du propriétaire de l'oeuvre.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence du propriétaire.",
+                        e,
+                        request
+                    );
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_owner_id", "Vous devez renseigner le nom.");
+            }
+            
+            if(!priceToParse.isEmpty())
+            {
+                try
+                {
+                    price = Double.parseDouble(priceToParse);
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_price", "Impossible de récupérer le prix de l'oeuvre.");
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_price", "Vous devez renseigner le prix de l'oeuvre.");
+            }
+
+            if(!hasError)
+            {
+                try
+                {
+                    // Customize flash message
+                    String flashMessage = "Vous avez édité avec succès l'oeuvre nommée <strong>%s</strong>.";
+                    
+                    if(!work.getName().equals(name))
+                    {
+                        flashMessage = "Vous avez édité avec succès l'oeuvre maintenant nommée <strong>%s</strong>.";
+                    }
+                    
+                    // Edit the work
+                    work.setName(name);
+                    work.setOwner(owner);
+                    work.setPrice(price);
+                    
+                    // Then, save it
+                    workRepository.save(work);
+
+                    // Then, define a flash message to inform the user
+                    this.addFlash(request,
+                        "success",
+                        String.format(
+                            flashMessage,
+                            StringEscapeUtils.escapeHtml4(work.getName())
+                        )
+                    );
+                    // Finally, redirect the user
+                    this.redirect("sellableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+
+                    return null;
+                }
+                catch(Exception e)
+                {
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'édition d'une oeuvre à vendre.",
+                        e,
+                        request
+                    );
+                }
+            }
+            
+            // The form did have errors
+            request.setAttribute("_last_name", name);
+            request.setAttribute("_last_owner_id", ownerId);
+            request.setAttribute("_last_price", priceToParse);
+        }
+        
+        // Fetch the existing owners
+        try
+        {
+            request.setAttribute("owners", ownerRepository.fetchAll());
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des propriétaires.",
+                e,
+                request
+            );
+        }
+        
+        return targetPath;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Try getting the work's id
+        String idToParse = request.getParameter("id");
+
+        if(null == idToParse)
+        {
+            return this.displayError(
+                "Données manquantes",
+                "Vous devez préciser l'identifiant de l'oeuvre à supprimer.",
+                request
+            );
+        }
+
+        // Get the actual id
+        int id = Integer.parseInt(idToParse);
+        
+        try
+        {
+            // Fetch the work
+            SellableWorkRepository repository = new SellableWorkRepository();
+            SellableWork work = repository.fetch(id);
+
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+            
+            // Then, delete them
+            repository.delete(work);
+            
+            // Then, define a flash message to inform the user
+            this.addFlash(
+                request,
+                "success",
+                String.format(
+                    "Vous avez supprimé l'oeuvre nommée <strong>%s</strong>.",
+                    StringEscapeUtils.escapeHtml4(work.getName())
+                )
+            );
+            
+            // Finally, redirect the user
+            this.redirect("sellableWorks.jsp?action=" + SalesController.ACTION_LIST, request, response);
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la suppression d'une oeuvre.",
+                e,
+                request
+            );
+        }
+
+        return null;
     }
     
     /**

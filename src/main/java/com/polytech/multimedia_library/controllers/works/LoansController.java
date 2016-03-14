@@ -289,7 +289,7 @@ public class LoansController extends AbstractController
             {
                 return this.displayError(
                     "Données manquantes",
-                    "Vous devez préciser l'identifiant du propriétaire à éditer.",
+                    "Vous devez préciser l'identifiant de l'oeuvre à éditer.",
                     request
                 );
             }
@@ -300,7 +300,7 @@ public class LoansController extends AbstractController
         {
             return this.displayError(
                 "Erreur",
-                "Impossible de récupérer l'identifiant du propriétaire.",
+                "Impossible de récupérer l'identifiant de l'oeuvre.",
                 e,
                 request
             );

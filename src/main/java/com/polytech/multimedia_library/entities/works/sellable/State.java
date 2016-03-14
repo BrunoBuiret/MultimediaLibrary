@@ -24,8 +24,33 @@ public enum State
         this.code = code;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public String getCode()
     {
         return this.code;
+    }
+    
+    /**
+     * 
+     * @param code
+     * @return 
+     */
+    public static State fromCode(String code)
+    {
+        if(null != code)
+        {
+            for(State state : State.values())
+            {
+                if(code.equalsIgnoreCase(state.getCode()))
+                {
+                    return state;
+                }
+            }
+        }
+        
+        return null;
     }
 }

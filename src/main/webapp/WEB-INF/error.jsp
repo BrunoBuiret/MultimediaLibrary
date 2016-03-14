@@ -32,8 +32,8 @@
                 <ol>
                     <c:forEach items="${_error_exception.stackTrace}" var="item">
                         <li>
-                            <code>${item.className}.${item.methodName}()</code><br/>
-                            <strong>${item.fileName}</strong> à la ligne <strong>${item.lineNumber}</strong>
+                            <strong>${item.fileName}</strong> à la ligne <strong>${item.lineNumber}</strong><br/>
+                            <code>${item.className}.${item.methodName}()</code>
                         </li>
                     </c:forEach>
                 </ol>
