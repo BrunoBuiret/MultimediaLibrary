@@ -1,4 +1,4 @@
-# MultimediaLibrary
+# Médiathèque
 
 ## Base de données
 ```sql
