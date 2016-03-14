@@ -14,7 +14,6 @@ import com.polytech.multimedia_library.utilities.DateUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -32,14 +31,34 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @WebServlet(name = "LoansController", urlPatterns = {"/loanableWorks.jsp"})
 public class LoansController extends AbstractController
 {
+    /**
+     * The loanable works' controller URL.
+     */
+    protected static final String URL = "/loanableWorks.jsp";
+    
+    /**
+     * The loanable works' list action parameter's value.
+     */
     protected static final String ACTION_LIST = "list";
     
+    /**
+     * The loanable works' add action parameter's value.
+     */
     protected static final String ACTION_ADD = "add";
     
+    /**
+     * The loanable works' edit action parameter's value.
+     */
     protected static final String ACTION_EDIT = "edit";
     
+    /**
+     * The loanable works' delete action parameter's value.
+     */
     protected static final String ACTION_DELETE = "delete";
     
+    /**
+     * The loanable works' borrow action parameter's value.
+     */
     protected static final String ACTION_BORROW = "borrow";
     
     /**
@@ -98,12 +117,13 @@ public class LoansController extends AbstractController
     }
     
     /**
+     * Displays a list of loanable works.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeList(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -119,7 +139,7 @@ public class LoansController extends AbstractController
             // Display flash messages
             request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -133,12 +153,13 @@ public class LoansController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to add a loanable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeAdd(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -146,6 +167,9 @@ public class LoansController extends AbstractController
         // Initialize vars
         final String requestMethod = request.getMethod().toUpperCase();
         String targetPath = "/WEB-INF/works/loans/add.jsp";
+        
+        // Initialize additional vars
+        OwnerRepository ownerRepository = new OwnerRepository();
 
         if(requestMethod.equals(HttpProtocol.METHOD_POST))
         {
@@ -155,7 +179,6 @@ public class LoansController extends AbstractController
             
             // Initialize vars
             int ownerId = 0;
-            OwnerRepository ownerRepository = new OwnerRepository();
             Owner owner = null;
 
             // Perform some checks
@@ -225,11 +248,9 @@ public class LoansController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(LoansController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -248,10 +269,9 @@ public class LoansController extends AbstractController
         // Fetch the existing owners
         try
         {
-            OwnerRepository ownerRepository = new OwnerRepository();
             request.setAttribute("owners", ownerRepository.fetchAll());
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -265,12 +285,13 @@ public class LoansController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to edit a loanable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -281,7 +302,7 @@ public class LoansController extends AbstractController
 
         // Try getting the owner's id
         String idToParse = request.getParameter("id");
-        int id = 0;
+        int id;
 
         try
         {
@@ -308,7 +329,7 @@ public class LoansController extends AbstractController
         
         // Fetch the work
         LoanableWorkRepository workRepository = new LoanableWorkRepository();
-        LoanableWork work = null;
+        LoanableWork work;
         
         try
         {
@@ -323,7 +344,7 @@ public class LoansController extends AbstractController
                 );
             }
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -333,7 +354,7 @@ public class LoansController extends AbstractController
             );
         }
         
-        // Bind the owner so as to display their data
+        // Bind the work so as to display its data
         request.setAttribute("work", work);
         
         // Initialize additional vars
@@ -421,16 +442,15 @@ public class LoansController extends AbstractController
                             StringEscapeUtils.escapeHtml4(work.getName())
                         )
                     );
+                    
                     // Finally, redirect the user
-                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(LoansController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
-                        "Une erreur est survenue lors de l'édition d'un propriétaire.",
+                        "Une erreur est survenue lors de l'édition d'une oeuvre à prêter.",
                         e,
                         request
                     );
@@ -447,7 +467,7 @@ public class LoansController extends AbstractController
         {
             request.setAttribute("owners", ownerRepository.fetchAll());
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -461,12 +481,13 @@ public class LoansController extends AbstractController
     }
     
     /**
+     * Handles the deletion of a loanable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -515,9 +536,9 @@ public class LoansController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+            return this.redirect(LoansController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -526,17 +547,16 @@ public class LoansController extends AbstractController
                 request
             );
         }
-
-        return null;
     }
     
     /**
+     * Displays and handles a form to borrow a loanable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeBorrow(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -547,7 +567,7 @@ public class LoansController extends AbstractController
 
         // Try getting the work's id
         String idToParse = request.getParameter("id");
-        int id = 0;
+        int id;
 
         try
         {
@@ -574,7 +594,7 @@ public class LoansController extends AbstractController
         
         // Fetch the work
         LoanableWorkRepository workRepository = new LoanableWorkRepository();
-        LoanableWork work = null;
+        LoanableWork work;
         
         try
         {
@@ -589,7 +609,7 @@ public class LoansController extends AbstractController
                 );
             }
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -604,19 +624,19 @@ public class LoansController extends AbstractController
         
         // Fetch the existing loans so as to avoid overlapping
         LoansRepository loanRepository = new LoansRepository();
-        List<Loan> loans = null;
+        List<Loan> loans;
         Set<Date> loanDates = new HashSet<>();
         
         try
         {
             loans = loanRepository.fetchByWorkAndNotFinished(id);
             
-            for(Loan loan : loans)
+            loans.stream().forEach((loan) ->
             {
                 loanDates.addAll(DateUtils.getDaysBetween(loan.getDateStart(), loan.getDateEnd()));
-            }
+            });
         }
-        catch(Exception e)
+        catch(NamingException | SQLException | ParseException e)
         {
             return this.displayError(
                 "Erreur",
@@ -772,17 +792,17 @@ public class LoansController extends AbstractController
                         request,
                         "success",
                         String.format(
-                            "Vous avez ajouté un emprunt pour l'oeuvre nommée <strong>%s</strong>.",
+                            "Vous avez ajouté un emprunt au nom de <strong>%s %s</strong> pour l'oeuvre nommée <strong>%s</strong>.",
+                            StringEscapeUtils.escapeHtml4(adherent.getFirstName()),
+                            StringEscapeUtils.escapeHtml4(adherent.getLastName()),
                             StringEscapeUtils.escapeHtml4(work.getName())
                         )
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(LoansController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -804,7 +824,7 @@ public class LoansController extends AbstractController
         {
             request.setAttribute("adherents", adherentRepository.fetchAll());
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",

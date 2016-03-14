@@ -30,7 +30,7 @@ public class SellableWorkRepository
      * @return The sellable work if it exists, <code>null</code> otherwise.
      * @throws javax.naming.NamingException If the context can't be read.
      * @throws java.sql.SQLException If an SQL error happens.
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException If a parsing error happens.
      */
     public SellableWork fetch(int id)
     throws NamingException, SQLException, ParseException
@@ -66,7 +66,7 @@ public class SellableWorkRepository
      * @return The list of sellable works.
      * @throws javax.naming.NamingException If the context can't be read.
      * @throws java.sql.SQLException If an SQL error happens.
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException If a parsing error happens.
      */
     public List<SellableWork> fetchAll()
     throws NamingException, SQLException, ParseException
@@ -250,7 +250,7 @@ public class SellableWorkRepository
      * @return The newly built sellable work.
      * @throws javax.naming.NamingException If the context can't be read.
      * @throws java.sql.SQLException If an SQL error happens.
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException If a parsing error happens.
      */
     protected SellableWork buildEntity(ResultSet resultSet)
     throws NamingException, SQLException, ParseException

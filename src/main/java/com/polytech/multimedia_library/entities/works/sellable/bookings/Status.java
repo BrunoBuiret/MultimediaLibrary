@@ -1,8 +1,7 @@
 package com.polytech.multimedia_library.entities.works.sellable.bookings;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret <bruno.buiret@etu.univ-lyon1.fr>
  */
 public enum Status
 {
@@ -11,13 +10,14 @@ public enum Status
     REJECTED("rejetee");
     
     /**
-     * 
+     * The status' code.
      */
     protected String code;
     
     /**
+     * Creates a new status.
      * 
-     * @param code 
+     * @param code The status' code.
      */
     Status(String code)
     {
@@ -25,27 +25,20 @@ public enum Status
     }
 
     /**
+     * Gets a status' code.
      * 
-     * @return 
+     * @return The status' code.
      */
     public String getCode()
     {
         return code;
     }
-
-    /**
-     * 
-     * @param code 
-     */
-    public void setCode(String code)
-    {
-        this.code = code;
-    }
     
     /**
+     * Gets a status from its code.
      * 
-     * @param code
-     * @return 
+     * @param code The status' code.
+     * @return The status, or <code>null</code> if no matching status has been found.
      */
     public static Status fromCode(String code)
     {

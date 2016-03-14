@@ -7,20 +7,19 @@ import com.polytech.multimedia_library.entities.Owner;
  */
 public class LoanableWork extends AbstractWork
 {
-    public LoanableWork()
-    {
-        this(0, "", null);
-    }
-    
+    /**
+     * {@inheritDoc}
+     */
     public LoanableWork(String name, Owner owner)
     {
-        this(0, name, owner);
+        super(name, owner);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public LoanableWork(int id, String name, Owner owner)
     {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
+        super(id, name, owner);
     }
 }

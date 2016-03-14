@@ -26,14 +26,6 @@ public class Adherent
     protected String town;
     
     /**
-     * Creates an adherent without any data.
-     */
-    public Adherent()
-    {
-        this(0, "", "", "");
-    }
-    
-    /**
      * Creates an adherent and fills them with part of their data. Usually
      * used when creating a new adherent who hasn't been saved already.
      * 
@@ -47,7 +39,8 @@ public class Adherent
     }
     
     /**
-     * Creates an adherent and fills them with data.
+     * Creates an adherent and fills them with data. Usually used when loading
+     * an adherent from the database.
      * 
      * @param id The adherent's id.
      * @param firstName The adherent's first name.

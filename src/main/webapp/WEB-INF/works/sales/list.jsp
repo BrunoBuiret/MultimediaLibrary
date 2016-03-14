@@ -23,7 +23,7 @@
         </c:forEach>
     </c:if>
     <p>
-        <c:url value="sellableWorks.jsp?action=add" var="_url" />
+        <c:url value="/sellableWorks.jsp?action=add" var="_url" />
         <a class="btn btn-default" href="${fn:escapeXml(_url)}" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Ajout
@@ -75,7 +75,7 @@
                                             ></span>
                                         </c:when>
                                         <c:otherwise>
-                                            <c:url value="sellableWorks.jsp?action=book&id=${work.id}" var="_url" />
+                                            <c:url value="/sellableWorks.jsp?action=book&id=${work.id}" var="_url" />
                                             <a
                                                 href="${fn:escapeXml(_url)}"
                                                 class="color-success"
@@ -87,7 +87,7 @@
                                             --></a>
                                         </c:otherwise>
                                     </c:choose>
-                                    <c:url value="sellableWorks.jsp?action=edit&id=${work.id}" var="_url" />
+                                    <c:url value="/sellableWorks.jsp?action=edit&id=${work.id}" var="_url" />
                                     <a
                                         href="${fn:escapeXml(_url)}"
                                         data-toggle="tooltip"
@@ -96,8 +96,9 @@
                                     ><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
+                                    <c:url value="/sellableWorks.jsp?action=delete&id=${work.id}" var="_url" />
                                     <a
-                                        href="sellableWorks.jsp?action=delete&id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         class="color-danger"
                                         data-toggle="tooltip"
                                         data-placement="left"
@@ -111,7 +112,7 @@
                     </c:when>
                     <c:otherwise>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4">
                                 Il n'y a aucune vente pour le moment.
                             </td>
                         </tr>

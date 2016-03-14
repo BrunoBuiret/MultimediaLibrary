@@ -14,37 +14,45 @@ import java.util.List;
 import javax.naming.NamingException;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret <bruno.buiret@etu.univ-lyon1.fr>
  */
 public class LoansRepository extends AbstractRepository
 {
     /**
+     * Fetches a single loan from the database.
      * 
-     * @param id
-     * @return 
+     * @param id The loan's id.
+     * @return The loan if it exists, <code>null</code> otherwise.
+     * @throws javax.naming.NamingException If the context can't be read.
+     * @throws java.sql.SQLException If an SQL error happens.
      */
     public Loan fetch(int id)
+    throws NamingException, SQLException
     {
         throw new UnsupportedOperationException("This method hasn't been implemented yet.");
     }
     
     /**
+     * Fetches every loan from database.
      * 
-     * @return 
+     * @return The list of loans.
+     * @throws javax.naming.NamingException If the context can't be read.
+     * @throws java.sql.SQLException If an SQL error happens.
      */
     public List<Loan> fetchAll()
+    throws NamingException, SQLException
     {
         throw new UnsupportedOperationException("This method hasn't been implemented yet.");
     }
     
     /**
+     * Fetches every loan from database associated with a given work's id.
      * 
-     * @param id
-     * @return
-     * @throws NamingException
-     * @throws SQLException
-     * @throws ParseException 
+     * @param id The work's id.
+     * @return The list of loans.
+     * @throws javax.naming.NamingException If the context can't be read.
+     * @throws java.sql.SQLException If an SQL error happens.
+     * @throws ParseException If a parsing error happens.
      */
     public List<Loan> fetchByWorkAndNotFinished(int id)
     throws NamingException, SQLException, ParseException
@@ -144,10 +152,14 @@ public class LoansRepository extends AbstractRepository
     }
     
     /**
+     * Deletes a single loan from the database.
      * 
-     * @param loan 
+     * @param loan The loan to delete.
+     * @throws javax.naming.NamingException If the context can't be read.
+     * @throws java.sql.SQLException If an SQL error happens.
      */
     public void delete(Loan loan)
+    throws NamingException, SQLException
     {
         throw new UnsupportedOperationException("This method hasn't been implemented yet.");
     }

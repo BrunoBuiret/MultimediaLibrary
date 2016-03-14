@@ -23,7 +23,8 @@
         </c:forEach>
     </c:if>
     <p>
-        <a class="btn btn-default" href="loanableWorks.jsp?action=add" role="button">
+        <c:url value="/loanableWorks.jsp?action=add" var="_url" />
+        <a class="btn btn-default" href="${fn:escapeXml(_url)}" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Ajout
         </a>
@@ -57,8 +58,9 @@
                                     ${fn:escapeXml(work.owner.lastName)}
                                 </td>
                                 <td class="text-center">
+                                    <c:url value="/loanableWorks.jsp?action=borrow&id=${work.id}" var="_url" />
                                     <a
-                                        href="loanableWorks.jsp?action=borrow&id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         class="color-success"
                                         data-toggle="tooltip"
                                         data-placement="left"
@@ -66,16 +68,18 @@
                                     ><!--
                                         --><span class="glyphicon glyphicon-thumbs-up"></span><!--
                                     --></a>
+                                    <c:url value="/loanableWorks.jsp?action=edit&id=${work.id}" var="_url" />
                                     <a
-                                        href="loanableWorks.jsp?action=edit&id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         data-toggle="tooltip"
                                         data-placement="left"
                                         title="Éditer cette oeuvre"
                                     ><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
+                                    <c:url value="/loanableWorks.jsp?action=delete&id=${work.id}" var="_url" />
                                     <a
-                                        href="loanableWorks.jsp?action=delete&id=${work.id}"
+                                        href="${fn:escapeXml(_url)}"
                                         class="color-danger"
                                         data-toggle="tooltip"
                                         data-placement="left"
@@ -89,7 +93,7 @@
                     </c:when>
                     <c:otherwise>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="3">
                                 Il n'y a aucune vente pour le moment.
                             </td>
                         </tr>

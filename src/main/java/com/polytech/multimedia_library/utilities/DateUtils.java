@@ -8,25 +8,26 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author bruno
+ * @author Bruno Buiret <bruno.buiret@etu.univ-lyon1.fr>
  */
 public abstract class DateUtils
 {
     /**
-     * 
+     * The date format used by SQL.
      */
     protected static SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     /**
-     * 
+     * The date format used by the forms.
      */
     protected static SimpleDateFormat formFormat = new SimpleDateFormat("dd/MM/yyyy");
     
     /**
+     * Parses a string with the form format to get a date.
      * 
-     * @param source
-     * @return
-     * @throws ParseException 
+     * @param source The string to parse.
+     * @return The corresponding date.
+     * @throws ParseException If a parsing error happens.
      */
     public static Date parseFormDate(String source)
     throws ParseException
@@ -35,10 +36,11 @@ public abstract class DateUtils
     }
     
     /**
+     * Parses a string with the sql format to get a date.
      * 
-     * @param source
-     * @return
-     * @throws ParseException 
+     * @param source The string to parse.
+     * @return The corresponding date.
+     * @throws ParseException If a parsing error happens.
      */
     public static Date parseSqlDate(String source)
     throws ParseException
@@ -47,9 +49,10 @@ public abstract class DateUtils
     }
     
     /**
+     * Formats a date to a SQL date string format.
      * 
-     * @param source
-     * @return 
+     * @param source The date to format.
+     * @return The corresponding string.
      */
     public static String toSqlDate(Date source)
     {
@@ -57,8 +60,9 @@ public abstract class DateUtils
     }
     
     /**
+     * Gets a <code>Date</code> instance of today at midnight.
      * 
-     * @return 
+     * @return Today's date instance.
      */
     public static Date getToday()
     {
@@ -74,10 +78,11 @@ public abstract class DateUtils
     }
     
     /**
+     * Gets every date between two points.
      * 
      * @param dateStart The start point.
      * @param dateEnd The end point.
-     * @return 
+     * @return The list of dates.
      * @see http://stackoverflow.com/questions/2689379/how-to-get-a-list-of-dates-between-two-dates-in-java#answer-2893790
      */
     public static List<Date> getDaysBetween(Date dateStart, Date dateEnd)

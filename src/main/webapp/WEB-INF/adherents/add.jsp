@@ -7,7 +7,8 @@
             Ajout d'un nouvel adhérent
         </h1>
     </div>
-    <form class="form-horizontal" method="post" action="adherents.jsp?action=add">
+    <c:url value="/adherents.jsp?action=add" var="_url" />
+    <form class="form-horizontal" method="post" action="${fn:escapeXml(_url)}">
         <div class="form-group<c:if test="${not empty _error_first_name}"> has-error</c:if>">
             <label for="firstName" class="control-label col-sm-2">
                 Prénom*
@@ -86,7 +87,8 @@
                         </c:otherwise>
                     </c:choose>
                 </button>
-                <a href="adherents.jsp?action=list" class="btn btn-default">
+                <c:url value="/adherents.jsp?action=list" var="_url" />
+                <a href="${fn:escapeXml(_url)}" class="btn btn-default">
                     Retour à la liste
                 </a>
             </div>

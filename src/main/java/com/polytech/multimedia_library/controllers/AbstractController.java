@@ -17,6 +17,11 @@ import javax.servlet.http.HttpSession;
 public abstract class AbstractController extends HttpServlet
 {
     /**
+     * The action parameter's name.
+     */
+    protected final static String PARAMETER_ACTION = "action";
+    
+    /**
      * The error page's path.
      */
     protected static String ERROR_PAGE_PATH = "/WEB-INF/error.jsp";
@@ -43,7 +48,7 @@ public abstract class AbstractController extends HttpServlet
      * @param url The URL to redirect to.
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return 
+     * @return <code>null</code> so as to avoid to repeat <code>return null</code> after each call.
      * @throws IOException  If an I/O error occurs.
      */
     protected String redirect(String url, HttpServletRequest request, HttpServletResponse response)
@@ -64,7 +69,7 @@ public abstract class AbstractController extends HttpServlet
      * 
      * @param message The message to display.
      * @param request The servlet request.
-     * @return 
+     * @return The error page's path.
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException If an I/O error occurs.
      */
@@ -82,9 +87,10 @@ public abstract class AbstractController extends HttpServlet
      * @param title The title to display.
      * @param message The message to display.
      * @param request The servlet request.
-     * @return
+     * @return The error page's path.
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException If an I/O error occurs.
+     * @see #displayError(java.lang.String, javax.servlet.http.HttpServletRequest)
      */
     protected String displayError(String title, String message, HttpServletRequest request)
     throws ServletException, IOException
@@ -100,9 +106,10 @@ public abstract class AbstractController extends HttpServlet
      * @param message The message to display.
      * @param exception The exception to handle.
      * @param request The servlet request.
-     * @return 
+     * @return The error page's path.
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException If an I/O error occurs.
+     * @see #displayError(java.lang.String, javax.servlet.http.HttpServletRequest) 
      */
     protected String displayError(String message, Exception exception, HttpServletRequest request)
     throws ServletException, IOException
@@ -120,9 +127,10 @@ public abstract class AbstractController extends HttpServlet
      * @param message The message to display.
      * @param exception The exception to handle.
      * @param request The servlet request.
-     * @return 
+     * @return The error page's path.
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException If an I/O error occurs.
+     * @see #displayError(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest) 
      */
     protected String displayError(String title, String message, Exception exception, HttpServletRequest request)
     throws ServletException, IOException
@@ -142,7 +150,7 @@ public abstract class AbstractController extends HttpServlet
     protected List<Flash> getFlashList(HttpSession session)
     {
         Object flashListItem = session.getAttribute("_flash");
-        List<Flash> flashList = null;
+        List<Flash> flashList;
         
         if(null != flashListItem && flashListItem instanceof List)
         {

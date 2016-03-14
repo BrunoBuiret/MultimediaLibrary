@@ -18,7 +18,8 @@
         </c:forEach>
     </c:if>
     <p>
-        <a class="btn btn-default" href="adherents.jsp?action=add" role="button">
+        <c:url value="/adherents.jsp?action=add" var="_url" />
+        <a class="btn btn-default" href="${fn:escapeXml(_url)}" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Ajout
         </a>
@@ -57,10 +58,12 @@
                                     ${fn:escapeXml(adherent.town)}
                                 </td>
                                 <td class="text-center">
-                                    <a href="adherents.jsp?action=edit&id=${adherent.id}"><!--
+                                    <c:url value="/adherents.jsp?action=edit&id=${adherent.id}" var="_url" />
+                                    <a href="${fn:escapeXml(_url)}"><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
-                                    <a href="adherents.jsp?action=delete&id=${adherent.id}" class="color-danger"><!--
+                                    <c:url value="/adherents.jsp?action=delete&id=${adherent.id}" var="_url" />
+                                    <a href="${fn:escapeXml(_url)}" class="color-danger"><!--
                                         --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
@@ -69,7 +72,7 @@
                     </c:when>
                     <c:otherwise>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4">
                                 Il n'y a aucun adhérent pour le moment.
                             </td>
                         </tr>

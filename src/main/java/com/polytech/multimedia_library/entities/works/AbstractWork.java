@@ -21,6 +21,33 @@ abstract public class AbstractWork
      * The work's owner.
      */
     Owner owner;
+    
+    /**
+     * Creates an abstract work and fills it with part of its data. Usually used
+     * when creating a new abstract work which hasn't been saved already.
+     * 
+     * @param name The work's name.
+     * @param owner The work's owner.
+     */
+    public AbstractWork(String name, Owner owner)
+    {
+        this(0, name, owner);
+    }
+    
+    /**
+     * Creates an abstract work and fills it with data. Usually used when loading
+     * an abstract work from the database.
+     * 
+     * @param id The work's id.
+     * @param name The work's name.
+     * @param owner The work's owner.
+     */
+    public AbstractWork(int id, String name, Owner owner)
+    {
+        this.id = id;
+        this.name = name;
+        this.owner = owner;
+    }
 
     /**
      * Gets a work's id.

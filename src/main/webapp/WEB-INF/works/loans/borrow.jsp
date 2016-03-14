@@ -33,7 +33,7 @@
             
             // Select 2
             var $adherentsList = $("#adherentId");
-            var $options = $ownersList.find("option");
+            var $options = $adherentsList.find("option");
             var firstItemId = $options.length > 0 ? $options.eq(0).val() : -1;
             
             $adherentsList.select2({

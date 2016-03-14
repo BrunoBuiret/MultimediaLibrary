@@ -4,6 +4,8 @@ import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.AdherentRepository;
 import java.io.IOException;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +18,29 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @WebServlet(name = "AdherentsController", urlPatterns = {"/adherents.jsp"})
 public class AdherentsController extends AbstractController
 {
+    /**
+     * The adherents's controller URL.
+     */
+    protected static final String URL = "/adherents.jsp";
+    
+    /**
+     * The adherent's list action parameter's value.
+     */
     protected static final String ACTION_LIST = "list";
     
+    /**
+     * The adherent's add action parameter's value.
+     */
     protected static final String ACTION_ADD = "add";
     
+    /**
+     * The adherent's edit action parameter's value.
+     */
     protected static final String ACTION_EDIT = "edit";
     
+    /**
+     * The adherent's delete action parameter's value.
+     */
     protected static final String ACTION_DELETE = "delete";
     
     /**
@@ -76,12 +95,13 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays a list of adherents.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeList(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -97,7 +117,7 @@ public class AdherentsController extends AbstractController
             // Display flash messages
             request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -111,12 +131,13 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to add an adherent.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeAdd(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -179,11 +200,9 @@ public class AdherentsController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(AdherentsController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + AdherentsController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -204,12 +223,13 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to edit an adherent.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -220,7 +240,7 @@ public class AdherentsController extends AbstractController
 
         // Try getting the adherent's id
         String idToParse = request.getParameter("id");
-        int id = 0;
+        int id;
         
         try
         {
@@ -247,7 +267,7 @@ public class AdherentsController extends AbstractController
         
         // Fetch the adherent
         AdherentRepository repository = new AdherentRepository();
-        Adherent adherent = null;
+        Adherent adherent;
         
         try
         {
@@ -262,7 +282,7 @@ public class AdherentsController extends AbstractController
                 );
             }
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -336,12 +356,11 @@ public class AdherentsController extends AbstractController
                             StringEscapeUtils.escapeHtml4(adherent.getLastName())
                         )
                     );
+                    
                     // Finally, redirect the user
-                    this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(AdherentsController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + AdherentsController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -362,12 +381,13 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Handles the deletion of an adherent.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -417,9 +437,9 @@ public class AdherentsController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("adherents.jsp?action=" + AdherentsController.ACTION_LIST, request, response);
+            return this.redirect(AdherentsController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + AdherentsController.ACTION_LIST, request, response);
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -428,8 +448,6 @@ public class AdherentsController extends AbstractController
                 request
             );
         }
-
-        return null;
     }
 
     /**

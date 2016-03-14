@@ -169,7 +169,15 @@ public class AdherentRepository extends AbstractRepository
                 bookingsDeletion.setInt(1, adherent.getId());
                 bookingsDeletion.executeUpdate();
                 
-                // Then, delete the adherent themselves
+                // Then, delete the loans
+                PreparedStatement loansDeletion = connection.prepare(
+                    "DELETE FROM `emprunt` " +
+                    "WHERE `id_adherent` = ?"
+                );
+                bookingsDeletion.setInt(1, adherent.getId());
+                bookingsDeletion.executeUpdate();
+                
+                // Finnaly, delete the adherent themselves
                 PreparedStatement adherentDeletion = connection.prepare(
                     "DELETE FROM `adherent` " +
                     "WHERE `id_adherent` = ? " +

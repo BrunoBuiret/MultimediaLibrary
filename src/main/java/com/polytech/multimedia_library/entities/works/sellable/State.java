@@ -25,8 +25,9 @@ public enum State
     }
     
     /**
+     * Gets a state's code.
      * 
-     * @return 
+     * @return The state's code.
      */
     public String getCode()
     {
@@ -34,9 +35,10 @@ public enum State
     }
     
     /**
+     * Gets a state from its code.
      * 
-     * @param code
-     * @return 
+     * @param code The state's code.
+     * @return The state, or <code>null</code> if no matching state has been found.
      */
     public static State fromCode(String code)
     {

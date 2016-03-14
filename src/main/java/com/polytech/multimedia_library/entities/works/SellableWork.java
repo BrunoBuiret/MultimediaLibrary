@@ -20,24 +20,18 @@ public class SellableWork extends AbstractWork
     State state;
     
     /**
-     * 
+     * The work's booking.
      */
     Booking booking;
     
     /**
+     * Creates a sellable work and fills it with part of its data. Usually used
+     * when creating a new sellable work which hasn't been saved already.
      * 
-     */
-    public SellableWork()
-    {
-        this(0, "", null, 0, State.UNKNOWN);
-    }
-    
-    /**
-     * 
-     * @param name
-     * @param owner
-     * @param price
-     * @param state 
+     * @param name The work's name.
+     * @param owner The work's owner.
+     * @param price The work's price.
+     * @param state The work's state.
      */
     public SellableWork(String name, Owner owner, double price, State state)
     {
@@ -45,12 +39,14 @@ public class SellableWork extends AbstractWork
     }
     
     /**
+     * Creates an abstract work and fills it with almost all its data. Usually
+     * used when loading a sellable work from the database.
      * 
-     * @param id
-     * @param name
-     * @param owner
-     * @param price
-     * @param state 
+     * @param id The work's id.
+     * @param name The work's name.
+     * @param owner The work's owner.
+     * @param price The work's price.
+     * @param state The work's state.
      */
     public SellableWork(int id, String name, Owner owner, double price, State state)
     {
@@ -58,19 +54,20 @@ public class SellableWork extends AbstractWork
     }
     
     /**
+     * Creates an abstract work and fills it with all its data. Usually
+     * used when loading a sellable work from the database.
      * 
-     * @param id
-     * @param name
-     * @param owner
-     * @param price
-     * @param state
-     * @param booking 
+     * @param id The work's id.
+     * @param name The work's name.
+     * @param owner The work's owner.
+     * @param price The work's price.
+     * @param state The work's state.
+     * @param booking The work's booking.
      */
     public SellableWork(int id, String name, Owner owner, double price, State state, Booking booking)
     {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
+        super(id, name, owner);
+        
         this.price = price;
         this.state = state;
         this.booking = booking;
@@ -107,7 +104,7 @@ public class SellableWork extends AbstractWork
     }
 
     /**
-     * Sets a woek' state.
+     * Sets a work' state.
      * 
      * @param state The work' state.
      */
@@ -117,8 +114,9 @@ public class SellableWork extends AbstractWork
     }
     
     /**
+     * Tests if a work has a booking.
      * 
-     * @return 
+     * @return <code>true</code> if it has a booking, <code>false</code> otherwise.
      */
     public boolean hasBooking()
     {
@@ -126,8 +124,9 @@ public class SellableWork extends AbstractWork
     }
     
     /**
+     * Gets a work's booking.
      * 
-     * @return 
+     * @return The work's booking.
      */
     public Booking getBooking()
     {
@@ -135,8 +134,9 @@ public class SellableWork extends AbstractWork
     }
     
     /**
+     * Sets a work's booking.
      * 
-     * @param booking 
+     * @param booking The work's booking.
      */
     public void setBooking(Booking booking)
     {

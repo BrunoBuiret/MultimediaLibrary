@@ -4,6 +4,8 @@ import com.polytech.multimedia_library.entities.Owner;
 import com.polytech.multimedia_library.http.HttpProtocol;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import java.io.IOException;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +18,29 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @WebServlet(name = "OwnersController", urlPatterns = {"/owners.jsp"})
 public class OwnersController extends AbstractController
 {
+    /**
+     * The adherents's controller URL.
+     */
+    protected static final String URL = "/owners.jsp";
+    
+    /**
+     * The owner's list action parameter's value.
+     */
     protected static final String ACTION_LIST = "list";
     
+    /**
+     * The owner's add action parameter's value.
+     */
     protected static final String ACTION_ADD = "add";
     
+    /**
+     * The owner's edit action parameter's value.
+     */
     protected static final String ACTION_EDIT = "edit";
     
+    /**
+     * The owner's delete action parameter's value.
+     */
     protected static final String ACTION_DELETE = "delete";
     
     /**
@@ -76,12 +95,13 @@ public class OwnersController extends AbstractController
     }
     
     /**
+     * Displays a list of owners.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeList(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -97,7 +117,7 @@ public class OwnersController extends AbstractController
             // Display flash messages
             request.setAttribute("_flash", this.getAndClearFlashList(request));
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -111,12 +131,13 @@ public class OwnersController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to add an owner.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeAdd(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -171,11 +192,9 @@ public class OwnersController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(OwnersController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + OwnersController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -195,12 +214,13 @@ public class OwnersController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to edit an owner.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -211,7 +231,7 @@ public class OwnersController extends AbstractController
 
         // Try getting the owner's id
         String idToParse = request.getParameter("id");
-        int id = 0;
+        int id;
 
         try
         {
@@ -238,7 +258,7 @@ public class OwnersController extends AbstractController
         
         // Fetch the owner
         OwnerRepository repository = new OwnerRepository();
-        Owner owner = null;
+        Owner owner;
         
         try
         {
@@ -253,7 +273,7 @@ public class OwnersController extends AbstractController
                 );
             }
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -318,11 +338,9 @@ public class OwnersController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(OwnersController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + OwnersController.ACTION_LIST, request, response);
                 }
-                catch(Exception e)
+                catch(NamingException | SQLException e)
                 {
                     return this.displayError(
                         "Erreur",
@@ -342,12 +360,13 @@ public class OwnersController extends AbstractController
     }
     
     /**
+     * Handles the deletion of an owner.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -395,9 +414,9 @@ public class OwnersController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("owners.jsp?action=" + OwnersController.ACTION_LIST, request, response);
+            return this.redirect(OwnersController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + OwnersController.ACTION_LIST, request, response);
         }
-        catch(Exception e)
+        catch(NamingException | SQLException e)
         {
             return this.displayError(
                 "Erreur",
@@ -406,8 +425,6 @@ public class OwnersController extends AbstractController
                 request
             );
         }
-
-        return null;
     }
 
     /**

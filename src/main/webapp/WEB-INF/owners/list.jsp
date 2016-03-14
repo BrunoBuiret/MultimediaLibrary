@@ -16,7 +16,8 @@
         </c:forEach>
     </c:if>
     <p>
-        <a class="btn btn-default" href="owners.jsp?action=add" role="button">
+        <c:url value="/owners.jsp?action=add" var="_url" />
+        <a class="btn btn-default" href="${fn:escapeXml(_url)}" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Ajout
         </a>
@@ -49,10 +50,12 @@
                                     ${fn:escapeXml(owner.lastName)}
                                 </td>
                                 <td class="text-center">
-                                    <a href="owners.jsp?action=edit&id=${owner.id}"><!--
+                                    <c:url value="/owners.jsp?action=edit&id=${owner.id}" var="_url" />
+                                    <a href="${fn:escapeXml(_url)}"><!--
                                         --><span class="glyphicon glyphicon-pencil"></span><!--
                                     --></a>
-                                    <a href="owners.jsp?action=delete&id=${owner.id}" class="color-danger"><!--
+                                    <c:url value="/owners.jsp?action=delete&id=${owner.id}" var="_url" />
+                                    <a href="${fn:escapeXml(_url)}" class="color-danger"><!--
                                         --><span class="glyphicon glyphicon-trash"></span><!--
                                     --></a>
                                 </td>
@@ -61,7 +64,7 @@
                     </c:when>
                     <c:otherwise>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="3">
                                 Il n'y a aucun propriétaire pour le moment.
                             </td>
                         </tr>

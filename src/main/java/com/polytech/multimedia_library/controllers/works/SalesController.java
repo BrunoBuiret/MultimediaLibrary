@@ -29,14 +29,34 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @WebServlet(name = "SalesController", urlPatterns = {"/sellableWorks.jsp"})
 public class SalesController extends AbstractController
 {
+    /**
+     * The sellable works' controller URL.
+     */
+    protected static final String URL = "/sellableWorks.jsp";
+    
+    /**
+     * The sellable works' list action parameter's value.
+     */
     protected static final String ACTION_LIST = "list";
     
+    /**
+     * The sellable works' add action parameter's value.
+     */
     protected static final String ACTION_ADD = "add";
     
+    /**
+     * The sellable works' edit action parameter's value.
+     */
     protected static final String ACTION_EDIT = "edit";
     
+    /**
+     * The sellable works' delete action parameter's value.
+     */
     protected static final String ACTION_DELETE = "delete";
     
+    /**
+     * The sellable works' book action parameter's value.
+     */
     protected static final String ACTION_BOOK = "book";
     
     /**
@@ -95,12 +115,13 @@ public class SalesController extends AbstractController
     }
     
     /**
+     * Displays a list of sellable works.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeList(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -130,12 +151,13 @@ public class SalesController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to add a sellable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeAdd(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -210,6 +232,12 @@ public class SalesController extends AbstractController
                 try
                 {
                     price = Double.parseDouble(priceToParse);
+                    
+                    if(price < 0)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_price", "Le prix de l'oeuvre ne peut pas être négatif.");
+                    }
                 }
                 catch(NumberFormatException e)
                 {
@@ -245,9 +273,7 @@ public class SalesController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    this.redirect("sellableWorks.jsp?action=" + SalesController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(SalesController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + SalesController.ACTION_LIST, request, response);
                 }
                 catch(NamingException | SQLException e)
                 {
@@ -285,12 +311,13 @@ public class SalesController extends AbstractController
     }
     
     /**
+     * Displays and handles a form to edit a sellable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeEdit(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -422,6 +449,12 @@ public class SalesController extends AbstractController
                 try
                 {
                     price = Double.parseDouble(priceToParse);
+                    
+                    if(price < 0)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_price", "Le prix de l'oeuvre ne peut pas être négatif.");
+                    }
                 }
                 catch(NumberFormatException e)
                 {
@@ -464,9 +497,7 @@ public class SalesController extends AbstractController
                         )
                     );
                     // Finally, redirect the user
-                    this.redirect("sellableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
-
-                    return null;
+                    return this.redirect(SalesController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
                 }
                 catch(NamingException | SQLException e)
                 {
@@ -504,12 +535,13 @@ public class SalesController extends AbstractController
     }
     
     /**
+     * Handles the deletion of a sellable work.
      * 
      * @param request The servlet request.
      * @param response The servlet response.
-     * @return
-     * @throws ServletException
-     * @throws IOException 
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -558,7 +590,7 @@ public class SalesController extends AbstractController
             );
             
             // Finally, redirect the user
-            this.redirect("sellableWorks.jsp?action=" + SalesController.ACTION_LIST, request, response);
+            return this.redirect(SalesController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + SalesController.ACTION_LIST, request, response);
         }
         catch(NamingException | SQLException | ParseException e)
         {
@@ -569,17 +601,16 @@ public class SalesController extends AbstractController
                 request
             );
         }
-
-        return null;
     }
     
     /**
+     * Displays and handles a form to book a sellable work.
      * 
-     * @param request
-     * @param response
-     * @return 
-     * @throws ServletException
-     * @throws IOException 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return The file to forward the request to, or <code>null</code>.
+     * @throws javax.servlet.ServletException If a servlet-specific error occurs.
+     * @throws java.io.IOException If an I/O error occurs.
      */
     protected String executeBook(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -636,7 +667,7 @@ public class SalesController extends AbstractController
                 return this.displayError(
                     "Oeuvre déjà réservée",
                     String.format(
-                        "L'oeuvre <strong>%s</strong> a été réservé pour <strong>%s %s</strong>.",
+                        "L'oeuvre <strong>%s</strong> a déjà été réservé pour <strong>%s %s</strong>.",
                         StringEscapeUtils.escapeHtml4(work.getName()),
                         StringEscapeUtils.escapeHtml4(work.getBooking().getAdherent().getFirstName()),
                         StringEscapeUtils.escapeHtml4(work.getBooking().getAdherent().getLastName())
@@ -736,7 +767,7 @@ public class SalesController extends AbstractController
                     );
                     
                     // Finally, redirect the user
-                    return this.redirect("sellableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+                    return this.redirect(SalesController.URL + "?" + AbstractController.PARAMETER_ACTION + "=" + LoansController.ACTION_LIST, request, response);
                 }
                 catch(NamingException | SQLException e)
                 {

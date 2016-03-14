@@ -1,35 +1,36 @@
 package com.polytech.multimedia_library.entities.works.sellable;
 
 import com.polytech.multimedia_library.entities.Adherent;
+import com.polytech.multimedia_library.entities.works.SellableWork;
 import com.polytech.multimedia_library.entities.works.sellable.bookings.Status;
 import java.util.Date;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret <bruno.buiret@etu.univ-lyon1.fr>
  */
 public class Booking
 {
     /**
-     * 
+     * The booking's beneficiary.
      */
     protected Adherent adherent;
     
     /**
-     * 
+     * The booking's date.
      */
     protected Date date;
     
     /**
-     * 
+     * The booking' status.
      */
     protected Status status;
     
     /**
+     * Creates a new booking to be used with {@link SellableWork}.
      * 
-     * @param adherent
-     * @param date
-     * @param status 
+     * @param adherent The booking's beneficiary.
+     * @param date The booking's date.
+     * @param status The booking' status.
      */
     public Booking(Adherent adherent, Date date, Status status)
     {
@@ -39,8 +40,9 @@ public class Booking
     }
 
     /**
+     * Gets a booking's beneficiary.
      * 
-     * @return 
+     * @return The booking's beneficiary.
      */
     public Adherent getAdherent()
     {
@@ -48,8 +50,9 @@ public class Booking
     }
 
     /**
+     * Sets a booking's beneficiary.
      * 
-     * @param adherent 
+     * @param adherent The booking's beneficiary.
      */
     public void setAdherent(Adherent adherent)
     {
@@ -57,8 +60,9 @@ public class Booking
     }
 
     /**
+     * Gets a booking's date.
      * 
-     * @return 
+     * @return The booking's date.
      */
     public Date getDate()
     {
@@ -66,8 +70,9 @@ public class Booking
     }
 
     /**
+     * Sets a booking's date.
      * 
-     * @param date 
+     * @param date The booking's date.
      */
     public void setDate(Date date)
     {
@@ -75,8 +80,9 @@ public class Booking
     }
 
     /**
+     * Gets a booking' status.
      * 
-     * @return 
+     * @return The booking' status.
      */
     public Status getStatus()
     {
@@ -84,8 +90,9 @@ public class Booking
     }
 
     /**
+     * Sets a booking' status.
      * 
-     * @param status 
+     * @param status The booking' status.
      */
     public void setStatus(Status status)
     {

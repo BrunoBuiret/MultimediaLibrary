@@ -11,7 +11,8 @@
             <small>${fn:escapeXml(owner.firstName)} ${fn:escapeXml(owner.lastName)}</small>
         </h1>
     </div>
-    <form class="form-horizontal" method="post" action="owners.jsp?action=edit&id=${owner.id}">
+    <c:url value="/owners.jsp?action=edit&id=${owner.id}" var="_url" />
+    <form class="form-horizontal" method="post" action="${fn:escapeXml(_url)}">
         <div class="form-group<c:if test="${not empty _error_first_name}"> has-error</c:if>">
             <label for="firstName" class="control-label col-sm-2">
                 Prénom*
@@ -72,7 +73,8 @@
                 <button type="reset" class="btn btn-danger">
                     Réinitialiser
                 </button>
-                <a href="owners.jsp?action=list" class="btn btn-default">
+                <c:url value="/owners.jsp?action=list" var="_url" />
+                <a href="${fn:escapeXml(_url)}" class="btn btn-default">
                     Retour à la liste
                 </a>
             </div>
