@@ -12,7 +12,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/i18n/fr.js"></script>
     <script type="text/javascript">
         $(function() {
-            // Initialize vars
+            // Select 2
             var $ownersList = $("#ownerId");
             
             $ownersList.select2({
@@ -73,25 +73,25 @@
             </label>
             <div class="col-sm-10">
                 <select class="form-control" id="ownerId" name="ownerId">
-                <c:forEach items="${owners}" var="owner">
-                    <option
-                        value="${owner.id}"
-                        <c:choose>
-                            <c:when test="${_last_owner_id != null}">
-                                <c:if test="${_last_owner_id == owner.id}">
-                                    selected="selected"
-                                </c:if>
-                            </c:when>
-                            <c:otherwise>
-                                <c:if test="${work.owner.id == owner.id}">
-                                    selected="selected"
-                                </c:if>
-                            </c:otherwise>
-                        </c:choose>
-                    >
-                        <c:out value="${owner.firstName} ${owner.lastName}" />
-                    </option>
-                </c:forEach>
+                    <c:forEach items="${owners}" var="owner">
+                        <option
+                            value="${owner.id}"
+                            <c:choose>
+                                <c:when test="${_last_owner_id != null}">
+                                    <c:if test="${_last_owner_id == owner.id}">
+                                        selected="selected"
+                                    </c:if>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:if test="${work.owner.id == owner.id}">
+                                        selected="selected"
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
+                        >
+                            <c:out value="${owner.firstName} ${owner.lastName}" />
+                        </option>
+                    </c:forEach>
                 </select>
                 <c:if test="${not empty _error_owner_id}">
                     <span class="help-block">

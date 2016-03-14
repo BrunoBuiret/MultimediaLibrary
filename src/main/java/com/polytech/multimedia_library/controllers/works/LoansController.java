@@ -1,13 +1,24 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.entities.Adherent;
+import com.polytech.multimedia_library.entities.Loan;
 import com.polytech.multimedia_library.entities.Owner;
 import com.polytech.multimedia_library.entities.works.LoanableWork;
 import com.polytech.multimedia_library.http.HttpProtocol;
+import com.polytech.multimedia_library.repositories.AdherentRepository;
+import com.polytech.multimedia_library.repositories.LoansRepository;
 import com.polytech.multimedia_library.repositories.OwnerRepository;
 import com.polytech.multimedia_library.repositories.works.LoanableWorkRepository;
+import com.polytech.multimedia_library.utilities.DateUtils;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,6 +39,8 @@ public class LoansController extends AbstractController
     protected static final String ACTION_EDIT = "edit";
     
     protected static final String ACTION_DELETE = "delete";
+    
+    protected static final String ACTION_BORROW = "borrow";
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,6 +83,10 @@ public class LoansController extends AbstractController
             
             case LoansController.ACTION_DELETE:
                 targetPath = this.executeDelete(request, response);
+            break;
+            
+            case LoansController.ACTION_BORROW:
+                targetPath = this.executeBorrow(request, response);
             break;
         }
         
@@ -193,7 +210,7 @@ public class LoansController extends AbstractController
                     // Build the new work
                     LoanableWork work = new LoanableWork(name, owner);
 
-                    // And save them
+                    // And save it
                     LoanableWorkRepository workRepository = new LoanableWorkRepository();
                     workRepository.save(work);
 
@@ -289,7 +306,7 @@ public class LoansController extends AbstractController
             );
         }
         
-        // Fetch the owner
+        // Fetch the work
         LoanableWorkRepository workRepository = new LoanableWorkRepository();
         LoanableWork work = null;
         
@@ -511,6 +528,293 @@ public class LoansController extends AbstractController
         }
 
         return null;
+    }
+    
+    /**
+     * 
+     * @param request The servlet request.
+     * @param response The servlet response.
+     * @return
+     * @throws ServletException
+     * @throws IOException 
+     */
+    protected String executeBorrow(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+        // Initialize vars
+        final String requestMethod = request.getMethod().toUpperCase();
+        String targetPath = "/WEB-INF/works/loans/borrow.jsp";
+
+        // Try getting the owner's id
+        String idToParse = request.getParameter("id");
+        int id = 0;
+
+        try
+        {
+            if(null == idToParse)
+            {
+                return this.displayError(
+                    "Données manquantes",
+                    "Vous devez préciser l'identifiant de l'oeuvre à emprunter.",
+                    request
+                );
+            }
+            
+            id = Integer.parseInt(idToParse);
+        }
+        catch(NumberFormatException e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Impossible de récupérer l'identifiant de l'oeuvre à emprunter.",
+                e,
+                request
+            );
+        }
+        
+        // Fetch the work
+        LoanableWorkRepository workRepository = new LoanableWorkRepository();
+        LoanableWork work = null;
+        
+        try
+        {
+            work = workRepository.fetch(id);
+            
+            if(null == work)
+            {
+                return this.displayError(
+                    "Erreur 404",
+                    "Cette oeuvre n'existe pas ou plus.",
+                    request
+                );
+            }
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des informations de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Bind the work so as to display its data
+        request.setAttribute("work", work);
+        
+        // Fetch the existing loans so as to avoid overlapping
+        LoansRepository loanRepository = new LoansRepository();
+        List<Loan> loans = null;
+        Set<Date> loanDates = new HashSet<>();
+        
+        try
+        {
+            loans = loanRepository.fetchByWorkAndNotFinished(id);
+            
+            for(Loan loan : loans)
+            {
+                loanDates.addAll(DateUtils.getDaysBetween(loan.getDateStart(), loan.getDateEnd()));
+            }
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue pendant la récupération des prêts existant de l'oeuvre.",
+                e,
+                request
+            );
+        }
+        
+        // Bind the work so as to display its data
+        request.setAttribute("loanDates", loanDates);
+        
+        // Initialize additional vars
+        AdherentRepository adherentRepository = new AdherentRepository();
+        
+        if(requestMethod.equals(HttpProtocol.METHOD_POST))
+        {
+            // The form has been sent already
+            String adherentIdToParse = request.getParameter("adherentId");
+            String dateStartToParse = request.getParameter("dateStart");
+            String dateEndToParse = request.getParameter("dateEnd");
+            
+            // Initialize vars
+            int adherentId = 0;
+            Adherent adherent = null;
+            Date dateStart = null, dateEnd = null, dateNow = DateUtils.getToday();
+            
+            // Perform some checks
+            boolean hasError = false;
+            adherentIdToParse = null != adherentIdToParse ? adherentIdToParse.trim() : "";
+            dateStartToParse = null != dateStartToParse ? dateStartToParse.trim() : "";
+            dateEndToParse = null != dateEndToParse ? dateEndToParse.trim() : "";
+            
+            if(!adherentIdToParse.isEmpty())
+            {
+                try
+                {
+                    adherentId = Integer.parseInt(adherentIdToParse);
+                    adherent = adherentRepository.fetch(adherentId);
+                    
+                    // Does the adherent exist?
+                    if(null == adherent)
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_adherent_id", "L'adhérent que vous avez renseigné n'existe pas ou plus.");
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_adherent_id", "Impossible de récupérer l'identifiant de l'adhérent.");
+                }
+                catch(NamingException | SQLException e)
+                {
+                    return this.displayError(
+                        "Erreur", 
+                        "Une erreur est survenue lors de la vérification de l'existence de l'adhérent.",
+                        e,
+                        request
+                    );
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_adherent_id", "Vous devez renseigner l'adhérent souhaitant emprunter l'oeuvre.");
+            }
+            
+            if(!dateStartToParse.isEmpty())
+            {
+                try
+                {
+                    dateStart = DateUtils.parseFormDate(dateStartToParse);
+                    
+                    // Is the date in the past?
+                    if(dateStart.before(dateNow))
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_date_start", "Impossible d'emprunter une oeuvre avant aujourd'hui.");
+                    }
+                }
+                catch(ParseException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_date_start", "Impossible d'interpréter la date de début donnée.");
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_date_start", "Vous devez renseigner la date de début de l'emprunt.");
+            }
+            
+            if(!dateEndToParse.isEmpty())
+            {
+                try
+                {
+                    dateEnd = DateUtils.parseFormDate(dateEndToParse);
+                    
+                    // Is the date in the past?
+                    if(dateEnd.before(dateNow))
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_date_end", "Impossible d'emprunter une oeuvre avant aujourd'hui.");
+                    }
+                    // Or is the end before the start?
+                    else if(null != dateStart && dateStart.after(dateEnd))
+                    {
+                        hasError = true;
+                        request.setAttribute("_error_date_end", "La date de fin ne peut pas se trouver avant la date de début.");
+                    }
+                }
+                catch(ParseException e)
+                {
+                    hasError = true;
+                    request.setAttribute("_error_date_end", "Impossible d'interpréter la date de fin donnée.");
+                }
+            }
+            else
+            {
+                hasError = true;
+                request.setAttribute("_error_date_end", "Vous devez renseigner la date de fin de l'emprunt.");
+            }
+            
+            // Is the work already borrowed for those dates?
+            if(null != dateStart && null != dateEnd)
+            {
+                if(loanDates.contains(dateStart))
+                {
+                    hasError = true;
+                    request.setAttribute("_error_date_start", "Cette oeuvre est déjà empruntée ce jour-ci.");
+                }
+                
+                if(loanDates.contains(dateEnd))
+                {
+                    hasError = true;
+                    request.setAttribute("_error_date_end", "Cette oeuvre est déjà empruntée ce jour-ci.");
+                }
+            }
+            
+            if(!hasError)
+            {
+                try
+                {
+                    // Build the new loan
+                    Loan loan = new Loan(work, adherent, dateStart, dateEnd);
+                    
+                    // And save it
+                    loanRepository.save(loan);
+                    
+                    // Then, define a flash message to inform the user
+                    this.addFlash(
+                        request,
+                        "success",
+                        String.format(
+                            "Vous avez ajouté un emprunt pour l'oeuvre nommée <strong>%s</strong>.",
+                            StringEscapeUtils.escapeHtml4(work.getName())
+                        )
+                    );
+                    
+                    // Finally, redirect the user
+                    this.redirect("loanableWorks.jsp?action=" + LoansController.ACTION_LIST, request, response);
+
+                    return null;
+                }
+                catch(Exception e)
+                {
+                    return this.displayError(
+                        "Erreur",
+                        "Une erreur est survenue lors de l'ajout de l'emprunt d'une oeuvre.",
+                        e,
+                        request
+                    );
+                }
+            }
+            
+            // The form did have errors
+            request.setAttribute("_last_adherent_id", adherentId);
+            request.setAttribute("_last_date_start", dateStartToParse);
+            request.setAttribute("_last_date_end", dateEndToParse);
+        }
+        
+        // Fetch the existing adherents
+        try
+        {
+            request.setAttribute("adherents", adherentRepository.fetchAll());
+        }
+        catch(Exception e)
+        {
+            return this.displayError(
+                "Erreur",
+                "Une erreur est survenue lors de la récupération de la liste des adhérents.",
+                e,
+                request
+            );
+        }
+        
+        return targetPath;
     }
     
     /**

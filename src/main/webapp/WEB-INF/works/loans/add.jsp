@@ -9,8 +9,22 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/i18n/fr.js"></script>
     <script type="text/javascript">
         $(function() {
-            $("#ownerId").select2({
+            // Select 2
+            var $ownersList = $("#ownerId");
+            
+            $ownersList.select2({
                 language: "fr"
+            });
+            
+            $("form").on("reset", function(e) {
+                <c:choose>
+                    <c:when test="${_last_owner_id != null}">
+                        $ownersList.val(${_last_owner_id}).trigger("change");
+                    </c:when>
+                    <c:otherwise>
+                        $ownersList.val(${work.owner.id}).trigger("change");
+                    </c:otherwise>
+                </c:choose>
             });
         });
     </script>
@@ -50,16 +64,16 @@
             </label>
             <div class="col-sm-10">
                 <select class="form-control" id="ownerId" name="ownerId">
-                <c:forEach items="${owners}" var="owner">
-                    <option
-                        value="${owner.id}"
-                        <c:if test="${not empty _last_owner_id and _last_owner_id == owner.id}">
-                            selected="selected"
-                        </c:if>
-                    >
-                        <c:out value="${owner.firstName} ${owner.lastName}" />
-                    </option>
-                </c:forEach>
+                    <c:forEach items="${owners}" var="owner">
+                        <option
+                            value="${owner.id}"
+                            <c:if test="${not empty _last_owner_id and _last_owner_id == owner.id}">
+                                selected="selected"
+                            </c:if>
+                        >
+                            <c:out value="${owner.firstName} ${owner.lastName}" />
+                        </option>
+                    </c:forEach>
                 </select>
                 <c:if test="${not empty _error_owner_id}">
                     <span class="help-block">
