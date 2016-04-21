@@ -24,3 +24,6 @@ nbdist/
 nbactions.xml
 .nb-gradle/
 
+# Spring
+# ======
+target/
