@@ -10,7 +10,7 @@
     <class>com.polytech.multimedia_library.entities.Proprietaire</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/baseoeuvre"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/baseoeuvre?useEncoding=true&amp;characterEncoding=UTF-8"/>
       <property name="javax.persistence.jdbc.user" value="userepul"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="epul"/>
