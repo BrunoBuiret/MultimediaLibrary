@@ -89,7 +89,7 @@ public class ReservationPK implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.ReservationPK[ idOeuvrevente=" + idOeuvrevente + ", idAdherent=" + idAdherent + " ]";
+        return "com.polytech.multimedia_library.ReservationPK[ idOeuvrevente=" + idOeuvrevente + ", idAdherent=" + idAdherent + " ]";
     }
     
 }

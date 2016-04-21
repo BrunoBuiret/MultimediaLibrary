@@ -1,12 +1,12 @@
 <%@include file="/WEB-INF/bootstrap.jsp" %>
-<c:set var="_page_title" value="Liste des propri�taires" />
+<c:set var="_page_title" value="Liste des propriÃ©taires" />
 <c:set var="_page_current" value="owners_list" />
 <c:set var="_page_scripts">
     <script type="text/javascript">
         $(function() {
             // Initialize vars
             var $multiDeleteButton = $("#multi-delete-button");
-            var $toggleAllCheckBox = $("#owners-toggle-all");
+            var $toggleAllCheckBox = $("#toggle-all");
             var $checkBoxes = $("input[type='checkbox'][name='ids[]']");
             
             // Register event handlers
@@ -29,6 +29,9 @@
                 // Check or uncheck the toggle all check box
                 $toggleAllCheckBox.prop("checked", $checkBoxes.length === checkedNumber);
             });
+            
+            // Enable tooltips
+            $("[data-toggle='tooltip']").tooltip();
         });
     </script>
 </c:set>
@@ -63,14 +66,14 @@
                         <th style="width: 30px;">
                             <input
                                 type="checkbox"
-                                id="owners-toggle-all"
+                                id="toggle-all"
                                 <c:if test="${empty owners || fn:length(owners) eq 0}">
                                     disabled="disabled"
                                 </c:if>
                             />
                         </th>
                         <th>
-                            Pr�nom
+                            PrÃ©nom
                         </th>
                         <th>
                             Nom
@@ -106,11 +109,22 @@
                                     </td>
                                     <td>
                                         <c:url value="/owners/edit/${owner.idProprietaire}" var="_url" />
-                                        <a href="${fn:escapeXml(_url)}"><!--
+                                        <a
+                                            href="${fn:escapeXml(_url)}"
+                                            data-toggle="tooltip"
+                                            data-placement="left"
+                                            title="Éditer ce propriétaire"
+                                        ><!--
                                             --><span class="glyphicon glyphicon-pencil"></span><!--
                                         --></a>
                                         <c:url value="/owners/delete/${owner.idProprietaire}" var="_url" />
-                                        <a href="${fn:escapeXml(_url)}" class="color-danger"><!--
+                                        <a
+                                            href="${fn:escapeXml(_url)}"
+                                            class="color-danger"
+                                            data-toggle="tooltip"
+                                            data-placement="left"
+                                            title="Supprimer ce propriétaire"
+                                        ><!--
                                             --><span class="glyphicon glyphicon-trash"></span><!--
                                         --></a>
                                     </td>
@@ -120,7 +134,7 @@
                         <c:otherwise>
                             <tr>
                                 <td colspan="4">
-                                    Il n'y a aucun propri�taire pour le moment.
+                                    Il n'y a aucun propriétaire pour le moment.
                                 </td>
                             </tr>
                         </c:otherwise>

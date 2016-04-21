@@ -7,6 +7,9 @@
     </c:if>
     <c:url value="/adherents/submit" var="_url" />
     <form:form cssClass="form-horizontal" method="post" action="${_url}" modelAttribute="adherentForm">
+        <c:if test="${empty adherentForm.idAdherent}">
+            <input type="hidden" name="_is_new" value="1" />
+        </c:if>
         <form:input
             type="hidden"
             path="idAdherent"
@@ -14,7 +17,7 @@
         <spring:bind path="prenomAdherent">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:label path="prenomAdherent" for="firstName" cssClass="control-label col-sm-2">
-                    Prénom*
+                    PrÃ©nom*
                 </form:label>
                 <div class="col-sm-10">
                     <form:input
@@ -65,11 +68,11 @@
                     Enregistrer
                 </button>
                 <button class="btn btn-danger" type="reset">
-                    Réinitialiser
+                    RÃ©initialiser
                 </button>
                 <c:url value="/adherents" var="_url" />
                 <a class="btn btn-default" href="${fn:escapeXml(_url)}">
-                    Retour à la liste
+                    Retour Ã  la liste
                 </a>
             </div>
         </div>

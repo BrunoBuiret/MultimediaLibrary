@@ -1,12 +1,12 @@
 <%@include file="/WEB-INF/bootstrap.jsp" %>
-<c:set var="_page_title" value="Liste des oeuvres � pr�ter" />
+<c:set var="_page_title" value="Liste des oeuvres Ã  prÃªter" />
 <c:set var="_page_current" value="works_loans_list" />
 <c:set var="_page_scripts">
     <script type="text/javascript">
         $(function() {
             // Initialize vars
             var $multiDeleteButton = $("#multi-delete-button");
-            var $toggleAllCheckBox = $("#works-loans-toggle-all");
+            var $toggleAllCheckBox = $("#toggle-all");
             var $checkBoxes = $("input[type='checkbox'][name='ids[]']");
             
             // Register event handlers
@@ -29,6 +29,9 @@
                 // Check or uncheck the toggle all check box
                 $toggleAllCheckBox.prop("checked", $checkBoxes.length === checkedNumber);
             });
+            
+            // Enable tooltips
+            $("[data-toggle='tooltip']").tooltip();
         });
     </script>
 </c:set>
@@ -63,7 +66,7 @@
                         <th style="width: 30px;">
                             <input
                                 type="checkbox"
-                                id="adherents-toggle-all"
+                                id="toggle-all"
                                 <c:if test="${empty works || fn:length(works) eq 0}">
                                     disabled="disabled"
                                 </c:if>
@@ -73,9 +76,9 @@
                             Titre
                         </th>
                         <th>
-                            Propri�taire
+                            PropriÃ©taire
                         </th>
-                        <th style="width: 50px;">
+                        <th style="width: 75px;">
                         </th>
                     </tr>
                 </thead>
@@ -101,17 +104,38 @@
                                     </td>
                                     <td>
                                         <label class="table-label" for="loanable_work_${work.idOeuvrepret}">
-                                            ${fn:escapeXml(work.idProprietaire.prenomAdherent)}
-                                            ${fn:escapeXml(work.idProprietaire.nomAdherent)}
+                                            ${fn:escapeXml(work.idProprietaire.prenomProprietaire)}
+                                            ${fn:escapeXml(work.idProprietaire.nomProprietaire)}
                                         </label>
                                     </td>
                                     <td>
+                                        <c:url value="/works/loanable/borrow/${work.idOeuvrepret}" var="_url" />
+                                        <a
+                                            href="${fn:escapeXml(_url)}"
+                                            class="color-success"
+                                            data-toggle="tooltip"
+                                            data-placement="left"
+                                            title="Emprunter cette oeuvre"
+                                        ><!--
+                                            --><span class="glyphicon glyphicon-thumbs-up"></span><!--
+                                        --></a>
                                         <c:url value="/works/loanable/edit/${work.idOeuvrepret}" var="_url" />
-                                        <a href="${fn:escapeXml(_url)}"><!--
+                                        <a
+                                            href="${fn:escapeXml(_url)}"
+                                            data-toggle="tooltip"
+                                            data-placement="left"
+                                            title="Éditer cette oeuvre"
+                                        ><!--
                                             --><span class="glyphicon glyphicon-pencil"></span><!--
                                         --></a>
                                         <c:url value="/works/loanable/delete/${work.idOeuvrepret}" var="_url" />
-                                        <a href="${fn:escapeXml(_url)}" class="color-danger"><!--
+                                        <a
+                                            href="${fn:escapeXml(_url)}"
+                                            class="color-danger"
+                                            data-toggle="tooltip"
+                                            data-placement="left"
+                                            title="Supprimer cette oeuvre"
+                                        ><!--
                                             --><span class="glyphicon glyphicon-trash"></span><!--
                                         --></a>
                                     </td>
@@ -121,7 +145,7 @@
                         <c:otherwise>
                             <tr>
                                 <td colspan="4">
-                                    Il n'y a aucune oeuvre � pr�ter pour le moment.
+                                    Il n'y a aucune oeuvre Ã  prÃªter pour le moment.
                                 </td>
                             </tr>
                         </c:otherwise>

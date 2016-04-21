@@ -17,7 +17,7 @@
         <spring:bind path="prenomProprietaire">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:label path="prenomProprietaire" for="firstName" cssClass="control-label col-sm-2">
-                    Prénom*
+                    PrÃ©nom*
                 </form:label>
                 <div class="col-sm-10">
                     <form:input
@@ -52,11 +52,11 @@
                     Enregistrer
                 </button>
                 <button class="btn btn-danger" type="reset">
-                    Réinitialiser
+                    RÃ©initialiser
                 </button>
                 <c:url value="/owners" var="_url" />
                 <a class="btn btn-default" href="${fn:escapeXml(_url)}">
-                    Retour à la liste
+                    Retour Ã  la liste
                 </a>
             </div>
         </div>

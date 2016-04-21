@@ -35,9 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Oeuvrepret.findAll", query = "SELECT o FROM Oeuvrepret o"),
-    @NamedQuery(name = "Oeuvrepret.findByIdOeuvrepret", query = "SELECT o FROM Oeuvrepret o WHERE o.idOeuvrepret = :idOeuvrepret"),
-    @NamedQuery(name = "Oeuvrepret.findByTitreOeuvrepret", query = "SELECT o FROM Oeuvrepret o WHERE o.titreOeuvrepret = :titreOeuvrepret")
+    @NamedQuery(name = "Oeuvrepret.findAll", query = "SELECT o FROM Oeuvrepret o")
 })
 public class Oeuvrepret implements Serializable
 {
@@ -141,7 +139,7 @@ public class Oeuvrepret implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.Oeuvrepret[ idOeuvrepret=" + idOeuvrepret + " ]";
+        return "com.polytech.multimedia_library.Oeuvrepret[ idOeuvrepret=" + idOeuvrepret + " ]";
     }
     
 }

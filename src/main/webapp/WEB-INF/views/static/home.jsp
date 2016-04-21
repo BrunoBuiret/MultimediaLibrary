@@ -8,9 +8,9 @@
                 <img src="${fn:escapeXml(_url)}" alt="Logo Polytech" style="margin-right: 20px;" />
             </figure>
         </div>
-        <h1>Médiathèque Polytech Lyon</h1>
+        <h1>MÃ©diathÃ¨que Polytech Lyon</h1>
         <p>
-            Bienvenue sur le site web de gestion de la médiathèque de Polytech Lyon.
+            Bienvenue sur le site web de gestion de la mÃ©diathÃ¨que de Polytech Lyon.
         </p>
         <div class="clearfix"></div>
     </div>

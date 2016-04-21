@@ -32,11 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
-    @NamedQuery(name = "Reservation.findByIdOeuvrevente", query = "SELECT r FROM Reservation r WHERE r.reservationPK.idOeuvrevente = :idOeuvrevente"),
-    @NamedQuery(name = "Reservation.findByIdAdherent", query = "SELECT r FROM Reservation r WHERE r.reservationPK.idAdherent = :idAdherent"),
-    @NamedQuery(name = "Reservation.findByDateReservation", query = "SELECT r FROM Reservation r WHERE r.dateReservation = :dateReservation"),
-    @NamedQuery(name = "Reservation.findByStatut", query = "SELECT r FROM Reservation r WHERE r.statut = :statut")
+    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r")
 })
 public class Reservation implements Serializable
 {
@@ -158,7 +154,7 @@ public class Reservation implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.Reservation[ reservationPK=" + reservationPK + " ]";
+        return "com.polytech.multimedia_library.Reservation[ reservationPK=" + reservationPK + " ]";
     }
     
 }

@@ -8,6 +8,7 @@ package com.polytech.multimedia_library.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,10 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Proprietaire.findAll", query = "SELECT p FROM Proprietaire p"),
-    @NamedQuery(name = "Proprietaire.findByIdProprietaire", query = "SELECT p FROM Proprietaire p WHERE p.idProprietaire = :idProprietaire"),
-    @NamedQuery(name = "Proprietaire.findByNomProprietaire", query = "SELECT p FROM Proprietaire p WHERE p.nomProprietaire = :nomProprietaire"),
-    @NamedQuery(name = "Proprietaire.findByPrenomProprietaire", query = "SELECT p FROM Proprietaire p WHERE p.prenomProprietaire = :prenomProprietaire")
+    @NamedQuery(name = "Proprietaire.findAll", query = "SELECT p FROM Proprietaire p")
 })
 public class Proprietaire implements Serializable
 {
@@ -53,9 +51,9 @@ public class Proprietaire implements Serializable
     @Size(max = 100)
     @Column(name = "prenom_proprietaire")
     private String prenomProprietaire;
-    @OneToMany(mappedBy = "idProprietaire", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProprietaire", fetch = FetchType.LAZY)
     private List<Oeuvrevente> oeuvreventeList;
-    @OneToMany(mappedBy = "idProprietaire", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProprietaire", fetch = FetchType.LAZY)
     private List<Oeuvrepret> oeuvrepretList;
 
     public Proprietaire()
@@ -101,6 +99,11 @@ public class Proprietaire implements Serializable
     public void setPrenomProprietaire(String prenomProprietaire)
     {
         this.prenomProprietaire = prenomProprietaire;
+    }
+    
+    public String getFullName()
+    {
+        return this.prenomProprietaire + " " + this.nomProprietaire;
     }
 
     @XmlTransient
@@ -152,7 +155,7 @@ public class Proprietaire implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.Proprietaire[ idProprietaire=" + idProprietaire + " ]";
+        return "com.polytech.multimedia_library.Proprietaire[ idProprietaire=" + idProprietaire + " ]";
     }
     
 }

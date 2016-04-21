@@ -33,10 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Emprunt.findAll", query = "SELECT e FROM Emprunt e"),
-    @NamedQuery(name = "Emprunt.findByIdEmprunt", query = "SELECT e FROM Emprunt e WHERE e.idEmprunt = :idEmprunt"),
-    @NamedQuery(name = "Emprunt.findByDateDebut", query = "SELECT e FROM Emprunt e WHERE e.dateDebut = :dateDebut"),
-    @NamedQuery(name = "Emprunt.findByDateFin", query = "SELECT e FROM Emprunt e WHERE e.dateFin = :dateFin")
+    @NamedQuery(name = "Emprunt.findAll", query = "SELECT e FROM Emprunt e")
 })
 public class Emprunt implements Serializable
 {
@@ -156,7 +153,7 @@ public class Emprunt implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.Emprunt[ idEmprunt=" + idEmprunt + " ]";
+        return "com.polytech.multimedia_library.Emprunt[ idEmprunt=" + idEmprunt + " ]";
     }
     
 }

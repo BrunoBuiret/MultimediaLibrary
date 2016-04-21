@@ -5,10 +5,10 @@
         <h1>Contact</h1>
     </div>
     <p class="text-justify">
-        L'auteur du site web de gestion de la médiathèque de Polytech Lyon est
-        <a href="mailto: bruno.buiret@etu.univ-lyon1.fr">Bruno Buiret</a>. Il a été
-        créé au cours de l'année 2015 - 2016 dans le cadre de l'<abbr title="Unité d'enseignement">UE</abbr>
-        de <strong>programmation répartie</strong> à l'aide des technologies suivantes :
+        L'auteur du site web de gestion de la mÃ©diathÃ¨que de Polytech Lyon est
+        <a href="mailto: bruno.buiret@etu.univ-lyon1.fr">Bruno Buiret</a>. Il a Ã©tÃ©
+        crÃ©Ã© au cours de l'annÃ©e 2015 - 2016 dans le cadre de l'<abbr title="UnitÃ© d'enseignement">UE</abbr>
+        de <strong>programmation rÃ©partie</strong> Ã  l'aide des technologies suivantes :
     </p>
     <ul>
         <li>

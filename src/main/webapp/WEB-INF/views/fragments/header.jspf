@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>
-            Médiathèque Polytech
+            MÃ©diathÃ¨que Polytech
             <c:if test="${not empty _page_title}">
                 &raquo; <c:out value="${_page_title}" />
             </c:if>
@@ -34,7 +34,7 @@
                     </button>
                     <c:url value="/" var="_url" />
                     <a class="navbar-brand" href="${fn:escapeXml(_url)}">
-                        Médiathèque Polytech
+                        MÃ©diathÃ¨que Polytech
                     </a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
@@ -51,7 +51,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header">
-                                    Prêts
+                                    PrÃªts
                                 </li>
                                 <li<c:if test="${not empty _page_current && _page_current == 'works_loans_list'}"> class="active"</c:if>>
                                     <c:url value="/works/loanable" var="_url" />
@@ -86,38 +86,38 @@
                         </li>
                         <li class="dropdown<c:if test="${not empty _page_current && fn:startsWith(_page_current, 'adherents')}"> active</c:if>">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Adhérents <span class="caret"></span>
+                                AdhÃ©ents <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li<c:if test="${not empty _page_current && _page_current == 'adherents_list'}"> class="active"</c:if>>
                                     <c:url value="/adherents" var="_url" />
                                     <a href="${fn:escapeXml(_url)}">
-                                        Liste des adhérents
+                                        Liste des adhÃ©rents
                                     </a>
                                 </li>
                                 <li<c:if test="${not empty _page_current && _page_current == 'adherents_add'}"> class="active"</c:if>>
                                     <c:url value="/adherents/add" var="_url" />
                                     <a href="${fn:escapeXml(_url)}">
-                                        Ajout d'un adhérent
+                                        Ajout d'un adhÃ©rent
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="dropdown<c:if test="${not empty _page_current && fn:startsWith(_page_current, 'owners')}"> active</c:if>">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Propriétaires <span class="caret"></span>
+                                PropriÃ©taires <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li<c:if test="${not empty _page_current && _page_current == 'owners_list'}"> class="active"</c:if>>
                                     <c:url value="/owners" var="_url" />
                                     <a href="${fn:escapeXml(_url)}">
-                                        Liste des propriétaires
+                                        Liste des propriÃ©taires
                                     </a>
                                 </li>
                                 <li<c:if test="${not empty _page_current && _page_current == 'owners_add'}"> class="active"</c:if>>
                                     <c:url value="/owners/add" var="_url" />
                                     <a href="${fn:escapeXml(_url)}">
-                                        Ajout d'un propriétaire
+                                        Ajout d'un propriÃ©taire
                                     </a>
                                 </li>
                             </ul>

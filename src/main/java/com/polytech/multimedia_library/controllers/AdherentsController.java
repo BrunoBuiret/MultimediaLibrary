@@ -1,7 +1,7 @@
 package com.polytech.multimedia_library.controllers;
 
 import com.polytech.multimedia_library.entities.Adherent;
-import com.polytech.multimedia_library.repositories.AdherentRepository;
+import com.polytech.multimedia_library.repositories.AdherentsRepository;
 import com.polytech.multimedia_library.validators.AdherentValidator;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AdherentsController extends AbstractController
     public ModelAndView list()
     {
         // Initialize vars
-        AdherentRepository repository = new AdherentRepository();
+        AdherentsRepository repository = new AdherentsRepository();
         
         // Populate model
         ModelMap model = new ModelMap();
@@ -78,7 +78,7 @@ public class AdherentsController extends AbstractController
     public ModelAndView edit(@PathVariable int adherentId)
     {
         // Initialize vars
-        AdherentRepository repository = new AdherentRepository();
+        AdherentsRepository repository = new AdherentsRepository();
         Adherent adherent = repository.fetch(adherentId);
         
         if(adherent != null)
@@ -110,18 +110,20 @@ public class AdherentsController extends AbstractController
      * 
      * @param adherent
      * @param result
+     * @param isNew
      * @return 
      */
     @RequestMapping(value="/adherents/submit", method=RequestMethod.POST)
     public ModelAndView submit(
         @ModelAttribute("adherentForm") @Validated Adherent adherent,
-        BindingResult result
+        BindingResult result,
+        @RequestParam(value="_is_new", required=false) boolean isNew
     )
     {
         if(!result.hasErrors())
         {
             // Save the adherent
-            AdherentRepository repository = new AdherentRepository();
+            AdherentsRepository repository = new AdherentsRepository();
             repository.save(adherent);
             
             // Then, register a flash message
@@ -142,6 +144,17 @@ public class AdherentsController extends AbstractController
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("adherentForm", adherent);
+            
+            if(isNew)
+            {
+                model.addAttribute("_page_title", "Ajouter un nouveau propriétaire");
+                model.addAttribute("_page_current", "owners_add");
+            }
+            else
+            {
+                model.addAttribute("_page_title", "Éditer un propriétaire");
+                model.addAttribute("_page_current", "owners_edit");
+            }
 
             return this.render("adherents/form", model);
         }
@@ -156,7 +169,7 @@ public class AdherentsController extends AbstractController
     public ModelAndView delete(@PathVariable int adherentId)
     {
         // Initialize vars
-        AdherentRepository repository = new AdherentRepository();
+        AdherentsRepository repository = new AdherentsRepository();
         Adherent adherent = repository.fetch(adherentId);
         
         if(adherent != null)
@@ -202,7 +215,7 @@ public class AdherentsController extends AbstractController
         if(ids != null && ids.size() > 0)
         {
             // Initialize vars
-            AdherentRepository repository = new AdherentRepository();
+            AdherentsRepository repository = new AdherentsRepository();
             List<Adherent> adherents = repository.fetch(ids);
             
             if(adherents.size() > 0)

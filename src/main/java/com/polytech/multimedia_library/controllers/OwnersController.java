@@ -1,7 +1,7 @@
 package com.polytech.multimedia_library.controllers;
 
 import com.polytech.multimedia_library.entities.Proprietaire;
-import com.polytech.multimedia_library.repositories.OwnerRepository;
+import com.polytech.multimedia_library.repositories.OwnersRepository;
 import com.polytech.multimedia_library.validators.AdherentValidator;
 import com.polytech.multimedia_library.validators.OwnerValidator;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class OwnersController extends AbstractController
     public ModelAndView list()
     {
         // Initialize vars
-        OwnerRepository repository = new OwnerRepository();
+        OwnersRepository repository = new OwnersRepository();
         
         // Populate model
         ModelMap model = new ModelMap();
@@ -79,7 +79,7 @@ public class OwnersController extends AbstractController
     public ModelAndView edit(@PathVariable int ownerId)
     {
         // Initialize vars
-        OwnerRepository repository = new OwnerRepository();
+        OwnersRepository repository = new OwnersRepository();
         Proprietaire owner = repository.fetch(ownerId);
         
         if(owner != null)
@@ -124,7 +124,7 @@ public class OwnersController extends AbstractController
         if(!result.hasErrors())
         {
             // Save the owner
-            OwnerRepository repository = new OwnerRepository();
+            OwnersRepository repository = new OwnersRepository();
             repository.save(owner);
             
             // Then, register a flash message
@@ -170,7 +170,7 @@ public class OwnersController extends AbstractController
     public ModelAndView delete(@PathVariable int ownerId)
     {
         // Initialize vars
-        OwnerRepository repository = new OwnerRepository();
+        OwnersRepository repository = new OwnersRepository();
         Proprietaire owner = repository.fetch(ownerId);
         
         if(owner != null)
@@ -216,7 +216,7 @@ public class OwnersController extends AbstractController
         if(ids != null && ids.size() > 0)
         {
             // Initialize vars
-            OwnerRepository repository = new OwnerRepository();
+            OwnersRepository repository = new OwnersRepository();
             List<Proprietaire> owners = repository.fetch(ids);
             
             if(owners.size() > 0)

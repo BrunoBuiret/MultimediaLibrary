@@ -33,11 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Adherent.findAll", query = "SELECT a FROM Adherent a"),
-    @NamedQuery(name = "Adherent.findByIdAdherent", query = "SELECT a FROM Adherent a WHERE a.idAdherent = :idAdherent"),
-    @NamedQuery(name = "Adherent.findByNomAdherent", query = "SELECT a FROM Adherent a WHERE a.nomAdherent = :nomAdherent"),
-    @NamedQuery(name = "Adherent.findByPrenomAdherent", query = "SELECT a FROM Adherent a WHERE a.prenomAdherent = :prenomAdherent"),
-    @NamedQuery(name = "Adherent.findByVilleAdherent", query = "SELECT a FROM Adherent a WHERE a.villeAdherent = :villeAdherent")
+    @NamedQuery(name = "Adherent.findAll", query = "SELECT a FROM Adherent a")
 })
 public class Adherent implements Serializable
 {
@@ -167,7 +163,7 @@ public class Adherent implements Serializable
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.entities.Adherent[ idAdherent=" + idAdherent + " ]";
+        return "com.polytech.multimedia_library.Adherent[ idAdherent=" + idAdherent + " ]";
     }
     
 }

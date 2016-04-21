@@ -1,35 +1,34 @@
 package com.polytech.multimedia_library.repositories;
 
-import com.polytech.multimedia_library.entities.Adherent;
+import com.polytech.multimedia_library.entities.Proprietaire;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
 
 /**
  * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
-public class AdherentRepository extends AbstractRepository
+public class OwnersRepository extends AbstractRepository
 {
     /**
-     * Fetches a single existing adherent from the database.
+     * Fetches a single existing owner from the database.
      * 
-     * @param id The adherent's id.
-     * @return The adherent, or <code>null</code> if there are no matching adherent.
+     * @param id The owner's id.
+     * @return The owner, or <code>null</code> if there are no matching owner.
      */
-    public Adherent fetch(int id)
+    public Proprietaire fetch(int id)
     {
-        // Fetch the adherent
+        // Fetch the owner
         try
         {
-            return this.entityManager.find(Adherent.class, id);
+            return this.entityManager.find(Proprietaire.class, id);
         }
         catch(Exception ex)
         {
             throw new RepositoryException(
                 ex,
                 String.format(
-                    "Impossible de récupérer l'adhérent d'identifiant #%d.",
+                    "Impossible de récupérer le propriétaire d'identifiant #%d.",
                     id
                 )
             );
@@ -37,26 +36,26 @@ public class AdherentRepository extends AbstractRepository
     }
     
     /**
-     * Fetches a list of adherents from the database according to their id.
+     * Fetches a list of owners from the database according to their id.
      * 
-     * @param ids The list of adherent's id.
-     * @return The list of adherents.
+     * @param ids The list of owner's id.
+     * @return The list of owners.
      */
-    public List<Adherent> fetch(List<Integer> ids)
+    public List<Proprietaire> fetch(List<Integer> ids)
     {
         // Initialize vars
-        List<Adherent> adherents;
+        List<Proprietaire> owners;
         
-        // Fetch the adherents
+        // Fetch the owners
         if(ids.size() > 0)
         {
             try
             {
-                adherents = (List<Adherent> ) this.entityManager.createQuery(
-                    "SELECT a " +
-                    "FROM Adherent a " +
-                    "WHERE a.idAdherent IN(:ids) " +
-                    "ORDER BY a.nomAdherent, a.prenomAdherent"
+                owners = (List<Proprietaire> ) this.entityManager.createQuery(
+                    "SELECT p " +
+                    "FROM Proprietaire p " +
+                    "WHERE p.idProprietaire IN(:ids) " +
+                    "ORDER BY p.nomProprietaire, p.prenomProprietaire"
                 )
                 .setParameter("ids", ids)
                 .getResultList();
@@ -65,61 +64,61 @@ public class AdherentRepository extends AbstractRepository
             {
                 throw new RepositoryException(
                     ex,
-                    "Impossible de récupérer la liste des adhérents."
+                    "Impossible de récupérer la liste des propriétaires."
                 );
             }
         }
         else
         {
-            adherents = new ArrayList<>();
+            owners = new ArrayList<>();
         }
         
-        return adherents;
+        return owners;
     }
     
     /**
-     * Fetches every existing adherent from the database.
+     * Fetches every existing owner from the database.
      * 
-     * @return The list of adherents.
+     * @return The list of owners.
      */
-    public List<Adherent> fetchAll()
+    public List<Proprietaire> fetchAll()
     {
         // Initialize vars
-        List<Adherent> adherents;
+        List<Proprietaire> owners;
         
         // Fetch the adherents
         try
         {
-            adherents = (List<Adherent>) this.entityManager.createQuery(
-                "SELECT a FROM Adherent a ORDER BY a.nomAdherent, a.prenomAdherent"
+            owners = (List<Proprietaire>) this.entityManager.createQuery(
+                "SELECT p FROM Proprietaire p ORDER BY p.nomProprietaire, p.prenomProprietaire"
             ).getResultList();
         }
         catch(Exception ex)
         {
             throw new RepositoryException(
                 ex,
-                "Impossible de récupérer la liste des adhérents."
+                "Impossible de récupérer la liste des propriétaires."
             );
         }
         
-        return adherents;
+        return owners;
     }
     
     /**
-     * Saves an adherent into the database.
+     * Saves an owner into the database.
      * 
-     * @param adherent The adherent to save.
+     * @param owner The owner to save.
      */
-    public void save(Adherent adherent)
+    public void save(Proprietaire owner)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
         
-        // Save the adherent
+        // Save the owner
         try
         {
             transaction.begin();
-            this.entityManager.persist(adherent);
+            this.entityManager.persist(owner);
             this.entityManager.flush();
             transaction.commit();
         }
@@ -129,26 +128,26 @@ public class AdherentRepository extends AbstractRepository
             
             throw new RepositoryException(
                 ex,
-                "Impossible de sauvegarder l'adhérent."
+                "Impossible de sauvegarder le propriétaire."
             );
         }
     }
     
     /**
-     * Removes an adherent from the database.
+     * Removes an owner from the database.
      * 
-     * @param adherent The adherent to remove.
+     * @param owner The owner to remove.
      */
-    public void delete(Adherent adherent)
+    public void delete(Proprietaire owner)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
         
-        // Delete the adherent
+        // Delete the owner
         try
         {
             transaction.begin();
-            this.entityManager.remove(adherent);
+            this.entityManager.remove(owner);
             this.entityManager.flush();
             transaction.commit();
         }
@@ -158,17 +157,17 @@ public class AdherentRepository extends AbstractRepository
             
             throw new RepositoryException(
                 ex,
-                "Impossible de supprimer l'adhérent."
+                "Impossible de supprimer le propriétaire."
             );
         }
     }
     
     /**
-     * Removes a list of adherents from the database.
+     * Removes a list of owners from the database.
      * 
-     * @param adherents The list of adherents to remove.
+     * @param owners The list of owners to remove.
      */
-    public void delete(List<Adherent> adherents)
+    public void delete(List<Proprietaire> owners)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
@@ -177,9 +176,9 @@ public class AdherentRepository extends AbstractRepository
         {
             transaction.begin();
             
-            for(Adherent adherent : adherents)
+            for(Proprietaire owner : owners)
             {
-                this.entityManager.remove(adherent);
+                this.entityManager.remove(owner);
             }
             
             this.entityManager.flush();
@@ -191,7 +190,7 @@ public class AdherentRepository extends AbstractRepository
             
             throw new RepositoryException(
                 ex,
-                "Impossible de supprimer les adhérents."
+                "Impossible de supprimer les propriétaires."
             );
         }
     }

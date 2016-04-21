@@ -2,11 +2,11 @@ package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
 import com.polytech.multimedia_library.editors.OwnerEditor;
-import com.polytech.multimedia_library.entities.Oeuvrepret;
+import com.polytech.multimedia_library.entities.Oeuvrevente;
 import com.polytech.multimedia_library.entities.Proprietaire;
 import com.polytech.multimedia_library.repositories.OwnersRepository;
-import com.polytech.multimedia_library.repositories.works.LoanableWorksRepository;
-import com.polytech.multimedia_library.validators.LoanableWorkValidator;
+import com.polytech.multimedia_library.repositories.works.SellableWorksRepository;
+import com.polytech.multimedia_library.validators.SellableWorkValidator;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
 @Controller
-public class LoanableWorksController extends AbstractController
+public class SellableWorksController extends AbstractController
 {
     /**
      * 
@@ -36,7 +36,7 @@ public class LoanableWorksController extends AbstractController
     @InitBinder
     protected void initBinder(WebDataBinder binder)
     {
-        binder.setValidator(new LoanableWorkValidator());
+        binder.setValidator(new SellableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
     }
     
@@ -44,25 +44,25 @@ public class LoanableWorksController extends AbstractController
      * 
      * @return 
      */
-    @RequestMapping(value="/works/loanable", method=RequestMethod.GET)
+    @RequestMapping(value="/works/sellable", method=RequestMethod.GET)
     public ModelAndView list()
     {
         // Initialize vars
-        LoanableWorksRepository repository = new LoanableWorksRepository();
+        SellableWorksRepository repository = new SellableWorksRepository();
         
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("works", repository.fetchAll());
         model.addAttribute("_flashList", this.getAndClearFlashList());
         
-        return this.render("works/loans/list", model);
+        return this.render("works/sales/list", model);
     }
     
     /**
      * 
      * @return 
      */
-    @RequestMapping(value="/works/loanable/add", method=RequestMethod.GET)
+    @RequestMapping(value="/works/sellable/add", method=RequestMethod.GET)
     public ModelAndView add()
     {
         // Initialize vars
@@ -70,12 +70,12 @@ public class LoanableWorksController extends AbstractController
         
         // Populate model
         ModelMap model = new ModelMap();
-        model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à prêter");
-        model.addAttribute("_page_current", "works_loans_add");
-        model.addAttribute("workForm", new Oeuvrepret());
+        model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à vendre");
+        model.addAttribute("_page_current", "works_sales_add");
+        model.addAttribute("workForm", new Oeuvrevente());
         model.addAttribute("ownersList", ownersRepository.fetchAll());
         
-        return this.render("works/loans/form", model);
+        return this.render("works/sales/form", model);
     }
     
     /**
@@ -83,12 +83,12 @@ public class LoanableWorksController extends AbstractController
      * @param workId
      * @return 
      */
-    @RequestMapping(value="/works/loanable/edit/{workId}")
+    @RequestMapping(value="/works/sellable/edit/{workId}")
     public ModelAndView edit(@PathVariable int workId)
     {
         // Initialize vars
-        LoanableWorksRepository worksRepository = new LoanableWorksRepository();
-        Oeuvrepret work = worksRepository.fetch(workId);
+        SellableWorksRepository worksRepository = new SellableWorksRepository();
+        Oeuvrevente work = worksRepository.fetch(workId);
         
         if(work != null)
         {
@@ -97,12 +97,12 @@ public class LoanableWorksController extends AbstractController
             
             // Populate model
             ModelMap model = new ModelMap();
-            model.addAttribute("_page_title", "Éditer une oeuvre à prêter");
-            model.addAttribute("_page_current", "works_loans_edit");
+            model.addAttribute("_page_title", "Éditer une oeuvre à vendre");
+            model.addAttribute("_page_current", "works_sales_edit");
             model.addAttribute("workForm", work);
             model.addAttribute("ownersList", ownersRepository.fetchAll());
 
-            return this.render("works/loans/form", model);
+            return this.render("works/sales/form", model);
         }
         else
         {
@@ -110,12 +110,12 @@ public class LoanableWorksController extends AbstractController
             this.addFlash(
                 "danger", 
                 String.format(
-                    "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
+                    "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
             
-            return this.redirect("/works/loanable");
+            return this.redirect("/works/sellable");
         }
     }
     
@@ -126,9 +126,9 @@ public class LoanableWorksController extends AbstractController
      * @param isNew
      * @return 
      */
-    @RequestMapping(value="/works/loanable/submit", method=RequestMethod.POST)
+    @RequestMapping(value="/works/sellable/submit", method=RequestMethod.POST)
     public ModelAndView submit(
-        @ModelAttribute("workForm") @Validated Oeuvrepret work,
+        @ModelAttribute("workForm") @Validated Oeuvrevente work,
         BindingResult result,
         @RequestParam(value="_is_new", required=false) boolean isNew
     )
@@ -136,20 +136,20 @@ public class LoanableWorksController extends AbstractController
         if(!result.hasErrors())
         {
             // Save the work
-            LoanableWorksRepository repository = new LoanableWorksRepository();
+            SellableWorksRepository repository = new SellableWorksRepository();
             repository.save(work);
             
             // Then, register a flash message
             this.addFlash(
                 "success", 
                 String.format(
-                    "L'oeuvre à prêter nommée <strong>%s</strong> a été sauvegardée.",
-                    StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret())
+                    "L'oeuvre à vendre nommée <strong>%s</strong> a été sauvegardée.",
+                    StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente())
                 )
             );
             
             // Finally, redirect user
-            return this.redirect("/works/loanable");
+            return this.redirect("/works/sellable");
         }
         else
         {
@@ -163,16 +163,16 @@ public class LoanableWorksController extends AbstractController
             
             if(isNew)
             {
-                model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à prêter");
-                model.addAttribute("_page_current", "works_loans_add");
+                model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à vendre");
+                model.addAttribute("_page_current", "works_sales_add");
             }
             else
             {
-                model.addAttribute("_page_title", "Éditer une oeuvre à prêter");
-                model.addAttribute("_page_current", "works_loans_edit");
+                model.addAttribute("_page_title", "Éditer une oeuvre à vendre");
+                model.addAttribute("_page_current", "works_sales_edit");
             }
 
-            return this.render("works/loans/form", model);
+            return this.render("works/sales/form", model);
         }
     }
     
@@ -181,12 +181,12 @@ public class LoanableWorksController extends AbstractController
      * @param workId
      * @return 
      */
-    @RequestMapping(value="/works/loanable/delete/{workId}", method=RequestMethod.GET)
+    @RequestMapping(value="/works/sellable/delete/{workId}", method=RequestMethod.GET)
     public ModelAndView delete(@PathVariable int workId)
     {
         // Initialize vars
-        LoanableWorksRepository repository = new LoanableWorksRepository();
-        Oeuvrepret work = repository.fetch(workId);
+        SellableWorksRepository repository = new SellableWorksRepository();
+        Oeuvrevente work = repository.fetch(workId);
         
         if(work != null)
         {
@@ -197,8 +197,8 @@ public class LoanableWorksController extends AbstractController
             this.addFlash(
                 "success", 
                 String.format(
-                    "L'oeuvre à prêter nommée <strong>%s</strong> a été supprimée.",
-                    StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret())
+                    "L'oeuvre à vendre nommée <strong>%s</strong> a été supprimée.",
+                    StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente())
                 )
             );
             
@@ -209,14 +209,14 @@ public class LoanableWorksController extends AbstractController
             this.addFlash(
                 "danger", 
                 String.format(
-                    "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
+                    "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
         }
         
         // Finally, redirect user
-        return this.redirect("/works/loanable");
+        return this.redirect("/works/sellable");
     }
     
     /**
@@ -224,14 +224,14 @@ public class LoanableWorksController extends AbstractController
      * @param ids
      * @return 
      */
-    @RequestMapping(value="/works/loanable/delete", method=RequestMethod.POST)
+    @RequestMapping(value="/works/sellable/delete", method=RequestMethod.POST)
     public ModelAndView multiDelete(@RequestParam(value="ids[]", required=false) ArrayList<Integer> ids)
     {
         if(ids != null && ids.size() > 0)
         {
             // Initialize vars
-            LoanableWorksRepository repository = new LoanableWorksRepository();
-            List<Oeuvrepret> works = repository.fetch(ids);
+            SellableWorksRepository repository = new SellableWorksRepository();
+            List<Oeuvrevente> works = repository.fetch(ids);
             
             if(works.size() > 0)
             {
@@ -243,16 +243,16 @@ public class LoanableWorksController extends AbstractController
                 
                 if(works.size() > 1)
                 {
-                    flashBuilder.append("Les oeuvres à prêter suivantes ont été supprimées : ");
+                    flashBuilder.append("Les oeuvres à vendre suivantes ont été supprimées : ");
                     
                     for(int i = 0, j = works.size(); i < j; i++)
                     {
-                        Oeuvrepret work = works.get(i);
+                        Oeuvrevente work = works.get(i);
                         
                         flashBuilder.append(
                             String.format(
                                 "%s%s",
-                                StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret()),
+                                StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente()),
                                 i < j - 1 ? ", " : ""
                             )
                         );
@@ -262,12 +262,12 @@ public class LoanableWorksController extends AbstractController
                 }
                 else
                 {
-                    Oeuvrepret work = works.get(0);
+                    Oeuvrevente work = works.get(0);
                     
                     flashBuilder.append(
                         String.format(
-                            "L'oeuvre à prêter nommée <strong>%s</strong> a été supprimée.",
-                            StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret())
+                            "L'oeuvre à vendre nommée <strong>%s</strong> a été supprimée.",
+                            StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente())
                         )
                     );
                 }
@@ -282,7 +282,7 @@ public class LoanableWorksController extends AbstractController
                 // Register a flash message
                 this.addFlash(
                     "danger",
-                    "Ces identifiants ne correspondent à aucune oeuvre à prêter."
+                    "Ces identifiants ne correspondent à aucune oeuvre à vendre."
                 );
             }
         }
@@ -291,10 +291,10 @@ public class LoanableWorksController extends AbstractController
             // Register a flash message
             this.addFlash(
                 "danger", 
-                "Vous n'avez sélectionné aucune oeuvre à prêter à supprimer."
+                "Vous n'avez sélectionné aucune oeuvre à vendre à supprimer."
             );
         }
         
-        return this.redirect("/works/loanable");
+        return this.redirect("/works/sellable");
     }
 }
