@@ -1,0 +1,40 @@
+package com.polytech.multimedia_library.validators;
+
+import com.polytech.multimedia_library.entities.Adherent;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
+
+/**
+ * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
+ */
+public class AdherentValidator implements Validator
+{
+    /**
+     * 
+     * @param type
+     * @return 
+     */
+    @Override
+    public boolean supports(Class<?> type)
+    {
+        return Adherent.class.equals(type);
+    }
+
+    /**
+     * 
+     * @param target
+     * @param errors 
+     */
+    @Override
+    public void validate(Object target, Errors errors)
+    {
+        if(target instanceof Adherent)
+        {
+            // Common checks
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "prenomAdherent", "NotEmpty.adherentForm.prenomAdherent");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nomAdherent", "NotEmpty.adherentForm.nomAdherent");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "villeAdherent", "NotEmpty.adherentForm.villeAdherent");
+        }
+    }
+}

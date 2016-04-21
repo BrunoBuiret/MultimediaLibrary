@@ -1,0 +1,162 @@
+/**
+ * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
+ */
+
+/**
+ * Bootstrap > Global style
+ */
+a:hover span.glyphicon {
+    text-decoration: none;
+}
+
+abbr {
+    text-decoration: none;
+}
+
+.page-header:first-of-type,
+.page-header:first-of-type h1 {
+    margin-top: 0;
+}
+
+.page-header:first-of-type h1 {
+    margin-bottom: 0;
+}
+
+.jumbotron,
+.container .jumbotron,
+.container-fluid .jumbotron {
+    padding: 20px;
+}
+
+/**
+ * Bootstrap > Tabs
+ */
+.tab-content {
+    padding: 10px;
+    
+    &.tab-bordered {
+        border: 1px solid #ddd;
+        border-top-width: 0;
+    }
+    
+    .tab-pane p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/**
+ * Bootstrap > Colors
+ */
+.color-primary {
+    color: #337ab7;
+    
+    &:hover {
+        color: #286090;
+    }
+}
+
+.color-success {
+    color: #5cb85c;
+    
+    &:hover {
+        color: #449d44;
+    }
+}
+.color-info {
+    color: #5bc0de;
+    
+    &:hover {
+        color: #31b0d5;
+    }
+}
+
+.color-warning {
+    color: #f0ad4e;
+    
+    &:hover {
+        color: #ec971f;
+    }
+}
+
+.color-danger {
+    color: #d9534f;
+    
+    &:hover {
+        color: #c9302c;
+    }
+}
+
+/**
+ * Bootstrap > Callout
+ */
+.callout {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    background-color: #f8f8f8;
+    
+    h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    
+    p:last-child {
+        margin-bottom: 0;
+    }
+    
+    &.callout-danger {
+        border-left-color: #ce4844;
+        
+        h4 {
+            color: #ce4844;
+        }
+    }
+    
+    &.callout-callout-warning {
+        border-left-color: #aa6708;
+        
+        h4 {
+            color: #aa6708;
+        }
+    }
+    
+    &.callout-callout-callout-info {
+        border-left-color: #1b809e;
+        
+        h4 {
+            color: #1b809e;
+        }
+    }
+}
+
+/**
+ * Bootstrap > Forms
+ */
+label.table-label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+/**
+ * Custom spacers
+ */
+.spacer {
+    display: block;
+    
+    &.spacer-xs {
+        height: 5px;
+    }
+    
+    &.spacer-sm {
+        height: 10px;
+    }
+    
+    &.spacer-md {
+        height: 15px;
+    }
+    
+    &.spacer-lg {
+        height: 20px;
+    }
+}
