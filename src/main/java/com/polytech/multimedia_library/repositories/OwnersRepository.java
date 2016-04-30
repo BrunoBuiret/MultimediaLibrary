@@ -51,7 +51,7 @@ public class OwnersRepository extends AbstractRepository
         {
             try
             {
-                owners = (List<Proprietaire> ) this.entityManager.createQuery(
+                owners = (List<Proprietaire>) this.entityManager.createQuery(
                     "SELECT p " +
                     "FROM Proprietaire p " +
                     "WHERE p.idProprietaire IN(:ids) " +

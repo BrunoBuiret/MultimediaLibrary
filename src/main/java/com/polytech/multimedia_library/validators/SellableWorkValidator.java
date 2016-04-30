@@ -11,9 +11,11 @@ import org.springframework.validation.Validator;
 public class SellableWorkValidator implements Validator
 {
     /**
+     * Tests if this validator can be used for this class.
      * 
-     * @param type
-     * @return 
+     * @param type The class to test.
+     * @return <code>true</code> if the validator supports this class,
+     * <code>false</code> otherwise.
      */
     @Override
     public boolean supports(Class<?> type)
@@ -22,9 +24,10 @@ public class SellableWorkValidator implements Validator
     }
 
     /**
+     * Validates an object.
      * 
-     * @param target
-     * @param errors 
+     * @param target The object to validate.
+     * @param errors The errors list.
      */
     @Override
     public void validate(Object target, Errors errors)

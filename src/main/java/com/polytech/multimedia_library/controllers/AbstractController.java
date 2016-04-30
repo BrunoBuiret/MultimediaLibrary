@@ -18,15 +18,17 @@ import org.springframework.web.servlet.view.RedirectView;
 public abstract class AbstractController
 {
     /**
-     * 
+     * The request sent to the server.
      */
     @Autowired
     protected HttpServletRequest request;
     
     /**
+     * Renders a view whose name is <code>viewName</code> without any
+     * model.
      * 
-     * @param viewName
-     * @return 
+     * @param viewName The view's name.
+     * @return The view only.
      */
     protected ModelAndView render(String viewName)
     {
@@ -34,10 +36,12 @@ public abstract class AbstractController
     }
     
     /**
+     * Renders a view whose name is <code>viewName</code> with an accompanying
+     * model.
      * 
-     * @param viewName
-     * @param model
-     * @return 
+     * @param viewName The view's name.
+     * @param model The accompanying model.
+     * @return The view with its model.
      */
     protected ModelAndView render(String viewName, ModelMap model)
     {
@@ -48,7 +52,7 @@ public abstract class AbstractController
      * Redirects the user to the given URL.
      * 
      * @param url The URL to redirect to.
-     * @return 
+     * @return A redirection view.
      */
     protected ModelAndView redirect(String url)
     {
@@ -56,9 +60,10 @@ public abstract class AbstractController
     }
     
     /**
+     * Handles exceptions that haven't been caught yet.
      * 
-     * @param ex
-     * @return 
+     * @param ex The exception that occured.
+     * @return A view to display informations about the exception.
      */
     @ExceptionHandler(AbstractException.class)
     public ModelAndView exceptionHandler(AbstractException ex)
@@ -74,8 +79,9 @@ public abstract class AbstractController
     }
     
     /**
+     * Creates the flash list if it doesn't exist yet and then returns it.
      * 
-     * @return 
+     * @return The flash list.
      */
     protected List<Flash> getFlashList()
     {
@@ -96,8 +102,10 @@ public abstract class AbstractController
     }
     
     /**
+     * Creates a copy of the current flash list before clearing it, then returns
+     * the copy.
      * 
-     * @return 
+     * @return The flash list.
      */
     protected List<Flash> getAndClearFlashList()
     {
@@ -117,9 +125,10 @@ public abstract class AbstractController
     }
     
     /**
+     * Adds a flash message to the flash list.
      * 
-     * @param type
-     * @param contents 
+     * @param type The flash message's type.
+     * @param contents The flash message's contents.
      */
     protected void addFlash(String type, String contents)
     {

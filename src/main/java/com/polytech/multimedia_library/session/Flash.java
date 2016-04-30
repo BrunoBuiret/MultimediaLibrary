@@ -6,19 +6,20 @@ package com.polytech.multimedia_library.session;
 public class Flash
 {
     /**
-     * 
+     * The flash message's type.
      */
     protected final String type;
     
     /**
-     * 
+     * The flash message's contents.
      */
     protected final String contents;
     
     /**
+     * Creates a new flash message.
      * 
-     * @param type
-     * @param contents 
+     * @param type The flash message's type.
+     * @param contents The flash message's contents.
      */
     public Flash(String type, String contents)
     {
@@ -27,20 +28,22 @@ public class Flash
     }
 
     /**
+     * Gets the flash message's type.
      * 
-     * @return 
+     * @return The flash message's type.
      */
     public String getType()
     {
-        return type;
+        return this.type;
     }
 
     /**
+     * Gets the flash message's contents.
      * 
-     * @return 
+     * @return The flash message's contents.
      */
     public String getContents()
     {
-        return contents;
+        return this.contents;
     }
 }

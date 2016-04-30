@@ -4,7 +4,6 @@ import com.polytech.multimedia_library.entities.Adherent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
 
 /**
  * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
@@ -52,7 +51,7 @@ public class AdherentsRepository extends AbstractRepository
         {
             try
             {
-                adherents = (List<Adherent> ) this.entityManager.createQuery(
+                adherents = (List<Adherent>) this.entityManager.createQuery(
                     "SELECT a " +
                     "FROM Adherent a " +
                     "WHERE a.idAdherent IN(:ids) " +

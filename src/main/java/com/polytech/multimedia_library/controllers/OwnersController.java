@@ -2,7 +2,6 @@ package com.polytech.multimedia_library.controllers;
 
 import com.polytech.multimedia_library.entities.Proprietaire;
 import com.polytech.multimedia_library.repositories.OwnersRepository;
-import com.polytech.multimedia_library.validators.AdherentValidator;
 import com.polytech.multimedia_library.validators.OwnerValidator;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,36 +26,39 @@ import org.springframework.web.servlet.ModelAndView;
 public class OwnersController extends AbstractController
 {
     /**
-     * 
-     * @param binder 
+     * Initializes a binder with validators and editors.
+     *
+     * @param binder The binder to initialize.
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder)
     {
         binder.setValidator(new OwnerValidator());
     }
-    
+
     /**
-     * 
-     * @return 
+     * Displays a list of owners.
+     *
+     * @return The view to display.
      */
     @RequestMapping(value="/owners", method=RequestMethod.GET)
     public ModelAndView list()
     {
         // Initialize vars
         OwnersRepository repository = new OwnersRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("owners", repository.fetchAll());
         model.addAttribute("_flashList", this.getAndClearFlashList());
-        
+
         return this.render("owners/list", model);
     }
-    
+
     /**
-     * 
-     * @return 
+     * Displays a form to add an owner.
+     *
+     * @return The view to display.
      */
     @RequestMapping(value="/owners/add")
     public ModelAndView add()
@@ -66,14 +68,15 @@ public class OwnersController extends AbstractController
         model.addAttribute("_page_title", "Ajouter un nouveau propriétaire");
         model.addAttribute("_page_current", "owners_add");
         model.addAttribute("ownerForm", new Proprietaire());
-        
+
         return this.render("owners/form", model);
     }
-    
+
     /**
-     * 
-     * @param ownerId
-     * @return 
+     * Displays a form to edit an owner.
+     *
+     * @param ownerId The owner's id.
+     * @return The view to display.
      */
     @RequestMapping(value="/owners/edit/{ownerId}")
     public ModelAndView edit(@PathVariable int ownerId)
@@ -81,7 +84,7 @@ public class OwnersController extends AbstractController
         // Initialize vars
         OwnersRepository repository = new OwnersRepository();
         Proprietaire owner = repository.fetch(ownerId);
-        
+
         if(owner != null)
         {
             // Populate model
@@ -96,23 +99,24 @@ public class OwnersController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucun propriétaire ayant pour identifiant <strong>%d</strong>.",
                     ownerId
                 )
             );
-            
+
             return this.redirect("/owners");
         }
     }
-    
+
     /**
+     * Handles the submission of a form to add or edit an owner.
      * 
-     * @param owner
-     * @param result
-     * @param isNew
-     * @return 
+     * @param owner The owner to save.
+     * @param result The validation results.
+     * @param isNew A boolean indicating if the owner is new or not.
+     * @return The view to display or use to redirect.
      */
     @RequestMapping(value="/owners/submit", method=RequestMethod.POST)
     public ModelAndView submit(
@@ -126,17 +130,17 @@ public class OwnersController extends AbstractController
             // Save the owner
             OwnersRepository repository = new OwnersRepository();
             repository.save(owner);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "Le propriétaire nommé <strong>%s %s</strong> a été sauvegardé.",
                     StringEscapeUtils.escapeHtml(owner.getPrenomProprietaire()),
                     StringEscapeUtils.escapeHtml(owner.getNomProprietaire())
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/owners");
         }
@@ -145,7 +149,7 @@ public class OwnersController extends AbstractController
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("ownerForm", owner);
-            
+
             if(isNew)
             {
                 model.addAttribute("_page_title", "Ajouter un nouveau propriétaire");
@@ -160,11 +164,12 @@ public class OwnersController extends AbstractController
             return this.render("owners/form", model);
         }
     }
-    
+
     /**
+     * Handles the deletion of a single owner.
      * 
-     * @param ownerId
-     * @return 
+     * @param ownerId The owner's id.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/owners/delete/{ownerId}", method=RequestMethod.GET)
     public ModelAndView delete(@PathVariable int ownerId)
@@ -172,43 +177,44 @@ public class OwnersController extends AbstractController
         // Initialize vars
         OwnersRepository repository = new OwnersRepository();
         Proprietaire owner = repository.fetch(ownerId);
-        
+
         if(owner != null)
         {
             // Delete the owner
             repository.delete(owner);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "Le propriétaire nommé <strong>%s %s</strong> a été supprimé.",
                     StringEscapeUtils.escapeHtml(owner.getPrenomProprietaire()),
                     StringEscapeUtils.escapeHtml(owner.getNomProprietaire())
                 )
             );
-            
+
         }
         else
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucun propriétaire ayant pour identifiant <strong>%d</strong>.",
                     ownerId
                 )
             );
         }
-        
+
         // Finally, redirect user
         return this.redirect("/owners");
     }
-    
+
     /**
+     * Handles the deletion of multiple owners.
      * 
-     * @param ids
-     * @return 
+     * @param ids The list of owners' ids.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/owners/delete", method=RequestMethod.POST)
     public ModelAndView multiDelete(@RequestParam(value="ids[]", required=false) ArrayList<Integer> ids)
@@ -218,23 +224,23 @@ public class OwnersController extends AbstractController
             // Initialize vars
             OwnersRepository repository = new OwnersRepository();
             List<Proprietaire> owners = repository.fetch(ids);
-            
+
             if(owners.size() > 0)
             {
                 // Delete the owners
                 repository.delete(owners);
-                
+
                 // Then, register a flash message
                 StringBuilder flashBuilder = new StringBuilder();
-                
+
                 if(owners.size() > 1)
                 {
                     flashBuilder.append("Les propriétaires suivants ont été supprimés : ");
-                    
+
                     for(int i = 0, j = owners.size(); i < j; i++)
                     {
                         Proprietaire owner = owners.get(i);
-                        
+
                         flashBuilder.append(
                             String.format(
                                 "%s %s%s",
@@ -244,13 +250,13 @@ public class OwnersController extends AbstractController
                             )
                         );
                     }
-                    
+
                     flashBuilder.append(".");
                 }
                 else
                 {
                     Proprietaire owner = owners.get(0);
-                    
+
                     flashBuilder.append(
                         String.format(
                             "Le propriétaire nommé <strong>%s %s</strong> a été supprimé.",
@@ -259,7 +265,7 @@ public class OwnersController extends AbstractController
                         )
                     );
                 }
-                
+
                 this.addFlash(
                     "success",
                     flashBuilder.toString()
@@ -278,11 +284,11 @@ public class OwnersController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 "Vous n'avez sélectionné aucun propriétaire à supprimer."
             );
         }
-        
+
         return this.redirect("/owners");
     }
 }

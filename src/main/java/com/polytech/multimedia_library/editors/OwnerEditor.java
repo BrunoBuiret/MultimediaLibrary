@@ -1,6 +1,7 @@
 package com.polytech.multimedia_library.editors;
 
 import com.polytech.multimedia_library.repositories.OwnersRepository;
+import com.polytech.multimedia_library.repositories.RepositoryException;
 import java.beans.PropertyEditorSupport;
 import org.springframework.stereotype.Component;
 
@@ -12,17 +13,20 @@ import org.springframework.stereotype.Component;
 public class OwnerEditor extends PropertyEditorSupport
 {
     /**
-     * 
+     * An instance of the owners' repository to fetch them.
      */
     protected OwnersRepository ownersRepository = new OwnersRepository();
 
     /**
+     * Transforms a string containing an owner's id into an owner instance.
      * 
-     * @param text
-     * @throws IllegalArgumentException 
+     * @param text The owner's id.
+     * @throws RepositoryException If the owner can't be fetched.
+     * @throws NumberFormatException If the string can't be parsed.
      */
     @Override
-    public void setAsText(String text) throws IllegalArgumentException
+    public void setAsText(String text)
+    throws RepositoryException, NumberFormatException
     {
         this.setValue(this.ownersRepository.fetch(Integer.parseInt(text)));
     }

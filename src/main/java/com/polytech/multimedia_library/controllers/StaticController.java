@@ -12,8 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class StaticController extends AbstractController
 {
     /**
+     * Displays the home page of the website.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/", method=RequestMethod.GET)
     public ModelAndView home()
@@ -22,8 +23,9 @@ public class StaticController extends AbstractController
     }
     
     /**
+     * Displays the contact page of the website.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/contact", method=RequestMethod.GET)
     public ModelAndView contact()

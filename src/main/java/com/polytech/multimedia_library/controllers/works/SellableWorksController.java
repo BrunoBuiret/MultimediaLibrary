@@ -30,8 +30,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class SellableWorksController extends AbstractController
 {
     /**
+     * Initializes a binder with validators and editors.
      * 
-     * @param binder 
+     * @param binder The binder to initialize.
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder)
@@ -41,8 +42,9 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Displays a list of sellable works.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/works/sellable", method=RequestMethod.GET)
     public ModelAndView list()
@@ -59,8 +61,9 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Displays a form to add a sellable work.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/works/sellable/add", method=RequestMethod.GET)
     public ModelAndView add()
@@ -79,9 +82,10 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Displays a form edit a sellable work.
      * 
-     * @param workId
-     * @return 
+     * @param workId The work's id.
+     * @return The view to display.
      */
     @RequestMapping(value="/works/sellable/edit/{workId}")
     public ModelAndView edit(@PathVariable int workId)
@@ -120,11 +124,12 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Handles the submission of a form to add or edit a sellable work.
      * 
-     * @param work
-     * @param result
-     * @param isNew
-     * @return 
+     * @param work The work to save.
+     * @param result The validation results.
+     * @param isNew A boolean indicating if the work is new or not.
+     * @return The view to display or to use to redirect.
      */
     @RequestMapping(value="/works/sellable/submit", method=RequestMethod.POST)
     public ModelAndView submit(
@@ -177,9 +182,10 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Handles the deletion of a single sellable work.
      * 
-     * @param workId
-     * @return 
+     * @param workId The work's id.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/sellable/delete/{workId}", method=RequestMethod.GET)
     public ModelAndView delete(@PathVariable int workId)
@@ -220,9 +226,10 @@ public class SellableWorksController extends AbstractController
     }
     
     /**
+     * Handles the deletion of multiple sellable works.
      * 
-     * @param ids
-     * @return 
+     * @param ids The list of works' ids.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/sellable/delete", method=RequestMethod.POST)
     public ModelAndView multiDelete(@RequestParam(value="ids[]", required=false) ArrayList<Integer> ids)

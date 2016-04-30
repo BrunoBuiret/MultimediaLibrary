@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 public abstract class AbstractRepository
 {
     /**
-     * 
+     * The entity manager used to persist entities into the database.
      */
     protected EntityManager entityManager;
     

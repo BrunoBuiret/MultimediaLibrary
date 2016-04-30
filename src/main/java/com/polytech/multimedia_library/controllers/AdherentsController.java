@@ -26,8 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdherentsController extends AbstractController
 {
     /**
+     * Initializes a binder with validators and editors.
      * 
-     * @param binder 
+     * @param binder The binder to initialize.
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder)
@@ -36,8 +37,9 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays a list of adherents.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/adherents", method=RequestMethod.GET)
     public ModelAndView list()
@@ -54,8 +56,9 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays a form to add an adherent.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/adherents/add", method=RequestMethod.GET)
     public ModelAndView add()
@@ -70,9 +73,10 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Displays a form to edit an adherent.
      * 
-     * @param adherentId
-     * @return 
+     * @param adherentId The adherent's id.
+     * @return The view to display.
      */
     @RequestMapping(value="/adherents/edit/{adherentId}")
     public ModelAndView edit(@PathVariable int adherentId)
@@ -107,11 +111,12 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Handles the submission of a form to add or edit an adherent.
      * 
-     * @param adherent
-     * @param result
-     * @param isNew
-     * @return 
+     * @param adherent The adherent to save.
+     * @param result The validation results.
+     * @param isNew A boolean indicating if the adherent is new or not.
+     * @return The view to display or to use to redirect.
      */
     @RequestMapping(value="/adherents/submit", method=RequestMethod.POST)
     public ModelAndView submit(
@@ -161,9 +166,10 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Handles the deletion of a single adherent.
      * 
-     * @param adherentId
-     * @return 
+     * @param adherentId The adherent's id.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/adherents/delete/{adherentId}", method=RequestMethod.GET)
     public ModelAndView delete(@PathVariable int adherentId)
@@ -205,9 +211,10 @@ public class AdherentsController extends AbstractController
     }
     
     /**
+     * Handles the deletion of multiple adherents.
      * 
-     * @param ids
-     * @return 
+     * @param ids The list of adherents' ids.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/adherents/delete", method=RequestMethod.POST)
     public ModelAndView multiDelete(@RequestParam(value="ids[]", required=false) ArrayList<Integer> ids)

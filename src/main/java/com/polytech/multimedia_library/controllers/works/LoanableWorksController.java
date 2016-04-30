@@ -30,8 +30,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoanableWorksController extends AbstractController
 {
     /**
+     * Initializes a binder with validators and editors.
      * 
-     * @param binder 
+     * @param binder The binder to initialize.
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder)
@@ -41,8 +42,9 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Displays a list loanable works.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/works/loanable", method=RequestMethod.GET)
     public ModelAndView list()
@@ -59,8 +61,9 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Displays a form to add a loanable work.
      * 
-     * @return 
+     * @return The view to display.
      */
     @RequestMapping(value="/works/loanable/add", method=RequestMethod.GET)
     public ModelAndView add()
@@ -79,9 +82,10 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Displays a form edit a loanable work.
      * 
-     * @param workId
-     * @return 
+     * @param workId The work's id.
+     * @return The view to display.
      */
     @RequestMapping(value="/works/loanable/edit/{workId}")
     public ModelAndView edit(@PathVariable int workId)
@@ -120,10 +124,11 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Handles the submission of a form to add or edit a loanable work.
      * 
-     * @param work
-     * @param result
-     * @param isNew
+     * @param work The work to save.
+     * @param result The validation results.
+     * @param isNew A boolean indicating if the work is new or not
      * @return 
      */
     @RequestMapping(value="/works/loanable/submit", method=RequestMethod.POST)
@@ -177,9 +182,10 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Handles the deletion of a single loanable work.
      * 
-     * @param workId
-     * @return 
+     * @param workId The work's id.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/loanable/delete/{workId}", method=RequestMethod.GET)
     public ModelAndView delete(@PathVariable int workId)
@@ -220,9 +226,10 @@ public class LoanableWorksController extends AbstractController
     }
     
     /**
+     * Handles the deletion of multiple loanable works.
      * 
-     * @param ids
-     * @return 
+     * @param ids The list of loanable works' ids.
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/loanable/delete", method=RequestMethod.POST)
     public ModelAndView multiDelete(@RequestParam(value="ids[]", required=false) ArrayList<Integer> ids)
