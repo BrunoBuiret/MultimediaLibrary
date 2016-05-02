@@ -42,7 +42,6 @@ public class SellableWorksController extends AbstractController
      * with sellable works.
      * 
      * @param binder The binder to initialize.
-     * @see http://stackoverflow.com/questions/25873363/configure-two-initbinder-to-work-with-the-same-model-or-entity-but-for-differen
      */
     @InitBinder("workForm")
     protected void initWorkBinder(WebDataBinder binder)
@@ -388,12 +387,6 @@ public class SellableWorksController extends AbstractController
         BindingResult result
     )
     {
-        System.out.println("pk: " + booking.getReservationPK());
-        System.out.println("ad: " + booking.getAdherent());
-        System.out.println("dr: " + booking.getDateReservation());
-        System.out.println("ov: " + booking.getOeuvrevente());
-        System.out.println("st: " + booking.getStatut());
-             
         if(!result.hasErrors())
         {
             // Save the booking

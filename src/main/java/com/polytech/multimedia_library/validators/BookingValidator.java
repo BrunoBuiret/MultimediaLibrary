@@ -2,7 +2,6 @@ package com.polytech.multimedia_library.validators;
 
 import com.polytech.multimedia_library.entities.Reservation;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**

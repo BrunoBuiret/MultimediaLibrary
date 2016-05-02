@@ -55,10 +55,10 @@ public class Emprunt implements Serializable
     private Date dateFin;
     @JoinColumn(name = "id_adherent", referencedColumnName = "id_adherent")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Adherent idAdherent;
+    private Adherent adherent;
     @JoinColumn(name = "id_oeuvrepret", referencedColumnName = "id_oeuvrepret")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Oeuvrepret idOeuvrepret;
+    private Oeuvrepret oeuvrepret;
 
     public Emprunt()
     {
@@ -106,24 +106,24 @@ public class Emprunt implements Serializable
         this.dateFin = dateFin;
     }
 
-    public Adherent getIdAdherent()
+    public Adherent getAdherent()
     {
-        return idAdherent;
+        return adherent;
     }
 
-    public void setIdAdherent(Adherent idAdherent)
+    public void setAdherent(Adherent adherent)
     {
-        this.idAdherent = idAdherent;
+        this.adherent = adherent;
     }
 
-    public Oeuvrepret getIdOeuvrepret()
+    public Oeuvrepret getOeuvrepret()
     {
-        return idOeuvrepret;
+        return oeuvrepret;
     }
 
-    public void setIdOeuvrepret(Oeuvrepret idOeuvrepret)
+    public void setOeuvrepret(Oeuvrepret oeuvrepret)
     {
-        this.idOeuvrepret = idOeuvrepret;
+        this.oeuvrepret = oeuvrepret;
     }
 
     @Override

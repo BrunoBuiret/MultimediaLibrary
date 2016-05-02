@@ -54,7 +54,7 @@ public class Adherent implements Serializable
     @Size(max = 100)
     @Column(name = "ville_adherent")
     private String villeAdherent;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdherent", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "adherent", fetch = FetchType.LAZY)
     private List<Emprunt> empruntList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "adherent", fetch = FetchType.LAZY)
     private List<Reservation> reservationList;

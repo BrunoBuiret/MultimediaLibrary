@@ -12,7 +12,7 @@ public class AdherentsRepository extends AbstractRepository
 {
     /**
      * Fetches a single existing adherent from the database.
-     * 
+     *
      * @param id The adherent's id.
      * @return The adherent, or <code>null</code> if there are no matching adherent.
      */
@@ -34,10 +34,10 @@ public class AdherentsRepository extends AbstractRepository
             );
         }
     }
-    
+
     /**
      * Fetches a list of adherents from the database according to their id.
-     * 
+     *
      * @param ids The list of adherent's id.
      * @return The list of adherents.
      */
@@ -45,7 +45,7 @@ public class AdherentsRepository extends AbstractRepository
     {
         // Initialize vars
         List<Adherent> adherents;
-        
+
         // Fetch the adherents
         if(ids.size() > 0)
         {
@@ -72,20 +72,20 @@ public class AdherentsRepository extends AbstractRepository
         {
             adherents = new ArrayList<>();
         }
-        
+
         return adherents;
     }
-    
+
     /**
      * Fetches every existing adherent from the database.
-     * 
+     *
      * @return The list of adherents.
      */
     public List<Adherent> fetchAll()
     {
         // Initialize vars
         List<Adherent> adherents;
-        
+
         // Fetch the adherents
         try
         {
@@ -100,20 +100,20 @@ public class AdherentsRepository extends AbstractRepository
                 "Impossible de récupérer la liste des adhérents."
             );
         }
-        
+
         return adherents;
     }
-    
+
     /**
      * Saves an adherent into the database.
-     * 
+     *
      * @param adherent The adherent to save.
      */
     public void save(Adherent adherent)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Save the adherent
         try
         {
@@ -125,24 +125,24 @@ public class AdherentsRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de sauvegarder l'adhérent."
             );
         }
     }
-    
+
     /**
      * Removes an adherent from the database.
-     * 
+     *
      * @param adherent The adherent to remove.
      */
     public void delete(Adherent adherent)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Delete the adherent
         try
         {
@@ -154,40 +154,40 @@ public class AdherentsRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer l'adhérent."
             );
         }
     }
-    
+
     /**
      * Removes a list of adherents from the database.
-     * 
+     *
      * @param adherents The list of adherents to remove.
      */
     public void delete(List<Adherent> adherents)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         try
         {
             transaction.begin();
-            
+
             for(Adherent adherent : adherents)
             {
                 this.entityManager.remove(adherent);
             }
-            
+
             this.entityManager.flush();
             transaction.commit();
         }
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer les adhérents."

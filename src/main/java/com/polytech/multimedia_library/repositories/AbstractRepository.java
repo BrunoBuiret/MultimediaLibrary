@@ -12,12 +12,20 @@ public abstract class AbstractRepository
     /**
      * 
      */
-    protected static EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("POeuvre");
+    protected static EntityManagerFactory FACTORY;
     
     /**
      * The entity manager used to persist entities into the database.
      */
     protected EntityManager entityManager;
+    
+    /**
+     * 
+     */
+    static
+    {
+        AbstractRepository.FACTORY = Persistence.createEntityManagerFactory("POeuvre");
+    }
     
     /**
      * Creates a new abstract repository.

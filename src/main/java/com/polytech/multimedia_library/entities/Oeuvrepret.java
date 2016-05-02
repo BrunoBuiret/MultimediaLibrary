@@ -50,7 +50,7 @@ public class Oeuvrepret implements Serializable
     @Size(min = 1, max = 200)
     @Column(name = "titre_oeuvrepret")
     private String titreOeuvrepret;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOeuvrepret", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "oeuvrepret", fetch = FetchType.LAZY)
     private List<Emprunt> empruntList;
     @JoinColumn(name = "id_proprietaire", referencedColumnName = "id_proprietaire")
     @ManyToOne(fetch = FetchType.LAZY)

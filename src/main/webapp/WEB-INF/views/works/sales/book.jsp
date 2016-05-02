@@ -41,67 +41,65 @@
     <form:form cssClass="form-horizontal" method="post" action="${_url}" modelAttribute="bookingForm">
         <form:input path="statut" type="hidden" value="?" />
         <div class="form-group">
-            <div class="form-group">
-                <label class="control-label col-sm-2">
-                    Nom de l'oeuvre
-                </label>
+            <label class="control-label col-sm-2">
+                Nom de l'oeuvre
+            </label>
+            <div class="col-sm-10">
+                <p class="form-control-static">
+                    ${fn:escapeXml(bookingForm.oeuvrevente.titreOeuvrevente)}
+                </p>
+                <form:input path="oeuvrevente" type="hidden" value="${bookingForm.oeuvrevente.idOeuvrevente}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">
+                Date de la réservation
+            </label>
+            <div class="col-sm-10">
+                <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" var="dateToday"/>
+                <p class="form-control-static">
+                    <c:out value="${dateToday}" />
+                </p>
+                <form:input path="dateReservation" type="hidden" value="${dateToday}" />
+            </div>
+        </div>
+        <spring:bind path="adherent">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:label path="adherent" for="adherent" cssClass="control-label col-sm-2">
+                    Adhérent*
+                </form:label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">
-                        ${fn:escapeXml(bookingForm.oeuvrevente.titreOeuvrevente)}
-                    </p>
-                    <form:input path="oeuvrevente" type="hidden" value="${bookingForm.oeuvrevente.idOeuvrevente}" />
+                    <c:choose>
+                        <c:when test="${not empty adherentsList && fn:length(adherentsList) gt 0}">
+                            <form:select
+                                cssClass="form-control"
+                                path="adherent"
+                                id="adherents"
+                            >
+                                <form:options items="${adherentsList}" itemValue="idAdherent" itemLabel="fullName"></form:options>
+                            </form:select>
+                            <form:errors cssClass="help-block" path="adherent" />
+                        </c:when>
+                        <c:otherwise>
+                            <p class="form-control-static">
+                                Il n'existe aucun adhérent pour le moment.
+                            </p>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2">
-                    Date de la réservation
-                </label>
-                <div class="col-sm-10">
-                    <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" var="dateToday"/>
-                    <p class="form-control-static">
-                        <c:out value="${dateToday}" />
-                    </p>
-                    <form:input path="dateReservation" type="hidden" value="${dateToday}" />
-                </div>
-            </div>
-            <spring:bind path="adherent">
-                <div class="form-group ${status.error ? 'has-error' : ''}">
-                    <form:label path="adherent" for="adherent" cssClass="control-label col-sm-2">
-                        Adhérent*
-                    </form:label>
-                    <div class="col-sm-10">
-                        <c:choose>
-                            <c:when test="${not empty adherentsList && fn:length(adherentsList) gt 0}">
-                                <form:select
-                                    cssClass="form-control"
-                                    path="adherent"
-                                    id="adherents"
-                                >
-                                    <form:options items="${adherentsList}" itemValue="idAdherent" itemLabel="fullName"></form:options>
-                                </form:select>
-                                <form:errors cssClass="help-block" path="adherent" />
-                            </c:when>
-                            <c:otherwise>
-                                <p class="form-control-static">
-                                    Il n'existe aucun adhérent pour le moment.
-                                </p>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </spring:bind>
-            <div class="col-sm-10 col-sm-offset-2 btn-group">
-                <button class="btn btn-success" type="submit"<c:if test="${empty adherentsList || fn:length(adherentsList) eq 0}"> disabled="disabled"</c:if>>
-                    Réserver
-                </button>
-                <button class="btn btn-danger" type="reset">
-                    Réinitialiser
-                </button>
-                <c:url value="/works/sellable" var="_url" />
-                <a class="btn btn-default" href="${fn:escapeXml(_url)}">
-                    Retour à la liste
-                </a>
-            </div>
+        </spring:bind>
+        <div class="col-sm-10 col-sm-offset-2 btn-group">
+            <button class="btn btn-success" type="submit"<c:if test="${empty adherentsList || fn:length(adherentsList) eq 0}"> disabled="disabled"</c:if>>
+                Réserver
+            </button>
+            <button class="btn btn-danger" type="reset">
+                Réinitialiser
+            </button>
+            <c:url value="/works/sellable" var="_url" />
+            <a class="btn btn-default" href="${fn:escapeXml(_url)}">
+                Retour à la liste
+            </a>
         </div>
     </form:form>
 <%@include file="/WEB-INF/views/fragments/footer.jspf" %>

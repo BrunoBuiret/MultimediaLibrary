@@ -1,13 +1,21 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.editors.AdherentEditor;
+import com.polytech.multimedia_library.editors.LoanableWorkEditor;
 import com.polytech.multimedia_library.editors.OwnerEditor;
+import com.polytech.multimedia_library.entities.Adherent;
+import com.polytech.multimedia_library.entities.Emprunt;
 import com.polytech.multimedia_library.entities.Oeuvrepret;
 import com.polytech.multimedia_library.entities.Proprietaire;
+import com.polytech.multimedia_library.repositories.AdherentsRepository;
 import com.polytech.multimedia_library.repositories.OwnersRepository;
 import com.polytech.multimedia_library.repositories.works.LoanableWorksRepository;
+import com.polytech.multimedia_library.utils.DateUtils;
+import com.polytech.multimedia_library.validators.LoanValidator;
 import com.polytech.multimedia_library.validators.LoanableWorkValidator;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
@@ -30,15 +38,30 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoanableWorksController extends AbstractController
 {
     /**
-     * Initializes a binder with validators and editors.
+     * Initializes a binder with validators and editors to work
+     * with sellable works.
      * 
      * @param binder The binder to initialize.
      */
-    @InitBinder
-    protected void initBinder(WebDataBinder binder)
+    @InitBinder("workForm")
+    protected void initWorkBinder(WebDataBinder binder)
     {
         binder.setValidator(new LoanableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
+    }
+    
+    /**
+     * Initializes a binder with validators and editors to work
+     * with loans.
+     * 
+     * @param binder The binder to initialize.
+     */
+    @InitBinder("borrowingForm")
+    protected void initBorrowingBinder(WebDataBinder binder)
+    {
+        binder.setValidator(new LoanValidator());
+        binder.registerCustomEditor(Adherent.class, new AdherentEditor());
+        binder.registerCustomEditor(Oeuvrepret.class, new LoanableWorkEditor());
     }
     
     /**
@@ -303,5 +326,64 @@ public class LoanableWorksController extends AbstractController
         }
         
         return this.redirect("/works/loanable");
+    }
+    
+    /**
+     * Displays a form to borrow a single loanable work.
+     * 
+     * @param workId The work's id.
+     * @return The view to display.
+     */
+    @RequestMapping(value="/works/loanable/borrow/{workId}", method=RequestMethod.GET)
+    public ModelAndView borrow(@PathVariable int workId)
+    {
+        // Initialize vars
+        LoanableWorksRepository worksRepository = new LoanableWorksRepository();
+        Oeuvrepret work = worksRepository.fetch(workId);
+        
+        if(work != null)
+        {
+            // Initialize additional vars
+            Date today = DateUtils.getToday();
+            AdherentsRepository adherentsRepository = new AdherentsRepository();
+            Emprunt loan = new Emprunt();
+            
+            // Populate model
+            ModelMap model = new ModelMap();
+            model.addAttribute("borrowingForm", loan);
+            model.addAttribute("adherentsList", adherentsRepository.fetchAll());
+            model.addAttribute("today", today);
+
+            return this.render("works/loans/borrow", model);
+        }
+        else
+        {
+            // Register a flash message
+            this.addFlash(
+                "danger", 
+                String.format(
+                    "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
+                    workId
+                )
+            );
+            
+            return this.redirect("/works/loanable");
+        }
+    }
+    
+    /**
+     * Handles the submission of a form to borrow a loanable work.
+     * 
+     * @param booking The loan to save.
+     * @param result The validation results.
+     * @return The view to use to redirect.
+     */
+    @RequestMapping(value="/works/loanable/book", method=RequestMethod.POST)
+    public ModelAndView handleBooking(
+        @ModelAttribute("borrowingForm") @Validated Emprunt booking,
+        BindingResult result
+    )
+    {
+        return null;
     }
 }
