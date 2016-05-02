@@ -6,10 +6,10 @@
 package com.polytech.multimedia_library.entities;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -18,78 +18,76 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 public class ReservationPK implements Serializable
 {
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id_oeuvrevente")
-    private int idOeuvrevente;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id_adherent")
-    private int idAdherent;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_oeuvrevente", nullable = false, insertable = false, updatable = false)
+    private Oeuvrevente oeuvrevente;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_adherent", nullable = false, insertable = false, updatable = false)
+    private Adherent adherent;
 
     public ReservationPK()
     {
     }
 
-    public ReservationPK(int idOeuvrevente, int idAdherent)
+    public ReservationPK(Oeuvrevente oeuvrevente, Adherent adherent)
     {
-        this.idOeuvrevente = idOeuvrevente;
-        this.idAdherent = idAdherent;
+        this.oeuvrevente = oeuvrevente;
+        this.adherent = adherent;
     }
 
-    public int getIdOeuvrevente()
+    public Oeuvrevente getOeuvrevente()
     {
-        return idOeuvrevente;
+        return this.oeuvrevente;
     }
 
-    public void setIdOeuvrevente(int idOeuvrevente)
+    public void setOeuvrevente(Oeuvrevente oeuvrevente)
     {
-        this.idOeuvrevente = idOeuvrevente;
+        this.oeuvrevente = oeuvrevente;
     }
 
-    public int getIdAdherent()
+    public Adherent getAdherent()
     {
-        return idAdherent;
+        return this.adherent;
     }
 
-    public void setIdAdherent(int idAdherent)
+    public void setAdherent(Adherent adherent)
     {
-        this.idAdherent = idAdherent;
+        this.adherent = adherent;
     }
 
     @Override
     public int hashCode()
     {
         int hash = 0;
-        hash += (int) idOeuvrevente;
-        hash += (int) idAdherent;
+        hash += (int) this.oeuvrevente.getIdOeuvrevente();
+        hash += (int) this.adherent.getIdAdherent();
         return hash;
     }
 
     @Override
     public boolean equals(Object object)
     {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if(!(object instanceof ReservationPK))
         {
             return false;
         }
+        
         ReservationPK other = (ReservationPK) object;
-        if(this.idOeuvrevente != other.idOeuvrevente)
-        {
-            return false;
-        }
-        if(this.idAdherent != other.idAdherent)
-        {
-            return false;
-        }
-        return true;
+        
+        return this.oeuvrevente.equals(other.oeuvrevente) && this.adherent.equals(other.adherent);
     }
 
     @Override
     public String toString()
     {
-        return "com.polytech.multimedia_library.ReservationPK[ idOeuvrevente=" + idOeuvrevente + ", idAdherent=" + idAdherent + " ]";
+        return
+            "com.polytech.multimedia_library.ReservationPK[ idOeuvrevente=" +
+            this.oeuvrevente.getIdOeuvrevente() +
+            ", idAdherent=" +
+            this.adherent.getIdAdherent() +
+            " ]"
+        ;
     }
     
 }

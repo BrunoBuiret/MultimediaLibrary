@@ -39,6 +39,7 @@
     </c:if>
     <c:url value="/works/sellable/book" var="_url" />
     <form:form cssClass="form-horizontal" method="post" action="${_url}" modelAttribute="bookingForm">
+        <form:input path="statut" type="hidden" value="?" />
         <div class="form-group">
             <div class="form-group">
                 <label class="control-label col-sm-2">
@@ -48,7 +49,7 @@
                     <p class="form-control-static">
                         ${fn:escapeXml(bookingForm.oeuvrevente.titreOeuvrevente)}
                     </p>
-                    <input type="hidden" name="id" value="${bookingForm.oeuvrevente.idOeuvrevente}" />
+                    <form:input path="oeuvrevente" type="hidden" value="${bookingForm.oeuvrevente.idOeuvrevente}" />
                 </div>
             </div>
             <div class="form-group">
@@ -56,9 +57,11 @@
                     Date de la réservation
                 </label>
                 <div class="col-sm-10">
+                    <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" var="dateToday"/>
                     <p class="form-control-static">
-                        <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" />
+                        <c:out value="${dateToday}" />
                     </p>
+                    <form:input path="dateReservation" type="hidden" value="${dateToday}" />
                 </div>
             </div>
             <spring:bind path="adherent">

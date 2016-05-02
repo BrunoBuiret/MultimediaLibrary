@@ -34,12 +34,25 @@ public class BookingValidator implements Validator
     {
         if(target instanceof Reservation)
         {
-            // Common checks
-            /*
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "prenomAdherent", "NotEmpty.adherentForm.prenomAdherent");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nomAdherent", "NotEmpty.adherentForm.nomAdherent");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "villeAdherent", "NotEmpty.adherentForm.villeAdherent");
-            */
+            // Specific checks
+            Reservation booking = (Reservation) target;
+            
+            if(booking.getAdherent() == null)
+            {
+                errors.rejectValue("adherent", "NotEmpty.bookingForm.adherent");
+            }
+            
+            if(booking.getDateReservation() == null)
+            {
+                errors.rejectValue("dateReservation", "NotEmpty.bookingForm.dateReservation");
+            }
+            
+            if(booking.getOeuvrevente() == null)
+            {
+                errors.rejectValue("dateReservation", "NotEmpty.bookingForm.oeuvrevente");
+            }
+            
+            // @todo Check status
         }
     }
 }

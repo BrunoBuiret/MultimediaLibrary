@@ -10,6 +10,11 @@ import javax.persistence.Persistence;
 public abstract class AbstractRepository
 {
     /**
+     * 
+     */
+    protected static EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("POeuvre");
+    
+    /**
      * The entity manager used to persist entities into the database.
      */
     protected EntityManager entityManager;
@@ -19,7 +24,6 @@ public abstract class AbstractRepository
      */
     public AbstractRepository()
     {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("POeuvre");
-        this.entityManager = factory.createEntityManager();
+        this.entityManager = AbstractRepository.FACTORY.createEntityManager();
     }
 }

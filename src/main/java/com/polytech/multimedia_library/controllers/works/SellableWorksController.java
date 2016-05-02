@@ -3,6 +3,7 @@ package com.polytech.multimedia_library.controllers.works;
 import com.polytech.multimedia_library.controllers.AbstractController;
 import com.polytech.multimedia_library.editors.AdherentEditor;
 import com.polytech.multimedia_library.editors.OwnerEditor;
+import com.polytech.multimedia_library.editors.SellableWorkEditor;
 import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.entities.Oeuvrevente;
 import com.polytech.multimedia_library.entities.Proprietaire;
@@ -56,11 +57,12 @@ public class SellableWorksController extends AbstractController
      * 
      * @param binder The binder to initialize.
      */
-    @InitBinder("bookForm")
+    @InitBinder("bookingForm")
     protected void initBookingBinder(WebDataBinder binder)
     {
         binder.setValidator(new BookingValidator());
         binder.registerCustomEditor(Adherent.class, new AdherentEditor());
+        binder.registerCustomEditor(Oeuvrevente.class, new SellableWorkEditor());
     }
     
     /**
@@ -376,16 +378,57 @@ public class SellableWorksController extends AbstractController
     /**
      * Handles the submission of a form to book a sellable work.
      * 
-     * @param work The work to book.
+     * @param booking The booking to save.
      * @param result The validation results.
-     * @return 
+     * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/sellable/book", method=RequestMethod.POST)
     public ModelAndView handleBooking(
-        @ModelAttribute("bookForm") @Validated Oeuvrevente work,
+        @ModelAttribute("bookingForm") @Validated Reservation booking,
         BindingResult result
     )
     {
-        return null;
+        System.out.println("pk: " + booking.getReservationPK());
+        System.out.println("ad: " + booking.getAdherent());
+        System.out.println("dr: " + booking.getDateReservation());
+        System.out.println("ov: " + booking.getOeuvrevente());
+        System.out.println("st: " + booking.getStatut());
+             
+        if(!result.hasErrors())
+        {
+            // Save the booking
+            SellableWorksRepository repository = new SellableWorksRepository();
+            
+            booking.getOeuvrevente().getReservationList().add(booking);
+            repository.save(booking.getOeuvrevente());
+            
+            // Then, register a flash message
+            this.addFlash(
+                "success",
+                String.format(
+                    "L'oeuvre à vendre nommée <strong>%s</strong> a été réservé à " +
+                    "la vente pour <strong>%s %s</strong>.",
+                    StringEscapeUtils.escapeHtml(booking.getOeuvrevente().getTitreOeuvrevente()),
+                    StringEscapeUtils.escapeHtml(booking.getAdherent().getPrenomAdherent()),
+                    StringEscapeUtils.escapeHtml(booking.getAdherent().getNomAdherent())
+                )
+            );
+            
+            // Finally, redirect user
+            return this.redirect("/works/sellable");
+        }
+        else
+        {
+            // Initialize vars
+             AdherentsRepository adherentsRepository = new AdherentsRepository();
+             
+             // Populate model
+             ModelMap model = new ModelMap();
+             model.addAttribute("bookingForm", booking);
+             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
+             model.addAttribute("today", DateUtils.getToday());
+             
+             return this.render("works/sales/book", model);
+        }
     }
 }

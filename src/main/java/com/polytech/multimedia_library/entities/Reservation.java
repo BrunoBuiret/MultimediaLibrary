@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -72,9 +73,9 @@ public class Reservation implements Serializable
         this.statut = statut;
     }
 
-    public Reservation(int idOeuvrevente, int idAdherent)
+    public Reservation(Oeuvrevente oeuvrevente, Adherent adherent)
     {
-        this.reservationPK = new ReservationPK(idOeuvrevente, idAdherent);
+        this.reservationPK = new ReservationPK(oeuvrevente, adherent);
     }
 
     public ReservationPK getReservationPK()
@@ -157,4 +158,12 @@ public class Reservation implements Serializable
         return "com.polytech.multimedia_library.Reservation[ reservationPK=" + reservationPK + " ]";
     }
     
+    @PrePersist
+    protected void onPrePersist()
+    {
+        if(this.reservationPK == null)
+        {
+            this.reservationPK = new ReservationPK(this.oeuvrevente, this.adherent);
+        }
+    }
 }

@@ -7,3 +7,4 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%-- Settings --%>
 <fmt:setLocale value="fr_FR" />
+<fmt:requestEncoding value="UTF-8" />
