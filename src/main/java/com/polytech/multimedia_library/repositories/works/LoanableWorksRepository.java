@@ -120,7 +120,7 @@ public class LoanableWorksRepository extends AbstractRepository
         try
         {
             transaction.begin();
-            this.entityManager.persist(work);
+            this.entityManager.merge(work);
             this.entityManager.flush();
             transaction.commit();
         }

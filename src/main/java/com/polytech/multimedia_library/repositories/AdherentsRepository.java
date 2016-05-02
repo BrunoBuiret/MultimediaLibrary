@@ -118,7 +118,7 @@ public class AdherentsRepository extends AbstractRepository
         try
         {
             transaction.begin();
-            this.entityManager.persist(adherent);
+            this.entityManager.merge(adherent);
             this.entityManager.flush();
             transaction.commit();
         }

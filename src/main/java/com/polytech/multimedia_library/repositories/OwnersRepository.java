@@ -118,7 +118,7 @@ public class OwnersRepository extends AbstractRepository
         try
         {
             transaction.begin();
-            this.entityManager.persist(owner);
+            this.entityManager.merge(owner);
             this.entityManager.flush();
             transaction.commit();
         }

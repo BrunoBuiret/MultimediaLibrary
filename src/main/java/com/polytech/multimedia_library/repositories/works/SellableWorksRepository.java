@@ -120,7 +120,7 @@ public class SellableWorksRepository extends AbstractRepository
         try
         {
             transaction.begin();
-            this.entityManager.persist(work);
+            this.entityManager.merge(work);
             this.entityManager.flush();
             transaction.commit();
         }
