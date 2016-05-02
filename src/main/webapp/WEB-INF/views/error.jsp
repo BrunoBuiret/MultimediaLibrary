@@ -16,12 +16,12 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
                 <a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
-                    Aperçu
+                    AperÃ§u
                 </a>
             </li>
             <li role="presentation">
                 <a href="#details" aria-controls="details" role="tab" data-toggle="tab">
-                    Détails
+                    DÃ©tails
                 </a>
             </li>
         </ul>
@@ -41,7 +41,7 @@
                     <ol>
                         <c:forEach items="${stackTrace}" var="item">
                             <li>
-                                <strong>${item.fileName}</strong> à la ligne <strong>${item.lineNumber}</strong><br/>
+                                <strong>${item.fileName}</strong> Ã  la ligne <strong>${item.lineNumber}</strong><br/>
                                 <code>${item.className}.${item.methodName}()</code>
                             </li>
                         </c:forEach>

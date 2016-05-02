@@ -1,5 +1,5 @@
 <%@include file="/WEB-INF/bootstrap.jsp" %>
-<c:set var="_page_title" value="Liste des oeuvres à prêter" />
+<c:set var="_page_title" value="Catalogue des oeuvres à prêter" />
 <c:set var="_page_current" value="works_loans_list" />
 <c:set var="_page_scripts">
     <script type="text/javascript">
