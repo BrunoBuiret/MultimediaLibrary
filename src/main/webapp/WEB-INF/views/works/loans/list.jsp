@@ -1,5 +1,5 @@
 <%@include file="/WEB-INF/bootstrap.jsp" %>
-<c:set var="_page_title" value="Liste des oeuvres Ã  prÃªter" />
+<c:set var="_page_title" value="Liste des oeuvres à prêter" />
 <c:set var="_page_current" value="works_loans_list" />
 <c:set var="_page_scripts">
     <script type="text/javascript">
@@ -76,7 +76,7 @@
                             Titre
                         </th>
                         <th>
-                            PropriÃ©taire
+                            Propriétaire
                         </th>
                         <th style="width: 75px;">
                         </th>
@@ -145,7 +145,7 @@
                         <c:otherwise>
                             <tr>
                                 <td colspan="4">
-                                    Il n'y a aucune oeuvre Ã  prÃªter pour le moment.
+                                    Il n'y a aucune oeuvre à prêter pour le moment.
                                 </td>
                             </tr>
                         </c:otherwise>

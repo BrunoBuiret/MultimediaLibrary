@@ -1,5 +1,5 @@
 <%@include file="/WEB-INF/bootstrap.jsp" %>
-<c:set var="_page_title" value="Liste des propriÃ©taires" />
+<c:set var="_page_title" value="Liste des propriétaires" />
 <c:set var="_page_current" value="owners_list" />
 <c:set var="_page_scripts">
     <script type="text/javascript">
@@ -73,7 +73,7 @@
                             />
                         </th>
                         <th>
-                            PrÃ©nom
+                            Prénom
                         </th>
                         <th>
                             Nom
