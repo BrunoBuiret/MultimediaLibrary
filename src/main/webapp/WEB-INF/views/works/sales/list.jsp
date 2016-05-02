@@ -81,7 +81,7 @@
                         <th>
                             Propriétaire
                         </th>
-                        <th style="width: 50px;">
+                        <th style="width: 75px;">
                         </th>
                     </tr>
                 </thead>
@@ -117,6 +117,28 @@
                                         </label>
                                     </td>
                                     <td>
+                                        <c:choose>
+                                            <c:when test="${fn:length(work.reservationList) gt 0}">
+                                                <span
+                                                    class="glyphicon glyphicon-tag"
+                                                    data-toggle="tooltip"
+                                                    data-placement="left"
+                                                    title="Cette oeuvre a déjà été réservée"
+                                                ></span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:url value="/works/sellable/book/${work.idOeuvrevente}" var="_url" />
+                                                <a
+                                                    href="${fn:escapeXml(_url)}"
+                                                    class="color-success"
+                                                    data-toggle="tooltip"
+                                                    data-placement="left"
+                                                    title="Réserver cette oeuvre pour l'acheter"
+                                                ><!--
+                                                    --><span class="glyphicon glyphicon-tag"></span><!--
+                                                --></a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <c:url value="/works/sellable/edit/${work.idOeuvrevente}" var="_url" />
                                         <a
                                             href="${fn:escapeXml(_url)}"

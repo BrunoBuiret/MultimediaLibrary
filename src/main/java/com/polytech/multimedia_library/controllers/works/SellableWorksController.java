@@ -1,13 +1,20 @@
 package com.polytech.multimedia_library.controllers.works;
 
 import com.polytech.multimedia_library.controllers.AbstractController;
+import com.polytech.multimedia_library.editors.AdherentEditor;
 import com.polytech.multimedia_library.editors.OwnerEditor;
+import com.polytech.multimedia_library.entities.Adherent;
 import com.polytech.multimedia_library.entities.Oeuvrevente;
 import com.polytech.multimedia_library.entities.Proprietaire;
+import com.polytech.multimedia_library.entities.Reservation;
+import com.polytech.multimedia_library.repositories.AdherentsRepository;
 import com.polytech.multimedia_library.repositories.OwnersRepository;
 import com.polytech.multimedia_library.repositories.works.SellableWorksRepository;
+import com.polytech.multimedia_library.utils.DateUtils;
+import com.polytech.multimedia_library.validators.BookingValidator;
 import com.polytech.multimedia_library.validators.SellableWorkValidator;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
@@ -30,15 +37,30 @@ import org.springframework.web.servlet.ModelAndView;
 public class SellableWorksController extends AbstractController
 {
     /**
-     * Initializes a binder with validators and editors.
+     * Initializes a binder with validators and editors to work
+     * with sellable works.
      * 
      * @param binder The binder to initialize.
+     * @see http://stackoverflow.com/questions/25873363/configure-two-initbinder-to-work-with-the-same-model-or-entity-but-for-differen
      */
-    @InitBinder
-    protected void initBinder(WebDataBinder binder)
+    @InitBinder("workForm")
+    protected void initWorkBinder(WebDataBinder binder)
     {
         binder.setValidator(new SellableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
+    }
+    
+    /**
+     * Initializes a binder with validators and editors to work
+     * with bookings.
+     * 
+     * @param binder The binder to initialize.
+     */
+    @InitBinder("bookForm")
+    protected void initBookingBinder(WebDataBinder binder)
+    {
+        binder.setValidator(new BookingValidator());
+        binder.registerCustomEditor(Adherent.class, new AdherentEditor());
     }
     
     /**
@@ -303,5 +325,67 @@ public class SellableWorksController extends AbstractController
         }
         
         return this.redirect("/works/sellable");
+    }
+    
+    /**
+     * Displays a form to book a single sellable work.
+     * 
+     * @param workId The work's id.
+     * @return The view to display.
+     */
+    @RequestMapping(value="/works/sellable/book/{workId}", method=RequestMethod.GET)
+    public ModelAndView book(@PathVariable int workId)
+    {
+        // Initialize vars
+        SellableWorksRepository worksRepository = new SellableWorksRepository();
+        Oeuvrevente work = worksRepository.fetch(workId);
+        
+        if(work != null)
+        {
+            // Initialize additional vars
+            Date today = DateUtils.getToday();
+            AdherentsRepository adherentsRepository = new AdherentsRepository();
+            Reservation booking = new Reservation();
+            booking.setDateReservation(today);
+            booking.setOeuvrevente(work);
+            booking.setStatut("?");
+            
+            // Populate model
+            ModelMap model = new ModelMap();
+            model.addAttribute("bookingForm", booking);
+            model.addAttribute("adherentsList", adherentsRepository.fetchAll());
+            model.addAttribute("today", today);
+
+            return this.render("works/sales/book", model);
+        }
+        else
+        {
+            // Register a flash message
+            this.addFlash(
+                "danger", 
+                String.format(
+                    "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
+                    workId
+                )
+            );
+            
+            return this.redirect("/works/sellable");
+        }
+    }
+    
+    /**
+     * Handles the submission of a form to book a sellable work.
+     * 
+     * @param work The work to book.
+     * @param result The validation results.
+     * @return 
+     */
+    @RequestMapping(value="/works/sellable/book", method=RequestMethod.POST)
+    public ModelAndView handleBooking(
+        @ModelAttribute("bookForm") @Validated Oeuvrevente work,
+        BindingResult result
+    )
+    {
+        return null;
     }
 }

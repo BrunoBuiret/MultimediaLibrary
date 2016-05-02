@@ -103,6 +103,11 @@ public class Adherent implements Serializable
     {
         this.prenomAdherent = prenomAdherent;
     }
+    
+    public String getFullName()
+    {
+        return this.prenomAdherent + " " + this.nomAdherent;
+    }
 
     public String getVilleAdherent()
     {
