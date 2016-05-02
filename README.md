@@ -25,11 +25,11 @@ ADD FOREIGN KEY (`id_adherent`) REFERENCES `adherent`(`id_adherent`);
 Les fonctionnalités suivantes pourront être implémentées :
 
 * Gestion des prêts
-** Consultation de la liste des prêts
-** Édition d'un prêt
-** Suppression d'un prêt
+    * Consultation de la liste des prêts
+    * Édition d'un prêt
+    * Suppression d'un prêt
 * Gestion des réservations
-** Consultation de la liste des réservations
-** Confirmation / Rejet d'une réservation
+    * Consultation de la liste des réservations
+    * Confirmation / Rejet d'une réservation
 * Système de paginations sur les pages de listes
 * Système d'internationalisation via des fichiers de propriétés
