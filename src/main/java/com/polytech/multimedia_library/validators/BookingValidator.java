@@ -11,7 +11,7 @@ public class BookingValidator implements Validator
 {
     /**
      * Tests if this validator can be used for this class.
-     * 
+     *
      * @param type The class to test.
      * @return <code>true</code> if the validator supports this class,
      * <code>false</code> otherwise.
@@ -24,7 +24,7 @@ public class BookingValidator implements Validator
 
     /**
      * Validates an object.
-     * 
+     *
      * @param target The object to validate.
      * @param errors The errors list.
      */
@@ -35,22 +35,22 @@ public class BookingValidator implements Validator
         {
             // Specific checks
             Reservation booking = (Reservation) target;
-            
+
             if(booking.getAdherent() == null)
             {
                 errors.rejectValue("adherent", "NotEmpty.bookingForm.adherent");
             }
-            
+
             if(booking.getOeuvrevente() == null)
             {
                 errors.rejectValue("dateReservation", "NotEmpty.bookingForm.oeuvrevente");
             }
-            
+
             if(booking.getDateReservation() == null)
             {
                 errors.rejectValue("dateReservation", "NotEmpty.bookingForm.dateReservation");
             }
-            
+
             // @todo Check status
         }
     }

@@ -9,10 +9,10 @@ public abstract class AbstractException extends RuntimeException
      * The title to be displayed on the page.
      */
     protected String title;
-    
+
     /**
      * Creates a new abstract exception.
-     * 
+     *
      * @param ex The actual exception that occured.
      * @param message The message to be displayed.
      */
@@ -20,10 +20,10 @@ public abstract class AbstractException extends RuntimeException
     {
         this(ex, null, message);
     }
-    
+
     /**
      * Creates a new abstract exception.
-     * 
+     *
      * @param ex The actual exception that occured.
      * @param title The title to be displayed.
      * @param message The message to be displayed.
@@ -32,14 +32,14 @@ public abstract class AbstractException extends RuntimeException
     {
         // Call super constructor
         super(message, ex);
-        
+
         // Initialize properties
         this.title = title;
     }
-    
+
     /**
      * Gets the title to be displayed.
-     * 
+     *
      * @return The title.
      */
     public String getTitle()

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.polytech.multimedia_library.entities;
 
 import java.io.Serializable;
@@ -16,52 +11,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
 @Entity
 @Table(name = "emprunt")
 @XmlRootElement
-@NamedQueries(
-{
-    @NamedQuery(name = "Emprunt.findAll", query = "SELECT e FROM Emprunt e")
-})
 public class Emprunt implements Serializable
 {
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_emprunt")
     private Integer idEmprunt;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "date_debut")
     @Temporal(TemporalType.DATE)
     private Date dateDebut;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "date_fin")
     @Temporal(TemporalType.DATE)
     private Date dateFin;
-    
+
     @JoinColumn(name = "id_adherent", referencedColumnName = "id_adherent")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Adherent adherent;
-    
+
     @JoinColumn(name = "id_oeuvrepret", referencedColumnName = "id_oeuvrepret")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Oeuvrepret oeuvrepret;
@@ -161,5 +148,4 @@ public class Emprunt implements Serializable
     {
         return "com.polytech.multimedia_library.Emprunt[ idEmprunt=" + idEmprunt + " ]";
     }
-    
 }

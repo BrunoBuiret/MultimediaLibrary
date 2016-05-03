@@ -13,7 +13,7 @@ public class StaticController extends AbstractController
 {
     /**
      * Displays the home page of the website.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/", method=RequestMethod.GET)
@@ -21,10 +21,10 @@ public class StaticController extends AbstractController
     {
         return new ModelAndView("static/home");
     }
-    
+
     /**
      * Displays the contact page of the website.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/contact", method=RequestMethod.GET)

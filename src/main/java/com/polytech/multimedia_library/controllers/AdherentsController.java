@@ -27,7 +27,7 @@ public class AdherentsController extends AbstractController
 {
     /**
      * Initializes a binder with validators and editors.
-     * 
+     *
      * @param binder The binder to initialize.
      */
     @InitBinder
@@ -35,10 +35,10 @@ public class AdherentsController extends AbstractController
     {
         binder.setValidator(new AdherentValidator());
     }
-    
+
     /**
      * Displays a list of adherents.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/adherents", method=RequestMethod.GET)
@@ -46,18 +46,18 @@ public class AdherentsController extends AbstractController
     {
         // Initialize vars
         AdherentsRepository repository = new AdherentsRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("adherents", repository.fetchAll());
         model.addAttribute("_flashList", this.getAndClearFlashList());
-        
+
         return this.render("adherents/list", model);
     }
-    
+
     /**
      * Displays a form to add an adherent.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/adherents/add", method=RequestMethod.GET)
@@ -68,13 +68,13 @@ public class AdherentsController extends AbstractController
         model.addAttribute("_page_title", "Ajouter un nouvel adhérent");
         model.addAttribute("_page_current", "adherents_add");
         model.addAttribute("adherentForm", new Adherent());
-        
+
         return this.render("adherents/form", model);
     }
-    
+
     /**
      * Displays a form to edit an adherent.
-     * 
+     *
      * @param adherentId The adherent's id.
      * @return The view to display.
      */
@@ -84,7 +84,7 @@ public class AdherentsController extends AbstractController
         // Initialize vars
         AdherentsRepository repository = new AdherentsRepository();
         Adherent adherent = repository.fetch(adherentId);
-        
+
         if(adherent != null)
         {
             // Populate model
@@ -99,20 +99,20 @@ public class AdherentsController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucun adhérent ayant pour identifiant <strong>%d</strong>.",
                     adherentId
                 )
             );
-            
+
             return this.redirect("/adherents");
         }
     }
-    
+
     /**
      * Handles the submission of a form to add or edit an adherent.
-     * 
+     *
      * @param adherent The adherent to save.
      * @param result The validation results.
      * @param isNew A boolean indicating if the adherent is new or not.
@@ -130,17 +130,17 @@ public class AdherentsController extends AbstractController
             // Save the adherent
             AdherentsRepository repository = new AdherentsRepository();
             repository.save(adherent);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'adhérent nommé <strong>%s %s</strong> a été sauvegardé.",
                     StringEscapeUtils.escapeHtml(adherent.getPrenomAdherent()),
                     StringEscapeUtils.escapeHtml(adherent.getNomAdherent())
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/adherents");
         }
@@ -149,7 +149,7 @@ public class AdherentsController extends AbstractController
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("adherentForm", adherent);
-            
+
             if(isNew)
             {
                 model.addAttribute("_page_title", "Ajouter un nouveau propriétaire");
@@ -164,10 +164,10 @@ public class AdherentsController extends AbstractController
             return this.render("adherents/form", model);
         }
     }
-    
+
     /**
      * Handles the deletion of a single adherent.
-     * 
+     *
      * @param adherentId The adherent's id.
      * @return The view to use to redirect.
      */
@@ -177,42 +177,42 @@ public class AdherentsController extends AbstractController
         // Initialize vars
         AdherentsRepository repository = new AdherentsRepository();
         Adherent adherent = repository.fetch(adherentId);
-        
+
         if(adherent != null)
         {
             // Delete the adherent
             repository.delete(adherent);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'adhérent nommé <strong>%s %s</strong> a été supprimé.",
                     StringEscapeUtils.escapeHtml(adherent.getPrenomAdherent()),
                     StringEscapeUtils.escapeHtml(adherent.getNomAdherent())
                 )
             );
-            
+
         }
         else
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucun adhérent ayant pour identifiant <strong>%d</strong>.",
                     adherentId
                 )
             );
         }
-        
+
         // Finally, redirect user
         return this.redirect("/adherents");
     }
-    
+
     /**
      * Handles the deletion of multiple adherents.
-     * 
+     *
      * @param ids The list of adherents' ids.
      * @return The view to use to redirect.
      */
@@ -224,23 +224,27 @@ public class AdherentsController extends AbstractController
             // Initialize vars
             AdherentsRepository repository = new AdherentsRepository();
             List<Adherent> adherents = repository.fetch(ids);
-            
+
             if(adherents.size() > 0)
             {
                 // Delete the adherents
                 repository.delete(adherents);
-                
+
                 // Then, register a flash message
                 StringBuilder flashBuilder = new StringBuilder();
-                
+
                 if(adherents.size() > 1)
                 {
-                    flashBuilder.append("Les adhérents suivants ont été supprimés : ");
+                    // Initialize some more vars
+                    Adherent adherent;
                     
+                    // Build flash message
+                    flashBuilder.append("Les adhérents suivants ont été supprimés : ");
+
                     for(int i = 0, j = adherents.size(); i < j; i++)
                     {
-                        Adherent adherent = adherents.get(i);
-                        
+                        adherent = adherents.get(i);
+
                         flashBuilder.append(
                             String.format(
                                 "%s %s%s",
@@ -250,13 +254,13 @@ public class AdherentsController extends AbstractController
                             )
                         );
                     }
-                    
+
                     flashBuilder.append(".");
                 }
                 else
                 {
                     Adherent adherent = adherents.get(0);
-                    
+
                     flashBuilder.append(
                         String.format(
                             "L'adhérent nommé <strong>%s %s</strong> a été supprimé.",
@@ -265,7 +269,7 @@ public class AdherentsController extends AbstractController
                         )
                     );
                 }
-                
+
                 this.addFlash(
                     "success",
                     flashBuilder.toString()
@@ -284,11 +288,11 @@ public class AdherentsController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 "Vous n'avez sélectionné aucun adhérent à supprimer."
             );
         }
-        
+
         return this.redirect("/adherents");
     }
 }

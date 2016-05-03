@@ -12,7 +12,7 @@ public class OwnersRepository extends AbstractRepository
 {
     /**
      * Fetches a single existing owner from the database.
-     * 
+     *
      * @param id The owner's id.
      * @return The owner, or <code>null</code> if there are no matching owner.
      */
@@ -34,10 +34,10 @@ public class OwnersRepository extends AbstractRepository
             );
         }
     }
-    
+
     /**
      * Fetches a list of owners from the database according to their id.
-     * 
+     *
      * @param ids The list of owner's id.
      * @return The list of owners.
      */
@@ -45,7 +45,7 @@ public class OwnersRepository extends AbstractRepository
     {
         // Initialize vars
         List<Proprietaire> owners;
-        
+
         // Fetch the owners
         if(ids.size() > 0)
         {
@@ -72,20 +72,20 @@ public class OwnersRepository extends AbstractRepository
         {
             owners = new ArrayList<>();
         }
-        
+
         return owners;
     }
-    
+
     /**
      * Fetches every existing owner from the database.
-     * 
+     *
      * @return The list of owners.
      */
     public List<Proprietaire> fetchAll()
     {
         // Initialize vars
         List<Proprietaire> owners;
-        
+
         // Fetch the adherents
         try
         {
@@ -100,20 +100,20 @@ public class OwnersRepository extends AbstractRepository
                 "Impossible de récupérer la liste des propriétaires."
             );
         }
-        
+
         return owners;
     }
-    
+
     /**
      * Saves an owner into the database.
-     * 
+     *
      * @param owner The owner to save.
      */
     public void save(Proprietaire owner)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Save the owner
         try
         {
@@ -125,24 +125,24 @@ public class OwnersRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de sauvegarder le propriétaire."
             );
         }
     }
-    
+
     /**
      * Removes an owner from the database.
-     * 
+     *
      * @param owner The owner to remove.
      */
     public void delete(Proprietaire owner)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Delete the owner
         try
         {
@@ -154,40 +154,40 @@ public class OwnersRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer le propriétaire."
             );
         }
     }
-    
+
     /**
      * Removes a list of owners from the database.
-     * 
+     *
      * @param owners The list of owners to remove.
      */
     public void delete(List<Proprietaire> owners)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         try
         {
             transaction.begin();
-            
-            for(Proprietaire owner : owners)
+
+            owners.stream().forEach((owner) ->
             {
                 this.entityManager.remove(owner);
-            }
-            
+            });
+
             this.entityManager.flush();
             transaction.commit();
         }
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer les propriétaires."

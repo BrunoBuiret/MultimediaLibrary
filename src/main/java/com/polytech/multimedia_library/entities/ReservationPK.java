@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.polytech.multimedia_library.entities;
 
 import java.io.Serializable;
@@ -12,8 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
 @Embeddable
 public class ReservationPK implements Serializable
@@ -21,7 +15,7 @@ public class ReservationPK implements Serializable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_oeuvrevente", nullable = false, insertable = false, updatable = false)
     private Oeuvrevente oeuvrevente;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_adherent", nullable = false, insertable = false, updatable = false)
     private Adherent adherent;
@@ -72,9 +66,9 @@ public class ReservationPK implements Serializable
         {
             return false;
         }
-        
+
         ReservationPK other = (ReservationPK) object;
-        
+
         return this.oeuvrevente.equals(other.oeuvrevente) && this.adherent.equals(other.adherent);
     }
 
@@ -89,5 +83,4 @@ public class ReservationPK implements Serializable
             " ]"
         ;
     }
-    
 }

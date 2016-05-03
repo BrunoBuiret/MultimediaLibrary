@@ -14,7 +14,7 @@ public class RepositoryException extends AbstractException
     {
         super(ex, message);
     }
-    
+
     /**
      * {@inheritDoc}
      */

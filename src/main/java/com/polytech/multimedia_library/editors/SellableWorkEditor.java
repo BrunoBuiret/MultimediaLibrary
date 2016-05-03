@@ -19,7 +19,7 @@ public class SellableWorkEditor extends PropertyEditorSupport
 
     /**
      * Transforms a string containing a sellable work's id into a sellable work instance.
-     * 
+     *
      * @param text The sellable work's id.
      * @throws RepositoryException If the sellable work can't be fetched.
      * @throws NumberFormatException If the string can't be parsed.

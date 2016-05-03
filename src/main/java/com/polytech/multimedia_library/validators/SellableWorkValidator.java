@@ -12,7 +12,7 @@ public class SellableWorkValidator implements Validator
 {
     /**
      * Tests if this validator can be used for this class.
-     * 
+     *
      * @param type The class to test.
      * @return <code>true</code> if the validator supports this class,
      * <code>false</code> otherwise.
@@ -25,7 +25,7 @@ public class SellableWorkValidator implements Validator
 
     /**
      * Validates an object.
-     * 
+     *
      * @param target The object to validate.
      * @param errors The errors list.
      */
@@ -38,15 +38,15 @@ public class SellableWorkValidator implements Validator
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "titreOeuvrevente", "NotEmpty.sellableWorkForm.titreOeuvrevente");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "etatOeuvrevente", "NotEmpty.sellableWorkForm.etatOeuvrevente");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "prixOeuvrevente", "NotEmpty.sellableWorkForm.prixOeuvrevente");
-            
+
             // Specific checks
             Oeuvrevente work = (Oeuvrevente) target;
-            
+
             if(work.getIdProprietaire() == null)
             {
                 errors.rejectValue("idProprietaire", "NotEmpty.sellableWorkForm.idProprietaire");
             }
-            
+
             if(work.getPrixOeuvrevente() < 0)
             {
                 errors.rejectValue("prixOeuvrevente", "Invalid.sellableWorkForm.prixOeuvrevente");

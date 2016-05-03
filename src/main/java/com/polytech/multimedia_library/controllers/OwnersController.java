@@ -112,7 +112,7 @@ public class OwnersController extends AbstractController
 
     /**
      * Handles the submission of a form to add or edit an owner.
-     * 
+     *
      * @param owner The owner to save.
      * @param result The validation results.
      * @param isNew A boolean indicating if the owner is new or not.
@@ -167,7 +167,7 @@ public class OwnersController extends AbstractController
 
     /**
      * Handles the deletion of a single owner.
-     * 
+     *
      * @param ownerId The owner's id.
      * @return The view to use to redirect.
      */
@@ -212,7 +212,7 @@ public class OwnersController extends AbstractController
 
     /**
      * Handles the deletion of multiple owners.
-     * 
+     *
      * @param ids The list of owners' ids.
      * @return The view to use to redirect.
      */
@@ -235,11 +235,15 @@ public class OwnersController extends AbstractController
 
                 if(owners.size() > 1)
                 {
+                    // Initialize some more vars
+                    Proprietaire owner;
+
+                    // Build flash message
                     flashBuilder.append("Les propriétaires suivants ont été supprimés : ");
 
                     for(int i = 0, j = owners.size(); i < j; i++)
                     {
-                        Proprietaire owner = owners.get(i);
+                        owner = owners.get(i);
 
                         flashBuilder.append(
                             String.format(

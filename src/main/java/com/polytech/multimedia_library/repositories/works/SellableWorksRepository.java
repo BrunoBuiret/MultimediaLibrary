@@ -14,7 +14,7 @@ public class SellableWorksRepository extends AbstractRepository
 {
     /**
      * Fetches a single existing sellable work from the database.
-     * 
+     *
      * @param id The work's id.
      * @return The work, or <code>null</code> if there are no matching work.
      */
@@ -36,10 +36,10 @@ public class SellableWorksRepository extends AbstractRepository
             );
         }
     }
-    
+
     /**
      * Fetches a list of sellable works from the database according to their id.
-     * 
+     *
      * @param ids The list of work's id.
      * @return The list of works.
      */
@@ -47,7 +47,7 @@ public class SellableWorksRepository extends AbstractRepository
     {
         // Initialize vars
         List<Oeuvrevente> works;
-        
+
         // Fetch the works
         if(ids.size() > 0)
         {
@@ -74,20 +74,20 @@ public class SellableWorksRepository extends AbstractRepository
         {
             works = new ArrayList<>();
         }
-        
+
         return works;
     }
-    
+
     /**
      * Fetches every existing sellable work from the database.
-     * 
+     *
      * @return The list of works.
      */
     public List<Oeuvrevente> fetchAll()
     {
         // Initialize vars
         List<Oeuvrevente> works;
-        
+
         // Fetch the works
         try
         {
@@ -102,20 +102,20 @@ public class SellableWorksRepository extends AbstractRepository
                 "Impossible de récupérer la liste des oeuvres à vendre."
             );
         }
-        
+
         return works;
     }
-    
+
     /**
      * Saves a sellable work into the database.
-     * 
+     *
      * @param work The work to save.
      */
     public void save(Oeuvrevente work)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Save the work
         try
         {
@@ -127,24 +127,24 @@ public class SellableWorksRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de sauvegarder l'oeuvre à vendre."
             );
         }
     }
-    
+
     /**
      * Removes a sellable work from the database.
-     * 
+     *
      * @param work The work to remove.
      */
     public void delete(Oeuvrevente work)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         // Delete the work
         try
         {
@@ -156,40 +156,40 @@ public class SellableWorksRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer l'oeuvre à vendre."
             );
         }
     }
-    
+
     /**
      * Removes a list of sellable works from the database.
-     * 
+     *
      * @param works The list of works to remove.
      */
     public void delete(List<Oeuvrevente> works)
     {
         // Initialize vars
         EntityTransaction transaction = this.entityManager.getTransaction();
-        
+
         try
         {
             transaction.begin();
-            
-            for(Oeuvrevente work : works)
+
+            works.stream().forEach((work) ->
             {
                 this.entityManager.remove(work);
-            }
-            
+            });
+
             this.entityManager.flush();
             transaction.commit();
         }
         catch(Exception ex)
         {
             transaction.rollback();
-            
+
             throw new RepositoryException(
                 ex,
                 "Impossible de supprimer les oeuvres à vendre."

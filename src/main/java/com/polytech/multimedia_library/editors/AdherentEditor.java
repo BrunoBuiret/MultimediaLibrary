@@ -19,7 +19,7 @@ public class AdherentEditor extends PropertyEditorSupport
 
     /**
      * Transforms a string containing an adherent's id into an adherent instance.
-     * 
+     *
      * @param text The adherent's id.
      * @throws RepositoryException If the adherent can't be fetched.
      * @throws NumberFormatException If the string can't be parsed.

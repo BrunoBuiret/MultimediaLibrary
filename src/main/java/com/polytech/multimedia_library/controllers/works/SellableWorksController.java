@@ -44,7 +44,7 @@ public class SellableWorksController extends AbstractController
      * @param binder The binder to initialize.
      */
     @InitBinder("workForm")
-    protected void initWorkBinder(WebDataBinder binder)
+    protected void initWorksBinder(WebDataBinder binder)
     {
         binder.setValidator(new SellableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
@@ -57,7 +57,7 @@ public class SellableWorksController extends AbstractController
      * @param binder The binder to initialize.
      */
     @InitBinder("bookingForm")
-    protected void initBookingBinder(WebDataBinder binder)
+    protected void initBookingsBinder(WebDataBinder binder)
     {
         binder.setValidator(new BookingValidator());
         binder.registerCustomEditor(Adherent.class, new AdherentEditor());
@@ -273,11 +273,15 @@ public class SellableWorksController extends AbstractController
 
                 if(works.size() > 1)
                 {
+                    // Initialize some more vars
+                    Oeuvrevente work;
+
+                    // Build flash message
                     flashBuilder.append("Les oeuvres à vendre suivantes ont été supprimées : ");
 
                     for(int i = 0, j = works.size(); i < j; i++)
                     {
-                        Oeuvrevente work = works.get(i);
+                        work = works.get(i);
 
                         flashBuilder.append(
                             String.format(

@@ -3,7 +3,6 @@ package com.polytech.multimedia_library.controllers;
 import com.polytech.multimedia_library.AbstractException;
 import com.polytech.multimedia_library.session.Flash;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,11 +22,11 @@ public abstract class AbstractController
      */
     @Autowired
     protected HttpServletRequest request;
-    
+
     /**
      * Renders a view whose name is <code>viewName</code> without any
      * model.
-     * 
+     *
      * @param viewName The view's name.
      * @return The view only.
      */
@@ -35,11 +34,11 @@ public abstract class AbstractController
     {
         return new ModelAndView(viewName);
     }
-    
+
     /**
      * Renders a view whose name is <code>viewName</code> with an accompanying
      * model.
-     * 
+     *
      * @param viewName The view's name.
      * @param model The accompanying model.
      * @return The view with its model.
@@ -48,10 +47,10 @@ public abstract class AbstractController
     {
         return new ModelAndView(viewName, model);
     }
-    
+
     /**
      * Redirects the user to the given URL.
-     * 
+     *
      * @param url The URL to redirect to.
      * @return A redirection view.
      */
@@ -59,10 +58,10 @@ public abstract class AbstractController
     {
         return new ModelAndView(new RedirectView(url, true));
     }
-    
+
     /**
      * Handles exceptions that haven't been caught yet.
-     * 
+     *
      * @param ex The exception that occured.
      * @return A view to display informations about the exception.
      */
@@ -70,18 +69,18 @@ public abstract class AbstractController
     public ModelAndView exceptionHandler(AbstractException ex)
     {
         ModelAndView modelAndView = new ModelAndView("error");
-        
+
         modelAndView.addObject("customTitle", ex.getTitle());
         modelAndView.addObject("customMessage", ex.getMessage());
         modelAndView.addObject("errorMessage", ex.getCause().getMessage());
         modelAndView.addObject("stackTrace", ex.getCause().getStackTrace());
-        
+
         return modelAndView;
     }
-    
+
     /**
      * Creates the flash list if it doesn't exist yet and then returns it.
-     * 
+     *
      * @return The flash list.
      */
     protected List<Flash> getFlashList()
@@ -89,7 +88,7 @@ public abstract class AbstractController
         // Initialize vars
         Object flashListObject = this.request.getSession().getAttribute("_flashes");
         List<Flash> flashList;
-        
+
         if(flashListObject != null && flashListObject instanceof List)
         {
             flashList = (List<Flash>) flashListObject;
@@ -98,15 +97,15 @@ public abstract class AbstractController
         {
             flashList = new ArrayList<>();
         }
-        
+
         return flashList;
     }
-    
+
     /**
      * Creates a copy of the current flash list before clearing it, then returns
      * the copy.
-     * 
-     * @return The flash list.
+     *
+     * @return The copy of the flash list.
      */
     protected List<Flash> getAndClearFlashList()
     {
@@ -114,20 +113,20 @@ public abstract class AbstractController
         HttpSession session = this.request.getSession();
         List<Flash> currentFlashList = this.getFlashList();
         List<Flash> flashList = new ArrayList<>(currentFlashList);
-        
+
         // Erase the saved flash list
         currentFlashList.clear();
         session.setAttribute(
             "_flashes",
             currentFlashList
         );
-        
+
         return flashList;
     }
-    
+
     /**
      * Adds a flash message to the flash list.
-     * 
+     *
      * @param type The flash message's type.
      * @param contents The flash message's contents.
      */
@@ -136,7 +135,7 @@ public abstract class AbstractController
         // Initialize vars
         HttpSession session = this.request.getSession();
         List<Flash> flashList = this.getFlashList();
-        
+
         // Add the flash message and memorize the new list
         flashList.add(new Flash(type, contents));
         session.setAttribute("_flashes", flashList);

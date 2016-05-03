@@ -12,7 +12,7 @@ public class OwnerValidator implements Validator
 {
     /**
      * Tests if this validator can be used for this class.
-     * 
+     *
      * @param type The class to test.
      * @return <code>true</code> if the validator supports this class,
      * <code>false</code> otherwise.
@@ -25,7 +25,7 @@ public class OwnerValidator implements Validator
 
     /**
      * Validates an object.
-     * 
+     *
      * @param target The object to validate.
      * @param errors The errors list.
      */

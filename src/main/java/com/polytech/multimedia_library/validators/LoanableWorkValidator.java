@@ -12,7 +12,7 @@ public class LoanableWorkValidator implements Validator
 {
     /**
      * Tests if this validator can be used for this class.
-     * 
+     *
      * @param type The class to test.
      * @return <code>true</code> if the validator supports this class,
      * <code>false</code> otherwise.
@@ -25,7 +25,7 @@ public class LoanableWorkValidator implements Validator
 
     /**
      * Validates an object.
-     * 
+     *
      * @param target The object to validate.
      * @param errors The errors list.
      */
@@ -36,10 +36,10 @@ public class LoanableWorkValidator implements Validator
         {
             // Common checks
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "titreOeuvrepret", "NotEmpty.loanableWorkForm.titreOeuvrepret");
-            
+
             // Specific checks
             Oeuvrepret work = (Oeuvrepret) target;
-            
+
             if(work.getIdProprietaire() == null)
             {
                 errors.rejectValue("idProprietaire", "NotEmpty.loanableWorkForm.idProprietaire");

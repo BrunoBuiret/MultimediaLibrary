@@ -19,7 +19,7 @@ public class LoanableWorkEditor extends PropertyEditorSupport
 
     /**
      * Transforms a string containing a loanable work's id into a loanable work instance.
-     * 
+     *
      * @param text The loanable work's id.
      * @throws RepositoryException If the loanable work can't be fetched.
      * @throws NumberFormatException If the string can't be parsed.

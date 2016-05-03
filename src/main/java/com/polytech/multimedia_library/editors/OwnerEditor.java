@@ -19,7 +19,7 @@ public class OwnerEditor extends PropertyEditorSupport
 
     /**
      * Transforms a string containing an owner's id into an owner instance.
-     * 
+     *
      * @param text The owner's id.
      * @throws RepositoryException If the owner can't be fetched.
      * @throws NumberFormatException If the string can't be parsed.

@@ -176,10 +176,10 @@ public class AdherentsRepository extends AbstractRepository
         {
             transaction.begin();
 
-            for(Adherent adherent : adherents)
+            adherents.stream().forEach((adherent) ->
             {
                 this.entityManager.remove(adherent);
-            }
+            });
 
             this.entityManager.flush();
             transaction.commit();

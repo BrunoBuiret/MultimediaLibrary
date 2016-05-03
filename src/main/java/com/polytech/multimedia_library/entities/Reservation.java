@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.polytech.multimedia_library.entities;
 
 import java.io.Serializable;
@@ -14,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,34 +18,34 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
- * @author bruno
+ * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
 @Entity
 @Table(name = "reservation")
 @XmlRootElement
-@NamedQueries(
-{
-    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r")
-})
 public class Reservation implements Serializable
 {
     private static final long serialVersionUID = 1L;
+    
     @EmbeddedId
     protected ReservationPK reservationPK;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "date_reservation")
     @Temporal(TemporalType.DATE)
     private Date dateReservation;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "statut")
     private String statut;
+    
     @JoinColumn(name = "id_oeuvrevente", referencedColumnName = "id_oeuvrevente", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Oeuvrevente oeuvrevente;
+    
     @JoinColumn(name = "id_adherent", referencedColumnName = "id_adherent", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Adherent adherent;

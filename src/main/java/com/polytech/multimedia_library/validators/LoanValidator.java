@@ -11,7 +11,7 @@ public class LoanValidator implements Validator
 {
     /**
      * Tests if this validator can be used for this class.
-     * 
+     *
      * @param type The class to test.
      * @return <code>true</code> if the validator supports this class,
      * <code>false</code> otherwise.
@@ -24,7 +24,7 @@ public class LoanValidator implements Validator
 
     /**
      * Validates an object.
-     * 
+     *
      * @param target The object to validate.
      * @param errors The errors list.
      */
@@ -35,27 +35,27 @@ public class LoanValidator implements Validator
         {
             // Specific checks
             Emprunt loan = (Emprunt) target;
-            
+
             if(loan.getAdherent() == null)
             {
                 errors.rejectValue("adherent", "NotEmpty.borrowingForm.adherent");
             }
-            
+
             if(loan.getOeuvrepret() == null)
             {
                 errors.rejectValue("oeuvrepret", "NotEmpty.borrowingForm.oeuvrepret");
             }
-            
+
             if(loan.getDateDebut() == null)
             {
                 errors.rejectValue("dateDebut", "NotEmpty.borrowingForm.dateDebut");
             }
-            
+
             if(loan.getDateFin() == null)
             {
                 errors.rejectValue("dateFin", "NotEmpty.borrowingForm.dateFin");
             }
-            
+
             if(
                 loan.getDateDebut() != null
                 && loan.getDateFin() != null

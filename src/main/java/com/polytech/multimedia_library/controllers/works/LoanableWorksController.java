@@ -43,34 +43,34 @@ public class LoanableWorksController extends AbstractController
     /**
      * Initializes a binder with validators and editors to work
      * with sellable works.
-     * 
+     *
      * @param binder The binder to initialize.
      */
     @InitBinder("workForm")
-    protected void initWorkBinder(WebDataBinder binder)
+    protected void initWorksBinder(WebDataBinder binder)
     {
         binder.setValidator(new LoanableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
     }
-    
+
     /**
      * Initializes a binder with validators and editors to work
      * with loans.
-     * 
+     *
      * @param binder The binder to initialize.
      */
     @InitBinder("borrowingForm")
-    protected void initBorrowingBinder(WebDataBinder binder)
+    protected void initLoansBinder(WebDataBinder binder)
     {
         binder.setValidator(new LoanValidator());
         binder.registerCustomEditor(Adherent.class, new AdherentEditor());
         binder.registerCustomEditor(Oeuvrepret.class, new LoanableWorkEditor());
         binder.registerCustomEditor(Date.class, new CustomDateEditor(DateUtils.FORMAT_SHORT, false));
     }
-    
+
     /**
      * Displays a list loanable works.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/works/loanable", method=RequestMethod.GET)
@@ -78,18 +78,18 @@ public class LoanableWorksController extends AbstractController
     {
         // Initialize vars
         LoanableWorksRepository repository = new LoanableWorksRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("works", repository.fetchAll());
         model.addAttribute("_flashList", this.getAndClearFlashList());
-        
+
         return this.render("works/loans/list", model);
     }
-    
+
     /**
      * Displays a form to add a loanable work.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/works/loanable/add", method=RequestMethod.GET)
@@ -97,20 +97,20 @@ public class LoanableWorksController extends AbstractController
     {
         // Initialize vars
         OwnersRepository ownersRepository = new OwnersRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à prêter");
         model.addAttribute("_page_current", "works_loans_add");
         model.addAttribute("workForm", new Oeuvrepret());
         model.addAttribute("ownersList", ownersRepository.fetchAll());
-        
+
         return this.render("works/loans/form", model);
     }
-    
+
     /**
      * Displays a form edit a loanable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to display.
      */
@@ -120,12 +120,12 @@ public class LoanableWorksController extends AbstractController
         // Initialize vars
         LoanableWorksRepository worksRepository = new LoanableWorksRepository();
         Oeuvrepret work = worksRepository.fetch(workId);
-        
+
         if(work != null)
         {
             // Initialize additional vars
             OwnersRepository ownersRepository = new OwnersRepository();
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("_page_title", "Éditer une oeuvre à prêter");
@@ -139,24 +139,24 @@ public class LoanableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
-            
+
             return this.redirect("/works/loanable");
         }
     }
-    
+
     /**
      * Handles the submission of a form to add or edit a loanable work.
-     * 
+     *
      * @param work The work to save.
      * @param result The validation results.
-     * @param isNew A boolean indicating if the work is new or not
-     * @return 
+     * @param isNew A boolean indicating if the work is new or not.
+     * @return The view to display or to use to redirect.
      */
     @RequestMapping(value="/works/loanable/submit", method=RequestMethod.POST)
     public ModelAndView submit(
@@ -170,16 +170,16 @@ public class LoanableWorksController extends AbstractController
             // Save the work
             LoanableWorksRepository repository = new LoanableWorksRepository();
             repository.save(work);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'oeuvre à prêter nommée <strong>%s</strong> a été sauvegardée.",
                     StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret())
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/works/loanable");
         }
@@ -187,12 +187,12 @@ public class LoanableWorksController extends AbstractController
         {
             // Initialize vars
             OwnersRepository ownersRepository = new OwnersRepository();
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("workForm", work);
             model.addAttribute("ownersList", ownersRepository.fetchAll());
-            
+
             if(isNew)
             {
                 model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à prêter");
@@ -207,10 +207,10 @@ public class LoanableWorksController extends AbstractController
             return this.render("works/loans/form", model);
         }
     }
-    
+
     /**
      * Handles the deletion of a single loanable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to use to redirect.
      */
@@ -220,41 +220,41 @@ public class LoanableWorksController extends AbstractController
         // Initialize vars
         LoanableWorksRepository repository = new LoanableWorksRepository();
         Oeuvrepret work = repository.fetch(workId);
-        
+
         if(work != null)
         {
             // Delete the work
             repository.delete(work);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'oeuvre à prêter nommée <strong>%s</strong> a été supprimée.",
                     StringEscapeUtils.escapeHtml(work.getTitreOeuvrepret())
                 )
             );
-            
+
         }
         else
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
         }
-        
+
         // Finally, redirect user
         return this.redirect("/works/loanable");
     }
-    
+
     /**
      * Handles the deletion of multiple loanable works.
-     * 
+     *
      * @param ids The list of loanable works' ids.
      * @return The view to use to redirect.
      */
@@ -266,23 +266,27 @@ public class LoanableWorksController extends AbstractController
             // Initialize vars
             LoanableWorksRepository repository = new LoanableWorksRepository();
             List<Oeuvrepret> works = repository.fetch(ids);
-            
+
             if(works.size() > 0)
             {
                 // Delete the works
                 repository.delete(works);
-                
+
                 // Then, register a flash message
                 StringBuilder flashBuilder = new StringBuilder();
-                
+
                 if(works.size() > 1)
                 {
+                    // Initialize some more vars
+                    Oeuvrepret work;
+
+                    // Build flash message
                     flashBuilder.append("Les oeuvres à prêter suivantes ont été supprimées : ");
-                    
+
                     for(int i = 0, j = works.size(); i < j; i++)
                     {
-                        Oeuvrepret work = works.get(i);
-                        
+                        work = works.get(i);
+
                         flashBuilder.append(
                             String.format(
                                 "%s%s",
@@ -291,13 +295,13 @@ public class LoanableWorksController extends AbstractController
                             )
                         );
                     }
-                    
+
                     flashBuilder.append(".");
                 }
                 else
                 {
                     Oeuvrepret work = works.get(0);
-                    
+
                     flashBuilder.append(
                         String.format(
                             "L'oeuvre à prêter nommée <strong>%s</strong> a été supprimée.",
@@ -305,7 +309,7 @@ public class LoanableWorksController extends AbstractController
                         )
                     );
                 }
-                
+
                 this.addFlash(
                     "success",
                     flashBuilder.toString()
@@ -324,17 +328,17 @@ public class LoanableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 "Vous n'avez sélectionné aucune oeuvre à prêter à supprimer."
             );
         }
-        
+
         return this.redirect("/works/loanable");
     }
-    
+
     /**
      * Displays a form to borrow a single loanable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to display.
      */
@@ -344,22 +348,22 @@ public class LoanableWorksController extends AbstractController
         // Initialize vars
         LoanableWorksRepository worksRepository = new LoanableWorksRepository();
         Oeuvrepret work = worksRepository.fetch(workId);
-        
+
         if(work != null)
         {
             // Initialize additional vars
             AdherentsRepository adherentsRepository = new AdherentsRepository();
             Emprunt loan = new Emprunt();
             loan.setOeuvrepret(work);
-            
+
             // Fetch every date the work is already borrowed
             Set<Date> loanDates = new HashSet<>();
-            
+
             work.getEmpruntList().stream().forEach((loanItem) ->
             {
                 loanDates.addAll(DateUtils.getDaysBetween(loanItem.getDateDebut(), loanItem.getDateFin()));
             });
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("borrowingForm", loan);
@@ -373,20 +377,20 @@ public class LoanableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à prêter ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
-            
+
             return this.redirect("/works/loanable");
         }
     }
-    
+
     /**
      * Handles the submission of a form to borrow a loanable work.
-     * 
+     *
      * @param loan The loan to save.
      * @param result The validation results.
      * @return The view to use to redirect.
@@ -401,10 +405,10 @@ public class LoanableWorksController extends AbstractController
         {
             // Save the booking
             LoanableWorksRepository repository = new LoanableWorksRepository();
-            
+
             loan.getOeuvrepret().getEmpruntList().add(loan);
             repository.save(loan.getOeuvrepret());
-            
+
             // Then, register a flash message
             this.addFlash("success",
                 String.format("L'oeuvre nommée <strong>%s</strong> sera prêtée à " +
@@ -416,7 +420,7 @@ public class LoanableWorksController extends AbstractController
                     DateUtils.format(loan.getDateFin(), DateUtils.FORMAT_SHORT)
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/works/loanable");
         }
@@ -424,22 +428,22 @@ public class LoanableWorksController extends AbstractController
         {
             // Initialize vars
             AdherentsRepository adherentsRepository = new AdherentsRepository();
-            
+
             // Fetch every date the work is already borrowed
             Set<Date> loanDates = new HashSet<>();
-            
+
             loan.getOeuvrepret().getEmpruntList().stream().forEach((loanItem) ->
             {
                 loanDates.addAll(DateUtils.getDaysBetween(loanItem.getDateDebut(), loanItem.getDateFin()));
             });
-             
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("borrowingForm", loan);
             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
             model.addAttribute("today", DateUtils.getToday());
             model.addAttribute("loanDates", loanDates);
-             
+
             return this.render("works/loans/borrow", model);
         }
     }
