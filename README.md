@@ -5,19 +5,18 @@ La base de données `baseoeuvre` a été complétée de la façon suivante :
 
 ```sql
 CREATE TABLE `emprunt`(
+ `id_emprunt` int(100) unsigned NOT NULL,
  `id_oeuvrepret` int(10) unsigned NOT NULL,
  `id_adherent` int(10) unsigned NOT NULL,
  `date_debut` date NOT NULL,
  `date_fin` date NOT NULL,
- PRIMARY KEY (`id_oeuvrepret`,`id_adherent`)
+ PRIMARY KEY (`id_emprunt`),
+ KEY `id_oeuvrepret` (`id_oeuvrepret`),
+ KEY `id_adherent` (`id_adherent`),
+ FOREIGN KEY (`id_adherent`) REFERENCES `adherent` (`id_adherent`),
+ FOREIGN KEY (`id_oeuvrepret`) REFERENCES `oeuvrepret` (`id_oeuvrepret`)
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `emprunt`
-ADD FOREIGN KEY (`id_oeuvrepret`) REFERENCES `oeuvrepret`(`id_oeuvrepret`);
-
-ALTER TABLE `emprunt`
-ADD FOREIGN KEY (`id_adherent`) REFERENCES `adherent`(`id_adherent`);
 ```
 
 ## Fonctionnalités supplémentaires
