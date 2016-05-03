@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
@@ -16,7 +15,7 @@ public abstract class DateUtils
     /**
      * 
      */
-    public static final DateFormat FORMAT_SHORT = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
+    public static final DateFormat FORMAT_SHORT = new SimpleDateFormat("dd/MM/yyyy");
     
     /**
      * 

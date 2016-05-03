@@ -348,7 +348,6 @@ public class LoanableWorksController extends AbstractController
         if(work != null)
         {
             // Initialize additional vars
-            Date today = DateUtils.getToday();
             AdherentsRepository adherentsRepository = new AdherentsRepository();
             Emprunt loan = new Emprunt();
             loan.setOeuvrepret(work);
@@ -365,7 +364,7 @@ public class LoanableWorksController extends AbstractController
             ModelMap model = new ModelMap();
             model.addAttribute("borrowingForm", loan);
             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
-            model.addAttribute("today", today);
+            model.addAttribute("today", DateUtils.getToday());
             model.addAttribute("loanDates", loanDates);
 
             return this.render("works/loans/borrow", model);
@@ -425,7 +424,6 @@ public class LoanableWorksController extends AbstractController
         {
             // Initialize vars
             AdherentsRepository adherentsRepository = new AdherentsRepository();
-            Date today = DateUtils.getToday();
             
             // Fetch every date the work is already borrowed
             Set<Date> loanDates = new HashSet<>();
@@ -439,7 +437,7 @@ public class LoanableWorksController extends AbstractController
             ModelMap model = new ModelMap();
             model.addAttribute("borrowingForm", loan);
             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
-            model.addAttribute("today", today);
+            model.addAttribute("today", DateUtils.getToday());
             model.addAttribute("loanDates", loanDates);
              
             return this.render("works/loans/borrow", model);
