@@ -21,7 +21,7 @@
             Gestionnaire <strong>Apache Maven</strong> ;
         </li>
         <li>
-            Framework <strong>Spring</strong> et <strong>Hibernate</strong>.
+            Framework <strong>Spring</strong>.
         </li>
     </ul>
 <%@include file="/WEB-INF/views/fragments/footer.jspf" %>

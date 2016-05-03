@@ -15,11 +15,11 @@
             var $adherentsList = $("#adherents");
             var $options = $adherentsList.find("option");
             var firstItemId = $options.length > 0 ? $options.eq(0).val() : -1;
-            
+
             $adherentsList.select2({
                 language: "fr"
             });
-            
+
             $("form").on("reset", function(e) {
                 <c:choose>
                     <c:when test="${not empty borrowingForm.adherent}">
@@ -30,14 +30,14 @@
                     </c:otherwise>
                 </c:choose>
             });
-            
+
             // Datetime picker
             var disabledDates = [
                 <c:forEach items="${loanDates}" var="date" varStatus="_loop">
                     "<fmt:formatDate value="${date}" pattern="yyyy/MM/dd" />"<c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
             ];
-            
+
             $("#dateStart, #dateEnd").datetimepicker({
                 lang: "fr",
                 timepicker: false,

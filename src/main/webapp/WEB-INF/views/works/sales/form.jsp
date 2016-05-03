@@ -11,11 +11,11 @@
             var $ownersList = $("#owner");
             var $options = $ownersList.find("option");
             var firstItemId = $options.length > 0 ? $options.eq(0).val() : -1;
-            
+
             $ownersList.select2({
                 language: "fr"
             });
-            
+
             $("form").on("reset", function(e) {
                 <c:choose>
                     <c:when test="${not empty workForm.idProprietaire}">

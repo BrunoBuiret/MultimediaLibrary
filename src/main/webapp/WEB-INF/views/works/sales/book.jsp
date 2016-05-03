@@ -13,11 +13,11 @@
             var $adherentsList = $("#adherents");
             var $options = $adherentsList.find("option");
             var firstItemId = $options.length > 0 ? $options.eq(0).val() : -1;
-            
+
             $adherentsList.select2({
                 language: "fr"
             });
-            
+
             $("form").on("reset", function(e) {
                 <c:choose>
                     <c:when test="${not empty bookingForm.adherent}">

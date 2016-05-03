@@ -8,28 +8,28 @@
             var $multiDeleteButton = $("#multi-delete-button");
             var $toggleAllCheckBox = $("#toggle-all");
             var $checkBoxes = $("input[type='checkbox'][name='ids[]']");
-            
+
             // Register event handlers
             $toggleAllCheckBox.click(function(e) {
                 var isChecked = $toggleAllCheckBox.prop("checked");
-                
+
                 // Enable or disable the multi delete button
                 $multiDeleteButton.prop("disabled", !isChecked);
-                
+
                 // Check or uncheck every check boxes
                 $checkBoxes.prop("checked", isChecked);
             });
-            
+
             $checkBoxes.click(function(e) {
                 var checkedNumber = $checkBoxes.filter(":checked").length;
-                
+
                 // Enable or disable the multi delete button
                 $multiDeleteButton.prop("disabled", checkedNumber === 0);
-                    
+
                 // Check or uncheck the toggle all check box
                 $toggleAllCheckBox.prop("checked", $checkBoxes.length === checkedNumber);
             });
-            
+
             // Enable tooltips
             $("[data-toggle='tooltip']").tooltip();
         });
@@ -142,7 +142,7 @@
                         <c:otherwise>
                             <tr>
                                 <td colspan="5">
-                                    Il n'y a aucun adhÃ©rent pour le moment.
+                                    Il n'y a aucun adhérent pour le moment.
                                 </td>
                             </tr>
                         </c:otherwise>
