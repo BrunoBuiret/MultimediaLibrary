@@ -16,8 +16,11 @@ import com.polytech.multimedia_library.validators.LoanValidator;
 import com.polytech.multimedia_library.validators.LoanableWorkValidator;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -62,6 +65,7 @@ public class LoanableWorksController extends AbstractController
         binder.setValidator(new LoanValidator());
         binder.registerCustomEditor(Adherent.class, new AdherentEditor());
         binder.registerCustomEditor(Oeuvrepret.class, new LoanableWorkEditor());
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(DateUtils.FORMAT_SHORT, false));
     }
     
     /**
@@ -347,12 +351,22 @@ public class LoanableWorksController extends AbstractController
             Date today = DateUtils.getToday();
             AdherentsRepository adherentsRepository = new AdherentsRepository();
             Emprunt loan = new Emprunt();
+            loan.setOeuvrepret(work);
+            
+            // Fetch every date the work is already borrowed
+            Set<Date> loanDates = new HashSet<>();
+            
+            work.getEmpruntList().stream().forEach((loanItem) ->
+            {
+                loanDates.addAll(DateUtils.getDaysBetween(loanItem.getDateDebut(), loanItem.getDateFin()));
+            });
             
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("borrowingForm", loan);
             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
             model.addAttribute("today", today);
+            model.addAttribute("loanDates", loanDates);
 
             return this.render("works/loans/borrow", model);
         }
@@ -374,16 +388,61 @@ public class LoanableWorksController extends AbstractController
     /**
      * Handles the submission of a form to borrow a loanable work.
      * 
-     * @param booking The loan to save.
+     * @param loan The loan to save.
      * @param result The validation results.
      * @return The view to use to redirect.
      */
     @RequestMapping(value="/works/loanable/book", method=RequestMethod.POST)
-    public ModelAndView handleBooking(
-        @ModelAttribute("borrowingForm") @Validated Emprunt booking,
+    public ModelAndView handleBorrow(
+        @ModelAttribute("borrowingForm") @Validated Emprunt loan,
         BindingResult result
     )
     {
-        return null;
+        if(!result.hasErrors())
+        {
+            // Save the booking
+            LoanableWorksRepository repository = new LoanableWorksRepository();
+            
+            loan.getOeuvrepret().getEmpruntList().add(loan);
+            repository.save(loan.getOeuvrepret());
+            
+            // Then, register a flash message
+            this.addFlash("success",
+                String.format("L'oeuvre nommée <strong>%s</strong> sera prêtée à " +
+                    "<strong>%s %s</strong> du <strong>%s</strong> au <strong>%s</strong>.",
+                    StringEscapeUtils.escapeHtml(loan.getOeuvrepret().getTitreOeuvrepret()),
+                    StringEscapeUtils.escapeHtml(loan.getAdherent().getPrenomAdherent()),
+                    StringEscapeUtils.escapeHtml(loan.getAdherent().getNomAdherent()),
+                    DateUtils.format(loan.getDateDebut(), DateUtils.FORMAT_SHORT),
+                    DateUtils.format(loan.getDateFin(), DateUtils.FORMAT_SHORT)
+                )
+            );
+            
+            // Finally, redirect user
+            return this.redirect("/works/loanable");
+        }
+        else
+        {
+            // Initialize vars
+            AdherentsRepository adherentsRepository = new AdherentsRepository();
+            Date today = DateUtils.getToday();
+            
+            // Fetch every date the work is already borrowed
+            Set<Date> loanDates = new HashSet<>();
+            
+            loan.getOeuvrepret().getEmpruntList().stream().forEach((loanItem) ->
+            {
+                loanDates.addAll(DateUtils.getDaysBetween(loanItem.getDateDebut(), loanItem.getDateFin()));
+            });
+             
+            // Populate model
+            ModelMap model = new ModelMap();
+            model.addAttribute("borrowingForm", loan);
+            model.addAttribute("adherentsList", adherentsRepository.fetchAll());
+            model.addAttribute("today", today);
+            model.addAttribute("loanDates", loanDates);
+             
+            return this.render("works/loans/borrow", model);
+        }
     }
 }

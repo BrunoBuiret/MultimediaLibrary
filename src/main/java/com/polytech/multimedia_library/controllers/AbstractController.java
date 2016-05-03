@@ -3,6 +3,7 @@ package com.polytech.multimedia_library.controllers;
 import com.polytech.multimedia_library.AbstractException;
 import com.polytech.multimedia_library.session.Flash;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

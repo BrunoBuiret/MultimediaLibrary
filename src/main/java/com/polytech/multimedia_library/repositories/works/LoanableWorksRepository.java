@@ -4,6 +4,7 @@ import com.polytech.multimedia_library.entities.Oeuvrepret;
 import com.polytech.multimedia_library.repositories.AbstractRepository;
 import com.polytech.multimedia_library.repositories.RepositoryException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityTransaction;
 
@@ -127,6 +128,13 @@ public class LoanableWorksRepository extends AbstractRepository
         catch(Exception ex)
         {
             transaction.rollback();
+            
+            System.out.println(ex);
+            
+            for(StackTraceElement e : ex.getStackTrace())
+            {
+                System.out.println(e);
+            }
             
             throw new RepositoryException(
                 ex,

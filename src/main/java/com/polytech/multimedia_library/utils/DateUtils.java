@@ -1,15 +1,45 @@
 package com.polytech.multimedia_library.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Bruno Buiret (bruno.buiret@etu.univ-lyon1.fr)
  */
 public abstract class DateUtils
 {
+    /**
+     * 
+     */
+    public static final DateFormat FORMAT_SHORT = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
+    
+    /**
+     * 
+     * @param date
+     * @param dateFormat
+     * @return 
+     */
+    public static String format(Date date, String dateFormat)
+    {
+        return DateUtils.format(date, new SimpleDateFormat(dateFormat));
+    }
+    
+    /**
+     * 
+     * @param date
+     * @param formatter
+     * @return 
+     */
+    public static String format(Date date, DateFormat formatter)
+    {
+        return formatter.format(date);
+    }
+    
     /**
      * Gets a <code>Date</code> instance of today at midnight.
      * 

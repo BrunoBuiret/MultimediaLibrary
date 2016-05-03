@@ -40,7 +40,7 @@ public class SellableWorksController extends AbstractController
     /**
      * Initializes a binder with validators and editors to work
      * with sellable works.
-     * 
+     *
      * @param binder The binder to initialize.
      */
     @InitBinder("workForm")
@@ -49,11 +49,11 @@ public class SellableWorksController extends AbstractController
         binder.setValidator(new SellableWorkValidator());
         binder.registerCustomEditor(Proprietaire.class, new OwnerEditor());
     }
-    
+
     /**
      * Initializes a binder with validators and editors to work
      * with bookings.
-     * 
+     *
      * @param binder The binder to initialize.
      */
     @InitBinder("bookingForm")
@@ -63,10 +63,10 @@ public class SellableWorksController extends AbstractController
         binder.registerCustomEditor(Adherent.class, new AdherentEditor());
         binder.registerCustomEditor(Oeuvrevente.class, new SellableWorkEditor());
     }
-    
+
     /**
      * Displays a list of sellable works.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/works/sellable", method=RequestMethod.GET)
@@ -74,18 +74,18 @@ public class SellableWorksController extends AbstractController
     {
         // Initialize vars
         SellableWorksRepository repository = new SellableWorksRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("works", repository.fetchAll());
         model.addAttribute("_flashList", this.getAndClearFlashList());
-        
+
         return this.render("works/sales/list", model);
     }
-    
+
     /**
      * Displays a form to add a sellable work.
-     * 
+     *
      * @return The view to display.
      */
     @RequestMapping(value="/works/sellable/add", method=RequestMethod.GET)
@@ -93,20 +93,20 @@ public class SellableWorksController extends AbstractController
     {
         // Initialize vars
         OwnersRepository ownersRepository = new OwnersRepository();
-        
+
         // Populate model
         ModelMap model = new ModelMap();
         model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à vendre");
         model.addAttribute("_page_current", "works_sales_add");
         model.addAttribute("workForm", new Oeuvrevente());
         model.addAttribute("ownersList", ownersRepository.fetchAll());
-        
+
         return this.render("works/sales/form", model);
     }
-    
+
     /**
      * Displays a form edit a sellable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to display.
      */
@@ -116,12 +116,12 @@ public class SellableWorksController extends AbstractController
         // Initialize vars
         SellableWorksRepository worksRepository = new SellableWorksRepository();
         Oeuvrevente work = worksRepository.fetch(workId);
-        
+
         if(work != null)
         {
             // Initialize additional vars
             OwnersRepository ownersRepository = new OwnersRepository();
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("_page_title", "Éditer une oeuvre à vendre");
@@ -135,20 +135,20 @@ public class SellableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
-            
+
             return this.redirect("/works/sellable");
         }
     }
-    
+
     /**
      * Handles the submission of a form to add or edit a sellable work.
-     * 
+     *
      * @param work The work to save.
      * @param result The validation results.
      * @param isNew A boolean indicating if the work is new or not.
@@ -166,16 +166,16 @@ public class SellableWorksController extends AbstractController
             // Save the work
             SellableWorksRepository repository = new SellableWorksRepository();
             repository.save(work);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'oeuvre à vendre nommée <strong>%s</strong> a été sauvegardée.",
                     StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente())
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/works/sellable");
         }
@@ -183,12 +183,12 @@ public class SellableWorksController extends AbstractController
         {
             // Initialize vars
             OwnersRepository ownersRepository = new OwnersRepository();
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("workForm", work);
             model.addAttribute("ownersList", ownersRepository.fetchAll());
-            
+
             if(isNew)
             {
                 model.addAttribute("_page_title", "Ajouter une nouvelle oeuvre à vendre");
@@ -203,10 +203,10 @@ public class SellableWorksController extends AbstractController
             return this.render("works/sales/form", model);
         }
     }
-    
+
     /**
      * Handles the deletion of a single sellable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to use to redirect.
      */
@@ -216,41 +216,41 @@ public class SellableWorksController extends AbstractController
         // Initialize vars
         SellableWorksRepository repository = new SellableWorksRepository();
         Oeuvrevente work = repository.fetch(workId);
-        
+
         if(work != null)
         {
             // Delete the work
             repository.delete(work);
-            
+
             // Then, register a flash message
             this.addFlash(
-                "success", 
+                "success",
                 String.format(
                     "L'oeuvre à vendre nommée <strong>%s</strong> a été supprimée.",
                     StringEscapeUtils.escapeHtml(work.getTitreOeuvrevente())
                 )
             );
-            
+
         }
         else
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
         }
-        
+
         // Finally, redirect user
         return this.redirect("/works/sellable");
     }
-    
+
     /**
      * Handles the deletion of multiple sellable works.
-     * 
+     *
      * @param ids The list of works' ids.
      * @return The view to use to redirect.
      */
@@ -262,23 +262,23 @@ public class SellableWorksController extends AbstractController
             // Initialize vars
             SellableWorksRepository repository = new SellableWorksRepository();
             List<Oeuvrevente> works = repository.fetch(ids);
-            
+
             if(works.size() > 0)
             {
                 // Delete the works
                 repository.delete(works);
-                
+
                 // Then, register a flash message
                 StringBuilder flashBuilder = new StringBuilder();
-                
+
                 if(works.size() > 1)
                 {
                     flashBuilder.append("Les oeuvres à vendre suivantes ont été supprimées : ");
-                    
+
                     for(int i = 0, j = works.size(); i < j; i++)
                     {
                         Oeuvrevente work = works.get(i);
-                        
+
                         flashBuilder.append(
                             String.format(
                                 "%s%s",
@@ -287,13 +287,13 @@ public class SellableWorksController extends AbstractController
                             )
                         );
                     }
-                    
+
                     flashBuilder.append(".");
                 }
                 else
                 {
                     Oeuvrevente work = works.get(0);
-                    
+
                     flashBuilder.append(
                         String.format(
                             "L'oeuvre à vendre nommée <strong>%s</strong> a été supprimée.",
@@ -301,7 +301,7 @@ public class SellableWorksController extends AbstractController
                         )
                     );
                 }
-                
+
                 this.addFlash(
                     "success",
                     flashBuilder.toString()
@@ -320,17 +320,17 @@ public class SellableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 "Vous n'avez sélectionné aucune oeuvre à vendre à supprimer."
             );
         }
-        
+
         return this.redirect("/works/sellable");
     }
-    
+
     /**
      * Displays a form to book a single sellable work.
-     * 
+     *
      * @param workId The work's id.
      * @return The view to display.
      */
@@ -340,7 +340,7 @@ public class SellableWorksController extends AbstractController
         // Initialize vars
         SellableWorksRepository worksRepository = new SellableWorksRepository();
         Oeuvrevente work = worksRepository.fetch(workId);
-        
+
         if(work != null)
         {
             // Initialize additional vars
@@ -350,7 +350,7 @@ public class SellableWorksController extends AbstractController
             booking.setDateReservation(today);
             booking.setOeuvrevente(work);
             booking.setStatut("?");
-            
+
             // Populate model
             ModelMap model = new ModelMap();
             model.addAttribute("bookingForm", booking);
@@ -363,20 +363,20 @@ public class SellableWorksController extends AbstractController
         {
             // Register a flash message
             this.addFlash(
-                "danger", 
+                "danger",
                 String.format(
                     "Il n'existe aucune oeuvre à vendre ayant pour identifiant <strong>%d</strong>.",
                     workId
                 )
             );
-            
+
             return this.redirect("/works/sellable");
         }
     }
-    
+
     /**
      * Handles the submission of a form to book a sellable work.
-     * 
+     *
      * @param booking The booking to save.
      * @param result The validation results.
      * @return The view to use to redirect.
@@ -391,10 +391,10 @@ public class SellableWorksController extends AbstractController
         {
             // Save the booking
             SellableWorksRepository repository = new SellableWorksRepository();
-            
+
             booking.getOeuvrevente().getReservationList().add(booking);
             repository.save(booking.getOeuvrevente());
-            
+
             // Then, register a flash message
             this.addFlash(
                 "success",
@@ -406,22 +406,22 @@ public class SellableWorksController extends AbstractController
                     StringEscapeUtils.escapeHtml(booking.getAdherent().getNomAdherent())
                 )
             );
-            
+
             // Finally, redirect user
             return this.redirect("/works/sellable");
         }
         else
         {
             // Initialize vars
-             AdherentsRepository adherentsRepository = new AdherentsRepository();
-             
-             // Populate model
-             ModelMap model = new ModelMap();
-             model.addAttribute("bookingForm", booking);
-             model.addAttribute("adherentsList", adherentsRepository.fetchAll());
-             model.addAttribute("today", DateUtils.getToday());
-             
-             return this.render("works/sales/book", model);
+            AdherentsRepository adherentsRepository = new AdherentsRepository();
+
+            // Populate model
+            ModelMap model = new ModelMap();
+            model.addAttribute("bookingForm", booking);
+            model.addAttribute("adherentsList", adherentsRepository.fetchAll());
+            model.addAttribute("today", DateUtils.getToday());
+
+            return this.render("works/sales/book", model);
         }
     }
 }

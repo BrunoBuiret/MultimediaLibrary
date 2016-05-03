@@ -35,6 +35,35 @@ public class LoanValidator implements Validator
         {
             // Specific checks
             Emprunt loan = (Emprunt) target;
+            
+            if(loan.getAdherent() == null)
+            {
+                errors.rejectValue("adherent", "NotEmpty.borrowingForm.adherent");
+            }
+            
+            if(loan.getOeuvrepret() == null)
+            {
+                errors.rejectValue("oeuvrepret", "NotEmpty.borrowingForm.oeuvrepret");
+            }
+            
+            if(loan.getDateDebut() == null)
+            {
+                errors.rejectValue("dateDebut", "NotEmpty.borrowingForm.dateDebut");
+            }
+            
+            if(loan.getDateFin() == null)
+            {
+                errors.rejectValue("dateFin", "NotEmpty.borrowingForm.dateFin");
+            }
+            
+            if(
+                loan.getDateDebut() != null
+                && loan.getDateFin() != null
+                && loan.getDateDebut().compareTo(loan.getDateFin()) > 0
+            )
+            {
+                errors.rejectValue("dateFin", "Invalid.borrowingForm.dateFin");
+            }
         }
     }
 }

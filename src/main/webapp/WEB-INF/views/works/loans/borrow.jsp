@@ -33,11 +33,9 @@
             
             // Datetime picker
             var disabledDates = [
-                <%--
                 <c:forEach items="${loanDates}" var="date" varStatus="_loop">
                     "<fmt:formatDate value="${date}" pattern="yyyy/MM/dd" />"<c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
-                --%>
             ];
             
             $("#dateStart, #dateEnd").datetimepicker({

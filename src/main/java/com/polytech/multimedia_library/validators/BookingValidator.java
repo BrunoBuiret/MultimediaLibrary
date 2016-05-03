@@ -41,14 +41,14 @@ public class BookingValidator implements Validator
                 errors.rejectValue("adherent", "NotEmpty.bookingForm.adherent");
             }
             
-            if(booking.getDateReservation() == null)
-            {
-                errors.rejectValue("dateReservation", "NotEmpty.bookingForm.dateReservation");
-            }
-            
             if(booking.getOeuvrevente() == null)
             {
                 errors.rejectValue("dateReservation", "NotEmpty.bookingForm.oeuvrevente");
+            }
+            
+            if(booking.getDateReservation() == null)
+            {
+                errors.rejectValue("dateReservation", "NotEmpty.bookingForm.dateReservation");
             }
             
             // @todo Check status
